@@ -649,3 +649,16 @@
         padding: 1.5rem;
     }
 }
+
+
+/* Critical fix - make textarea text transparent */
+#code-editor {
+    color: transparent !important;  /* Hide text but keep it editable */
+    caret-color: #ffffff;  /* Keep cursor visible */
+    -webkit-text-fill-color: transparent;  /* For Safari/Chrome */
+}
+
+/* Ensure overlay is properly positioned */
+.syntax-highlight-overlay {
+    pointer-events: none !important;  /* Never intercept mouse events */
+}

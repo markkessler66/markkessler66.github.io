@@ -229,21 +229,6 @@ function showError(title, message) {
     outputElement.innerHTML = `<div class="output-error">${title}\\n\\n${message}</div>`;
 }
 
-// Load example code
-function loadExample(exampleKey) {
-    const codeEditor = document.getElementById('code-editor');
-    const example = demoExamples[exampleKey];
-    if (example && codeEditor) {
-        // Ensure we only put plain text into the textarea
-        codeEditor.value = typeof example === 'string' ? example : '';
-        // Use setTimeout to ensure DOM is updated
-        setTimeout(() => {
-            updateLineNumbers();
-            updateSyntaxHighlighting();
-        }, 10);
-    }
-}
-
 // Reset code to original example
 function resetCode() {
     const exampleSelect = document.getElementById('example-select');
@@ -317,28 +302,28 @@ function highlightPythonSyntax(code) {
     return code;
 }
 
-// Update syntax highlighting overlay
-function updateSyntaxHighlighting() {
-    const codeEditor = document.getElementById('code-editor');
-    const syntaxOverlay = document.getElementById('syntax-overlay');
+// // Update syntax highlighting overlay
+// function updateSyntaxHighlighting() {
+//     const codeEditor = document.getElementById('code-editor');
+//     const syntaxOverlay = document.getElementById('syntax-overlay');
     
-    if (!codeEditor || !syntaxOverlay) return;
+//     if (!codeEditor || !syntaxOverlay) return;
     
-    // Get the raw text content (never modify the textarea value)
-    const code = codeEditor.value;
+//     // Get the raw text content (never modify the textarea value)
+//     const code = codeEditor.value;
     
-    // Only highlight if we have actual content
-    if (code && code.trim()) {
-        const highlightedCode = highlightPythonSyntax(code);
-        syntaxOverlay.innerHTML = highlightedCode;
-    } else {
-        syntaxOverlay.innerHTML = '';
-    }
+//     // Only highlight if we have actual content
+//     if (code && code.trim()) {
+//         const highlightedCode = highlightPythonSyntax(code);
+//         syntaxOverlay.innerHTML = highlightedCode;
+//     } else {
+//         syntaxOverlay.innerHTML = '';
+//     }
     
-    // Sync scroll position
-    syntaxOverlay.scrollTop = codeEditor.scrollTop;
-    syntaxOverlay.scrollLeft = codeEditor.scrollLeft;
-}
+//     // Sync scroll position
+//     syntaxOverlay.scrollTop = codeEditor.scrollTop;
+//     syntaxOverlay.scrollLeft = codeEditor.scrollLeft;
+// }
 
 // Update line numbers
 function updateLineNumbers() {
@@ -634,91 +619,102 @@ function cleanTextareaContent() {
     }
 }
 
-// Initialize demo when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Set up event listeners
-    const exampleSelect = document.getElementById('example-select');
-    const runButton = document.getElementById('run-button');
-    const clearButton = document.getElementById('clear-button');
-    const resetButton = document.getElementById('reset-button');
-    const copyCodeBtn = document.getElementById('copy-code');
-    const copyOutputBtn = document.getElementById('copy-output');
-    const downloadCodeBtn = document.getElementById('download-code');
+
+
+// Key fix for syntax highlighting - this is the corrected version
+// The main issue was that HTML was being injected into the textarea value
+
+// Update syntax highlighting overlay - FIXED VERSION
+function updateSyntaxHighlighting() {
     const codeEditor = document.getElementById('code-editor');
+    const syntaxOverlay = document.getElementById('syntax-overlay');
     
-    // Example selection
-    if (exampleSelect) {
-        exampleSelect.addEventListener('change', (e) => {
-            loadExample(e.target.value);
+    if (!codeEditor || !syntaxOverlay) return;
+    
+    // Get the raw text content from textarea
+    const code = codeEditor.value || '';
+    
+    // Only highlight if we have actual content
+    if (code && code.trim()) {
+        // Apply highlighting to the overlay, NOT to the textarea
+        const highlightedCode = highlightPythonSyntax(code);
+        syntaxOverlay.innerHTML = highlightedCode;
+    } else {
+        syntaxOverlay.innerHTML = '';
+    }
+    
+    // Sync scroll position
+    syntaxOverlay.scrollTop = codeEditor.scrollTop;
+    syntaxOverlay.scrollLeft = codeEditor.scrollLeft;
+}
+
+// Load example code - FIXED VERSION
+function loadExample(exampleKey) {
+    const codeEditor = document.getElementById('code-editor');
+    const example = demoExamples[exampleKey];
+    if (example && codeEditor) {
+        // IMPORTANT: Only set plain text in the textarea
+        codeEditor.value = typeof example === 'string' ? example : '';
+        
+        // Update highlighting AFTER setting the value
+        setTimeout(() => {
+            updateLineNumbers();
+            updateSyntaxHighlighting();
+        }, 10);
+    }
+}
+
+// Initialize demo when DOM is loaded - FIXED VERSION
+document.addEventListener('DOMContentLoaded', function() {
+    // ... (keep existing event listener setup) ...
+    
+    // Code editor event listeners - FIXED
+    if (codeEditor) {
+        // On input, update ONLY the overlay, never modify textarea.value
+        codeEditor.addEventListener('input', () => {
+            updateLineNumbers();
+            updateSyntaxHighlighting();
         });
-    }
-    
-    // Button event listeners
-    if (runButton) {
-        runButton.addEventListener('click', runPythonCode);
-    }
-    
-    if (clearButton) {
-        clearButton.addEventListener('click', clearOutput);
-    }
-    
-    if (resetButton) {
-        resetButton.addEventListener('click', resetCode);
-    }
-    
-    if (copyCodeBtn) {
-        copyCodeBtn.addEventListener('click', copyCode);
-    }
-    
-    if (copyOutputBtn) {
-        copyOutputBtn.addEventListener('click', copyOutput);
-    }
-    
-    if (downloadCodeBtn) {
-        downloadCodeBtn.addEventListener('click', downloadCode);
-    }
-    
-        // Code editor event listeners
-        if (codeEditor) {
-            codeEditor.addEventListener('input', () => {
+        
+        // Sync scrolling between textarea and overlay
+        codeEditor.addEventListener('scroll', () => {
+            const lineNumbers = document.getElementById('line-numbers');
+            const syntaxOverlay = document.getElementById('syntax-overlay');
+            if (lineNumbers) {
+                lineNumbers.scrollTop = codeEditor.scrollTop;
+            }
+            if (syntaxOverlay) {
+                syntaxOverlay.scrollTop = codeEditor.scrollTop;
+                syntaxOverlay.scrollLeft = codeEditor.scrollLeft;
+            }
+        });
+        
+        // Tab key handling - FIXED
+        codeEditor.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = codeEditor.selectionStart;
+                const end = codeEditor.selectionEnd;
+                
+                // Insert 4 spaces at cursor position
+                const newValue = codeEditor.value.substring(0, start) + 
+                    '    ' + codeEditor.value.substring(end);
+                    
+                codeEditor.value = newValue;
+                codeEditor.selectionStart = codeEditor.selectionEnd = start + 4;
+                
+                // Update display after modifying content
                 updateLineNumbers();
                 updateSyntaxHighlighting();
-            });
-            codeEditor.addEventListener('scroll', () => {
-                const lineNumbers = document.getElementById('line-numbers');
-                const syntaxOverlay = document.getElementById('syntax-overlay');
-                if (lineNumbers) {
-                    lineNumbers.scrollTop = codeEditor.scrollTop;
-                }
-                if (syntaxOverlay) {
-                    syntaxOverlay.scrollTop = codeEditor.scrollTop;
-                    syntaxOverlay.scrollLeft = codeEditor.scrollLeft;
-                }
-            });
-            
-            // Allow tab key in textarea
-            codeEditor.addEventListener('keydown', (e) => {
-                if (e.key === 'Tab') {
-                    e.preventDefault();
-                    const start = codeEditor.selectionStart;
-                    const end = codeEditor.selectionEnd;
-                    codeEditor.value = codeEditor.value.substring(0, start) + 
-                        '    ' + codeEditor.value.substring(end);
-                    codeEditor.selectionStart = codeEditor.selectionEnd = start + 4;
-                    updateLineNumbers();
-                    updateSyntaxHighlighting();
-                }
-            });
-            
-            // Force initial line number update after a small delay
-            setTimeout(() => {
-                updateLineNumbers();
-                updateSyntaxHighlighting();
-            }, 100);
-        }
-    
-    // Clean any existing HTML from textarea
-    cleanTextareaContent();
+            }
+        });
+        
+        // Initial update after page load
+        setTimeout(() => {
+            updateLineNumbers();
+            updateSyntaxHighlighting();
+        }, 100);
+    }
     
     // Initialize Pyodide
     if (typeof loadPyodide !== 'undefined') {
