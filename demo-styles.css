@@ -279,7 +279,7 @@
     position: relative;
     z-index: 2;
     background: transparent;
-    color: transparent;
+    color: rgba(255, 255, 255, 0.01);
     caret-color: #ffffff;
 }
 

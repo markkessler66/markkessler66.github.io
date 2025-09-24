@@ -234,7 +234,8 @@ function loadExample(exampleKey) {
     const codeEditor = document.getElementById('code-editor');
     const example = demoExamples[exampleKey];
     if (example && codeEditor) {
-        codeEditor.value = example;
+        // Ensure we only put plain text into the textarea
+        codeEditor.value = typeof example === 'string' ? example : '';
         // Use setTimeout to ensure DOM is updated
         setTimeout(() => {
             updateLineNumbers();
@@ -323,9 +324,16 @@ function updateSyntaxHighlighting() {
     
     if (!codeEditor || !syntaxOverlay) return;
     
+    // Get the raw text content (never modify the textarea value)
     const code = codeEditor.value;
-    const highlightedCode = highlightPythonSyntax(code);
-    syntaxOverlay.innerHTML = highlightedCode;
+    
+    // Only highlight if we have actual content
+    if (code && code.trim()) {
+        const highlightedCode = highlightPythonSyntax(code);
+        syntaxOverlay.innerHTML = highlightedCode;
+    } else {
+        syntaxOverlay.innerHTML = '';
+    }
     
     // Sync scroll position
     syntaxOverlay.scrollTop = codeEditor.scrollTop;
@@ -612,6 +620,20 @@ function showToast(message, type = 'success') {
     }, 3000);
 }
 
+// Function to clean textarea content
+function cleanTextareaContent() {
+    const codeEditor = document.getElementById('code-editor');
+    if (codeEditor && codeEditor.value) {
+        // Remove any HTML tags that might have gotten into the textarea
+        const cleanText = codeEditor.value.replace(/<[^>]*>/g, '');
+        if (cleanText !== codeEditor.value) {
+            codeEditor.value = cleanText;
+            updateLineNumbers();
+            updateSyntaxHighlighting();
+        }
+    }
+}
+
 // Initialize demo when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Set up event listeners
@@ -694,6 +716,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateSyntaxHighlighting();
             }, 100);
         }
+    
+    // Clean any existing HTML from textarea
+    cleanTextareaContent();
     
     // Initialize Pyodide
     if (typeof loadPyodide !== 'undefined') {
