@@ -231,7 +231,7 @@
     padding: 1.5rem 1.5rem 1.5rem 4rem;
     border: none;
     background-color: #1e1e1e;
-    color: #d4d4d4;
+    color: transparent !important;
     font-family: 'Consolas', 'Courier New', 'SF Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
     font-size: 14px;
     line-height: 1.4;
