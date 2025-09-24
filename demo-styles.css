@@ -185,6 +185,11 @@
     outline: none;
     tab-size: 4;
     border-right: 1px solid var(--border-color);
+    box-sizing: border-box;
+    /* Ensure consistent spacing */
+    letter-spacing: 0;
+    word-spacing: 0;
+    white-space: pre-wrap;
 }
 
 #code-editor::placeholder {
@@ -210,6 +215,10 @@
     white-space: pre;
     overflow: hidden;
     pointer-events: none;
+    box-sizing: border-box;
+    /* Ensure consistent line height */
+    letter-spacing: 0;
+    word-spacing: 0;
 }
 
 /* Enhanced Output Panel */

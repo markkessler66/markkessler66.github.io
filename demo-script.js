@@ -254,19 +254,19 @@ function updateLineNumbers() {
     if (!lineNumbers || !codeEditor) return;
     
     const lines = codeEditor.value.split('\\n');
-    const lineCount = lines.length;
+    const lineCount = Math.max(lines.length, 1);
     
-    // Create line numbers with proper formatting
-    let numberLines = '';
-    for (let i = 1; i <= lineCount; i++) {
-        numberLines += i + '\\n';
-    }
+    // Create line numbers with exact same line height as textarea
+    const numberLines = Array.from({length: lineCount}, (_, i) => i + 1).join('\\n');
     
-    // Remove trailing newline
-    numberLines = numberLines.slice(0, -1);
-    
-    // Update content - using textContent for Safari compatibility
+    // Update content
     lineNumbers.textContent = numberLines;
+    
+    // Force same styling as code editor
+    const computedStyle = window.getComputedStyle(codeEditor);
+    lineNumbers.style.lineHeight = computedStyle.lineHeight;
+    lineNumbers.style.fontSize = computedStyle.fontSize;
+    lineNumbers.style.fontFamily = computedStyle.fontFamily;
     
     // Sync scroll position
     lineNumbers.scrollTop = codeEditor.scrollTop;
@@ -508,29 +508,34 @@ document.addEventListener('DOMContentLoaded', function() {
         downloadCodeBtn.addEventListener('click', downloadCode);
     }
     
-    // Code editor event listeners
-    if (codeEditor) {
-        codeEditor.addEventListener('input', updateLineNumbers);
-        codeEditor.addEventListener('scroll', () => {
-            const lineNumbers = document.getElementById('line-numbers');
-            if (lineNumbers) {
-                lineNumbers.scrollTop = codeEditor.scrollTop;
-            }
-        });
-        
-        // Allow tab key in textarea
-        codeEditor.addEventListener('keydown', (e) => {
-            if (e.key === 'Tab') {
-                e.preventDefault();
-                const start = codeEditor.selectionStart;
-                const end = codeEditor.selectionEnd;
-                codeEditor.value = codeEditor.value.substring(0, start) + 
-                    '    ' + codeEditor.value.substring(end);
-                codeEditor.selectionStart = codeEditor.selectionEnd = start + 4;
+        // Code editor event listeners
+        if (codeEditor) {
+            codeEditor.addEventListener('input', updateLineNumbers);
+            codeEditor.addEventListener('scroll', () => {
+                const lineNumbers = document.getElementById('line-numbers');
+                if (lineNumbers) {
+                    lineNumbers.scrollTop = codeEditor.scrollTop;
+                }
+            });
+            
+            // Allow tab key in textarea
+            codeEditor.addEventListener('keydown', (e) => {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    const start = codeEditor.selectionStart;
+                    const end = codeEditor.selectionEnd;
+                    codeEditor.value = codeEditor.value.substring(0, start) + 
+                        '    ' + codeEditor.value.substring(end);
+                    codeEditor.selectionStart = codeEditor.selectionEnd = start + 4;
+                    updateLineNumbers();
+                }
+            });
+            
+            // Force initial line number update after a small delay
+            setTimeout(() => {
                 updateLineNumbers();
-            }
-        });
-    }
+            }, 100);
+        }
     
     // Initialize Pyodide
     if (typeof loadPyodide !== 'undefined') {
