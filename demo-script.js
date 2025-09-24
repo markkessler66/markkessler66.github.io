@@ -165,12 +165,12 @@ async function initializePyodide() {
     const outputElement = document.getElementById('output-content');
     
     try {
-        updateLoadingStatus('🐍 Loading Python environment...', 'This may take 10-30 seconds on first load');
+        updateLoadingStatus('Loading Python environment...', 'This may take 10-30 seconds on first load');
         
         // Load Pyodide
         pyodide = await loadPyodide();
         
-        updateLoadingStatus('📦 Installing packages...', 'Loading NumPy, NetworkX, and Matplotlib');
+        updateLoadingStatus('Installing packages...', 'Loading NumPy, NetworkX, and Matplotlib');
         
         // Install core packages
         await pyodide.loadPackage(['numpy', 'networkx', 'matplotlib']);
@@ -181,10 +181,10 @@ async function initializePyodide() {
 import micropip
 await micropip.install('phynetpy')
             `);
-            showSuccess('✅ PhyNetPy environment ready!', 'All packages loaded successfully. Select an example and click "Run Code" to get started.');
+        showSuccess('PhyNetPy environment ready!', 'All packages loaded successfully. Select an example and click "Run Code" to get started.');
         } catch (error) {
             console.log('PhyNetPy not available on PyPI, using core packages');
-            showSuccess('📊 Python environment ready!', 'Core packages loaded. PhyNetPy features may need manual implementation.');
+            showSuccess('Python environment ready!', 'Core packages loaded. PhyNetPy features may need manual implementation.');
         }
         
         pyodideReady = true;
@@ -195,7 +195,7 @@ await micropip.install('phynetpy')
         
     } catch (error) {
         console.error('Failed to initialize Pyodide:', error);
-        showError('❌ Failed to load Python environment', `Error: ${error.message}\\n\\nPlease refresh the page and try again.`);
+        showError('Failed to load Python environment', `Error: ${error.message}\\n\\nPlease refresh the page and try again.`);
     }
 }
 
@@ -246,16 +246,30 @@ function resetCode() {
     loadExample(currentExample);
 }
 
-// Update line numbers
+// Update line numbers - Safari compatible
 function updateLineNumbers() {
     const codeEditor = document.getElementById('code-editor');
     const lineNumbers = document.getElementById('line-numbers');
     
-    if (!lineNumbers) return;
+    if (!lineNumbers || !codeEditor) return;
     
     const lines = codeEditor.value.split('\\n');
-    const numberLines = lines.map((_, index) => index + 1).join('\\n');
+    const lineCount = lines.length;
+    
+    // Create line numbers with proper formatting
+    let numberLines = '';
+    for (let i = 1; i <= lineCount; i++) {
+        numberLines += i + '\\n';
+    }
+    
+    // Remove trailing newline
+    numberLines = numberLines.slice(0, -1);
+    
+    // Update content - using textContent for Safari compatibility
     lineNumbers.textContent = numberLines;
+    
+    // Sync scroll position
+    lineNumbers.scrollTop = codeEditor.scrollTop;
 }
 
 // Run Python code
@@ -338,7 +352,7 @@ sys.stderr = sys.__stderr__
         const executionTimeMs = (endTime - startTime).toFixed(2);
         
         console.error('Python execution error:', error);
-        showError('❌ Execution Error', error.message);
+        showError('Execution Error', error.message);
         
         if (executionTime) {
             executionTime.textContent = `Failed after ${executionTimeMs}ms`;
