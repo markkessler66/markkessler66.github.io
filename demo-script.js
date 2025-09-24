@@ -160,7 +160,25 @@ print("\\n--- Add your own code below this line ---")
 // Store original examples for reset functionality
 const originalExamples = { ...demoExamples };
 
-// 5. Fix for initializePyodide to handle failures gracefully
+// Clean any HTML from textarea
+function cleanTextareaContent() {
+    const codeEditor = document.getElementById('code-editor');
+    if (codeEditor && codeEditor.value) {
+        // Check if there's HTML in the content
+        if (codeEditor.value.includes('<') || codeEditor.value.includes('>')) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = codeEditor.value;
+            const cleanText = tempDiv.textContent || tempDiv.innerText || '';
+            
+            // Only update if there were actually HTML tags to clean
+            if (cleanText !== codeEditor.value && cleanText.trim()) {
+                codeEditor.value = cleanText;
+            }
+        }
+    }
+}
+
+// Initialize Pyodide environment
 async function initializePyodide() {
     const outputElement = document.getElementById('output-content');
     
@@ -228,6 +246,33 @@ function showSuccess(title, message) {
 function showError(title, message) {
     const outputElement = document.getElementById('output-content');
     outputElement.innerHTML = `<div class="output-error">${title}\\n\\n${message}</div>`;
+}
+
+// Load example code
+function loadExample(exampleKey) {
+    const codeEditor = document.getElementById('code-editor');
+    const example = demoExamples[exampleKey];
+    
+    if (example && codeEditor) {
+        // CRITICAL: Ensure we're working with plain text
+        let plainTextExample = example;
+        
+        // If somehow HTML got into the example, strip it
+        if (typeof example === 'string' && example.includes('<')) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = example;
+            plainTextExample = tempDiv.textContent || tempDiv.innerText || '';
+        }
+        
+        // Set ONLY plain text in textarea
+        codeEditor.value = plainTextExample;
+        
+        // Update the visual elements
+        setTimeout(() => {
+            updateLineNumbers();
+            updateSyntaxHighlighting();
+        }, 10);
+    }
 }
 
 // Reset code to original example
@@ -303,30 +348,55 @@ function highlightPythonSyntax(code) {
     return code;
 }
 
-// // Update syntax highlighting overlay
-// function updateSyntaxHighlighting() {
-//     const codeEditor = document.getElementById('code-editor');
-//     const syntaxOverlay = document.getElementById('syntax-overlay');
+// Update syntax highlighting - FIXED VERSION
+function updateSyntaxHighlighting() {
+    const codeEditor = document.getElementById('code-editor');
+    const syntaxOverlay = document.getElementById('syntax-overlay');
     
-//     if (!codeEditor || !syntaxOverlay) return;
+    if (!codeEditor || !syntaxOverlay) return;
     
-//     // Get the raw text content (never modify the textarea value)
-//     const code = codeEditor.value;
+    // Store the current cursor position and value
+    const cursorPos = codeEditor.selectionStart;
+    const originalValue = codeEditor.value;
     
-//     // Only highlight if we have actual content
-//     if (code && code.trim()) {
-//         const highlightedCode = highlightPythonSyntax(code);
-//         syntaxOverlay.innerHTML = highlightedCode;
-//     } else {
-//         syntaxOverlay.innerHTML = '';
-//     }
+    // Get the PLAIN TEXT from textarea
+    const code = originalValue || '';
     
-//     // Sync scroll position
-//     syntaxOverlay.scrollTop = codeEditor.scrollTop;
-//     syntaxOverlay.scrollLeft = codeEditor.scrollLeft;
-// }
+    // CRITICAL: Check if HTML has contaminated the textarea
+    if (code.includes('<span') || code.includes('</span>') || code.includes('class=')) {
+        // HTML has gotten into the textarea! Clean it immediately
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = code;
+        const cleanText = tempDiv.textContent || tempDiv.innerText || '';
+        
+        // Restore clean text to textarea
+        codeEditor.value = cleanText;
+        
+        // Restore cursor position
+        if (codeEditor.setSelectionRange) {
+            const newPos = Math.min(cursorPos, cleanText.length);
+            codeEditor.setSelectionRange(newPos, newPos);
+        }
+        
+        // Use the clean text for highlighting
+        const highlightedCode = highlightPythonSyntax(cleanText);
+        syntaxOverlay.innerHTML = highlightedCode;
+    } else {
+        // No contamination, proceed normally
+        if (code && code.trim()) {
+            const highlightedCode = highlightPythonSyntax(code);
+            syntaxOverlay.innerHTML = highlightedCode;
+        } else {
+            syntaxOverlay.innerHTML = '';
+        }
+    }
+    
+    // Sync scroll position
+    syntaxOverlay.scrollTop = codeEditor.scrollTop;
+    syntaxOverlay.scrollLeft = codeEditor.scrollLeft;
+}
 
-// Update line numbers
+// Update line numbers - FIXED: Don't call updateSyntaxHighlighting from here
 function updateLineNumbers() {
     const codeEditor = document.getElementById('code-editor');
     const lineNumbers = document.getElementById('line-numbers');
@@ -344,7 +414,6 @@ function updateLineNumbers() {
     // Detect browser for specific handling
     const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    const isChrome = /chrome/i.test(navigator.userAgent) && !/edge|edg/i.test(navigator.userAgent);
     
     // Create a test element that exactly mimics the textarea
     const testElement = document.createElement('div');
@@ -381,10 +450,8 @@ function updateLineNumbers() {
     // Browser-specific adjustments
     let adjustedLineHeight = singleLineHeight;
     if (isSafari) {
-        // Safari sometimes renders lines slightly differently
         adjustedLineHeight = Math.round(singleLineHeight * 1.001);
     } else if (isFirefox) {
-        // Firefox has different line height handling
         adjustedLineHeight = Math.ceil(singleLineHeight);
     }
     
@@ -410,8 +477,7 @@ function updateLineNumbers() {
     // Sync scroll position
     lineNumbers.scrollTop = codeEditor.scrollTop;
     
-    // Also update syntax highlighting
-    updateSyntaxHighlighting();
+    // DON'T call updateSyntaxHighlighting here - it creates a circular dependency
 }
 
 // Run Python code
@@ -606,102 +672,7 @@ function showToast(message, type = 'success') {
     }, 3000);
 }
 
-// CRITICAL FIX: Prevent HTML from ever entering the textarea
-
-// 1. First, clean any existing HTML from the textarea
-function cleanTextareaContent() {
-    const codeEditor = document.getElementById('code-editor');
-    if (codeEditor && codeEditor.value) {
-        // Remove any HTML tags that might have gotten into the textarea
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = codeEditor.value;
-        const cleanText = tempDiv.textContent || tempDiv.innerText || '';
-        
-        // Only update if there were actually HTML tags to clean
-        if (cleanText !== codeEditor.value && cleanText.trim()) {
-            codeEditor.value = cleanText;
-        }
-    }
-}
-
-
-
-// 1. Update syntax highlighting - NEVER modify textarea value
-function updateSyntaxHighlighting() {
-    const codeEditor = document.getElementById('code-editor');
-    const syntaxOverlay = document.getElementById('syntax-overlay');
-    
-    if (!codeEditor || !syntaxOverlay) return;
-    
-    // Store the current cursor position and value
-    const cursorPos = codeEditor.selectionStart;
-    const originalValue = codeEditor.value;
-    
-    // Get the PLAIN TEXT from textarea
-    const code = originalValue || '';
-    
-    // CRITICAL: Check if HTML has contaminated the textarea
-    if (code.includes('<span') || code.includes('</span>') || code.includes('class=')) {
-        // HTML has gotten into the textarea! Clean it immediately
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = code;
-        const cleanText = tempDiv.textContent || tempDiv.innerText || '';
-        
-        // Restore clean text to textarea
-        codeEditor.value = cleanText;
-        
-        // Restore cursor position
-        if (codeEditor.setSelectionRange) {
-            const newPos = Math.min(cursorPos, cleanText.length);
-            codeEditor.setSelectionRange(newPos, newPos);
-        }
-        
-        // Use the clean text for highlighting
-        const highlightedCode = highlightPythonSyntax(cleanText);
-        syntaxOverlay.innerHTML = highlightedCode;
-    } else {
-        // No contamination, proceed normally
-        if (code && code.trim()) {
-            const highlightedCode = highlightPythonSyntax(code);
-            syntaxOverlay.innerHTML = highlightedCode;
-        } else {
-            syntaxOverlay.innerHTML = '';
-        }
-    }
-    
-    // Sync scroll position
-    syntaxOverlay.scrollTop = codeEditor.scrollTop;
-    syntaxOverlay.scrollLeft = codeEditor.scrollLeft;
-}
-
-// 3. Load example - ensure only plain text goes in textarea
-function loadExample(exampleKey) {
-    const codeEditor = document.getElementById('code-editor');
-    const example = demoExamples[exampleKey];
-    
-    if (example && codeEditor) {
-        // CRITICAL: Ensure we're working with plain text
-        let plainTextExample = example;
-        
-        // If somehow HTML got into the example, strip it
-        if (typeof example === 'string' && example.includes('<')) {
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = example;
-            plainTextExample = tempDiv.textContent || tempDiv.innerText || '';
-        }
-        
-        // Set ONLY plain text in textarea
-        codeEditor.value = plainTextExample;
-        
-        // Update the visual elements
-        setTimeout(() => {
-            updateLineNumbers();
-            updateSyntaxHighlighting();
-        }, 10);
-    }
-}
-
-// 4. Initialize on page load with safety checks
+// Initialize demo when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Clean any existing HTML contamination first
     cleanTextareaContent();
@@ -730,11 +701,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (copyOutputBtn) copyOutputBtn.addEventListener('click', copyOutput);
     if (downloadCodeBtn) downloadCodeBtn.addEventListener('click', downloadCode);
     
-
-
-    // Code editor event listeners
+    // Code editor event listeners - FIXED: Only one input listener
     if (codeEditor) {
-
         // Prevent any modification of textarea value during input
         let isUpdating = false;
         
@@ -769,7 +737,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             isUpdating = false;
         });
-    
+        
         // Also add a safety check on focus
         codeEditor.addEventListener('focus', () => {
             const currentValue = codeEditor.value;
@@ -782,26 +750,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // On every input, clean and update
-        codeEditor.addEventListener('input', () => {
-            // Ensure no HTML gets typed/pasted into the textarea
-            const currentValue = codeEditor.value;
-            if (currentValue.includes('<') && currentValue.includes('>')) {
-                cleanTextareaContent();
-            }
-            updateLineNumbers();
-            updateSyntaxHighlighting();
-        });
-        
         // Handle paste events to clean HTML
         codeEditor.addEventListener('paste', (e) => {
             e.preventDefault();
             const text = (e.clipboardData || window.clipboardData).getData('text');
-            const selection = window.getSelection();
-            if (!selection.rangeCount) return;
-            selection.deleteFromDocument();
-            selection.getRangeAt(0).insertNode(document.createTextNode(text));
-            selection.collapseToEnd();
+            
+            // Insert plain text at cursor position
+            const start = codeEditor.selectionStart;
+            const end = codeEditor.selectionEnd;
+            const before = codeEditor.value.substring(0, start);
+            const after = codeEditor.value.substring(end);
+            
+            codeEditor.value = before + text + after;
+            codeEditor.selectionStart = codeEditor.selectionEnd = start + text.length;
             
             updateLineNumbers();
             updateSyntaxHighlighting();
