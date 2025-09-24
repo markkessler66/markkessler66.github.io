@@ -232,9 +232,13 @@ function showError(title, message) {
 function loadExample(exampleKey) {
     const codeEditor = document.getElementById('code-editor');
     const example = demoExamples[exampleKey];
-    if (example) {
+    if (example && codeEditor) {
         codeEditor.value = example;
-        updateLineNumbers();
+        console.log('Loaded example:', exampleKey, 'Length:', example.length);
+        // Use setTimeout to ensure DOM is updated
+        setTimeout(() => {
+            updateLineNumbers();
+        }, 10);
     }
 }
 
@@ -253,8 +257,16 @@ function updateLineNumbers() {
     
     if (!lineNumbers || !codeEditor) return;
     
-    const lines = codeEditor.value.split('\\n');
+    // Get the actual content and split by newlines
+    const content = codeEditor.value || '';
+    const lines = content.split('\n');
     const lineCount = Math.max(lines.length, 1);
+    
+    console.log('Updating line numbers:', {
+        contentLength: content.length,
+        lineCount: lineCount,
+        firstFewLines: lines.slice(0, 5)
+    });
     
     // Clear existing line numbers
     lineNumbers.innerHTML = '';
@@ -266,6 +278,8 @@ function updateLineNumbers() {
         lineDiv.className = 'line-number';
         lineNumbers.appendChild(lineDiv);
     }
+    
+    console.log('Created', lineNumbers.children.length, 'line number elements');
     
     // Sync scroll position
     lineNumbers.scrollTop = codeEditor.scrollTop;
