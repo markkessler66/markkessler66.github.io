@@ -192,6 +192,7 @@ await micropip.install('phynetpy')
         // Load the default example
         loadExample('basic');
         updateLineNumbers();
+        updateSyntaxHighlighting();
         
     } catch (error) {
         console.error('Failed to initialize Pyodide:', error);
@@ -237,6 +238,7 @@ function loadExample(exampleKey) {
         // Use setTimeout to ensure DOM is updated
         setTimeout(() => {
             updateLineNumbers();
+            updateSyntaxHighlighting();
         }, 10);
     }
 }
@@ -247,6 +249,87 @@ function resetCode() {
     const currentExample = exampleSelect.value;
     demoExamples[currentExample] = originalExamples[currentExample];
     loadExample(currentExample);
+}
+
+// Python syntax highlighting function
+function highlightPythonSyntax(code) {
+    // Python keywords, builtins, and operators
+    const keywords = ['def', 'class', 'if', 'elif', 'else', 'for', 'while', 'in', 'not', 'and', 'or', 'is', 'import', 'from', 'as', 'try', 'except', 'finally', 'with', 'lambda', 'return', 'yield', 'break', 'continue', 'pass', 'global', 'nonlocal', 'async', 'await'];
+    const constants = ['True', 'False', 'None'];
+    const builtins = ['print', 'len', 'range', 'enumerate', 'zip', 'map', 'filter', 'sum', 'max', 'min', 'sorted', 'list', 'dict', 'set', 'tuple', 'str', 'int', 'float', 'bool', 'type', 'isinstance', 'hasattr', 'getattr', 'setattr', 'open', 'abs', 'all', 'any', 'bin', 'chr', 'dir', 'divmod', 'hex', 'id', 'input', 'iter', 'next', 'oct', 'ord', 'pow', 'repr', 'round', 'slice', 'super', 'vars'];
+    const methods = ['append', 'extend', 'insert', 'remove', 'pop', 'clear', 'index', 'count', 'sort', 'reverse', 'copy', 'keys', 'values', 'items', 'get', 'update', 'split', 'join', 'strip', 'replace', 'upper', 'lower', 'format', 'startswith', 'endswith', 'find', 'rfind', 'isdigit', 'isalpha', 'isalnum', 'add', 'discard', 'union', 'intersection', 'difference'];
+    const modules = ['numpy', 'np', 'networkx', 'nx', 'matplotlib', 'plt', 'pandas', 'pd', 'scipy', 'sklearn', 'json', 'os', 'sys', 'math', 'random', 'time', 'datetime', 'collections', 'itertools', 'functools'];
+
+    // Escape HTML entities
+    code = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    
+    // Highlight strings (single and double quotes, including triple quotes and f-strings)
+    code = code.replace(/(f"""[\s\S]*?"""|f'''[\s\S]*?'''|f"(?:[^"\\]|\\.)*"|f'(?:[^'\\]|\\.)*'|"""[\s\S]*?"""|'''[\s\S]*?'''|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, '<span class="string">$1</span>');
+    
+    // Highlight comments
+    code = code.replace(/(#.*$)/gm, '<span class="comment">$1</span>');
+    
+    // Highlight numbers (integers, floats, scientific notation, hex, binary, octal)
+    code = code.replace(/\b(0[xX][0-9a-fA-F]+|0[bB][01]+|0[oO][0-7]+|\d+\.?\d*(?:[eE][+-]?\d+)?)\b/g, '<span class="number">$1</span>');
+    
+    // Highlight constants (True, False, None)
+    const constantPattern = new RegExp('\\b(' + constants.join('|') + ')\\b', 'g');
+    code = code.replace(constantPattern, '<span class="constant">$1</span>');
+    
+    // Highlight keywords
+    const keywordPattern = new RegExp('\\b(' + keywords.join('|') + ')\\b', 'g');
+    code = code.replace(keywordPattern, '<span class="keyword">$1</span>');
+    
+    // Highlight built-in functions
+    const builtinPattern = new RegExp('\\b(' + builtins.join('|') + ')(?=\\s*\\()', 'g');
+    code = code.replace(builtinPattern, '<span class="builtin">$1</span>');
+    
+    // Highlight module names after import
+    const modulePattern = new RegExp('\\b(import|from)\\s+(' + modules.join('|') + ')\\b', 'g');
+    code = code.replace(modulePattern, '<span class="import">$1</span> <span class="module">$2</span>');
+    
+    // Highlight common methods
+    const methodPattern = new RegExp('\\.(' + methods.join('|') + ')(?=\\s*\\()', 'g');
+    code = code.replace(methodPattern, '.<span class="method">$1</span>');
+    
+    // Highlight function definitions
+    code = code.replace(/\b(def)\s+(\w+)/g, '<span class="keyword">$1</span> <span class="function">$2</span>');
+    
+    // Highlight class definitions
+    code = code.replace(/\b(class)\s+(\w+)/g, '<span class="keyword">$1</span> <span class="class">$2</span>');
+    
+    // Highlight function parameters
+    code = code.replace(/\bdef\s+\w+\s*\(\s*([^)]*)\)/g, function(match, params) {
+        const highlightedParams = params.replace(/\b(\w+)(?=\s*[,=)])/g, '<span class="parameter">$1</span>');
+        return match.replace(params, highlightedParams);
+    });
+    
+    // Highlight decorators
+    code = code.replace(/(@\w+)/g, '<span class="decorator">$1</span>');
+    
+    // Highlight operators
+    code = code.replace(/([+\-*/%=<>!&|^~]|==|!=|<=|>=|\/\/|\*\*|<<|>>|\+=|\-=|\*=|\/=|%=|&=|\|=|\^=|<<=|>>=)/g, '<span class="operator">$1</span>');
+    
+    // Highlight remaining import statements
+    code = code.replace(/\b(import|from|as)\b/g, '<span class="import">$1</span>');
+    
+    return code;
+}
+
+// Update syntax highlighting overlay
+function updateSyntaxHighlighting() {
+    const codeEditor = document.getElementById('code-editor');
+    const syntaxOverlay = document.getElementById('syntax-overlay');
+    
+    if (!codeEditor || !syntaxOverlay) return;
+    
+    const code = codeEditor.value;
+    const highlightedCode = highlightPythonSyntax(code);
+    syntaxOverlay.innerHTML = highlightedCode;
+    
+    // Sync scroll position
+    syntaxOverlay.scrollTop = codeEditor.scrollTop;
+    syntaxOverlay.scrollLeft = codeEditor.scrollLeft;
 }
 
 // Update line numbers
@@ -332,6 +415,9 @@ function updateLineNumbers() {
     
     // Sync scroll position
     lineNumbers.scrollTop = codeEditor.scrollTop;
+    
+    // Also update syntax highlighting
+    updateSyntaxHighlighting();
 }
 
 // Run Python code
@@ -572,11 +658,19 @@ document.addEventListener('DOMContentLoaded', function() {
     
         // Code editor event listeners
         if (codeEditor) {
-            codeEditor.addEventListener('input', updateLineNumbers);
+            codeEditor.addEventListener('input', () => {
+                updateLineNumbers();
+                updateSyntaxHighlighting();
+            });
             codeEditor.addEventListener('scroll', () => {
                 const lineNumbers = document.getElementById('line-numbers');
+                const syntaxOverlay = document.getElementById('syntax-overlay');
                 if (lineNumbers) {
                     lineNumbers.scrollTop = codeEditor.scrollTop;
+                }
+                if (syntaxOverlay) {
+                    syntaxOverlay.scrollTop = codeEditor.scrollTop;
+                    syntaxOverlay.scrollLeft = codeEditor.scrollLeft;
                 }
             });
             
@@ -590,12 +684,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         '    ' + codeEditor.value.substring(end);
                     codeEditor.selectionStart = codeEditor.selectionEnd = start + 4;
                     updateLineNumbers();
+                    updateSyntaxHighlighting();
                 }
             });
             
             // Force initial line number update after a small delay
             setTimeout(() => {
                 updateLineNumbers();
+                updateSyntaxHighlighting();
             }, 100);
         }
     
