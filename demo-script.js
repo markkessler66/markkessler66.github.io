@@ -626,22 +626,47 @@ function cleanTextareaContent() {
 
 
 
-// 2. Update syntax highlighting - apply ONLY to overlay
+// 1. Update syntax highlighting - NEVER modify textarea value
 function updateSyntaxHighlighting() {
     const codeEditor = document.getElementById('code-editor');
     const syntaxOverlay = document.getElementById('syntax-overlay');
     
     if (!codeEditor || !syntaxOverlay) return;
     
-    // Get the PLAIN TEXT from textarea (no HTML should ever be here)
-    const code = codeEditor.value || '';
+    // Store the current cursor position and value
+    const cursorPos = codeEditor.selectionStart;
+    const originalValue = codeEditor.value;
     
-    // Apply highlighting to the OVERLAY only
-    if (code && code.trim()) {
-        const highlightedCode = highlightPythonSyntax(code);
+    // Get the PLAIN TEXT from textarea
+    const code = originalValue || '';
+    
+    // CRITICAL: Check if HTML has contaminated the textarea
+    if (code.includes('<span') || code.includes('</span>') || code.includes('class=')) {
+        // HTML has gotten into the textarea! Clean it immediately
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = code;
+        const cleanText = tempDiv.textContent || tempDiv.innerText || '';
+        
+        // Restore clean text to textarea
+        codeEditor.value = cleanText;
+        
+        // Restore cursor position
+        if (codeEditor.setSelectionRange) {
+            const newPos = Math.min(cursorPos, cleanText.length);
+            codeEditor.setSelectionRange(newPos, newPos);
+        }
+        
+        // Use the clean text for highlighting
+        const highlightedCode = highlightPythonSyntax(cleanText);
         syntaxOverlay.innerHTML = highlightedCode;
     } else {
-        syntaxOverlay.innerHTML = '';
+        // No contamination, proceed normally
+        if (code && code.trim()) {
+            const highlightedCode = highlightPythonSyntax(code);
+            syntaxOverlay.innerHTML = highlightedCode;
+        } else {
+            syntaxOverlay.innerHTML = '';
+        }
     }
     
     // Sync scroll position
@@ -705,8 +730,58 @@ document.addEventListener('DOMContentLoaded', function() {
     if (copyOutputBtn) copyOutputBtn.addEventListener('click', copyOutput);
     if (downloadCodeBtn) downloadCodeBtn.addEventListener('click', downloadCode);
     
+
+
     // Code editor event listeners
     if (codeEditor) {
+
+        // Prevent any modification of textarea value during input
+        let isUpdating = false;
+        
+        codeEditor.addEventListener('input', () => {
+            if (isUpdating) return; // Prevent recursive updates
+            
+            isUpdating = true;
+            
+            // Store current state
+            const cursorPos = codeEditor.selectionStart;
+            const currentValue = codeEditor.value;
+            
+            // Check for HTML contamination
+            if (currentValue.includes('<') && currentValue.includes('>')) {
+                // Clean the HTML immediately
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = currentValue;
+                const cleanText = tempDiv.textContent || tempDiv.innerText || '';
+                
+                // Only update if actually contaminated
+                if (cleanText !== currentValue) {
+                    codeEditor.value = cleanText;
+                    // Restore cursor position
+                    const newPos = Math.min(cursorPos, cleanText.length);
+                    codeEditor.setSelectionRange(newPos, newPos);
+                }
+            }
+            
+            // Update display elements
+            updateLineNumbers();
+            updateSyntaxHighlighting();
+            
+            isUpdating = false;
+        });
+    
+        // Also add a safety check on focus
+        codeEditor.addEventListener('focus', () => {
+            const currentValue = codeEditor.value;
+            if (currentValue.includes('<span') || currentValue.includes('class=')) {
+                // Clean on focus if contaminated
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = currentValue;
+                codeEditor.value = tempDiv.textContent || tempDiv.innerText || '';
+                updateSyntaxHighlighting();
+            }
+        });
+        
         // On every input, clean and update
         codeEditor.addEventListener('input', () => {
             // Ensure no HTML gets typed/pasted into the textarea
