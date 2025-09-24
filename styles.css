@@ -288,7 +288,7 @@ nav {
 
 /* About Section */
 .about {
-    background-color: var(--bg-light);
+    background-color: var(--bg-white);
     padding: 5rem 2rem;
 }
 

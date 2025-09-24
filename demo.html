@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhyNetPy Interactive Demo - Mark Kessler</title>
+    <link rel="icon" type="image/png" href="m.png">
+    <link rel="apple-touch-icon" href="m.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="demo-styles.css">
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <header>
+        <nav>
+            <a href="index.html" class="logo">
+                <img src="m.png" alt="Mark Kessler Logo" />
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#phynetpy">PhyNetPy</a></li>
+                <li><a href="demo.html" class="active">Demo</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Demo Hero Section -->
+    <section class="demo-hero">
+        <div class="hero-content">
+            <h1>PhyNetPy Interactive Demo</h1>
+            <p class="subtitle">Try network analysis algorithms directly in your browser</p>
+            <p class="hero-description">
+                Experiment with PhyNetPy's powerful network analysis capabilities using real Python code. 
+                No installation required - everything runs in your browser using WebAssembly.
+            </p>
+        </div>
+    </section>
+
+    <!-- Interactive Demo Section -->
+    <section class="demo-section">
+        <div class="demo-container">
+            <!-- Demo Controls -->
+            <div class="demo-controls">
+                <div class="example-selector">
+                    <label for="example-select">Choose Example:</label>
+                    <select id="example-select">
+                        <option value="basic">Basic Network Analysis</option>
+                        <option value="community">Community Detection</option>
+                        <option value="metrics">Network Metrics</option>
+                        <option value="custom">Custom Script</option>
+                    </select>
+                </div>
+                <div class="control-buttons">
+                    <button id="run-button" class="btn btn-primary">
+                        <span id="run-text">▶ Run Code</span>
+                        <span id="loading-text" style="display: none;">⏳ Running...</span>
+                    </button>
+                    <button id="clear-button" class="btn btn-secondary">Clear Output</button>
+                    <button id="reset-button" class="btn btn-secondary">Reset Code</button>
+                </div>
+            </div>
+            
+            <!-- Demo Workspace -->
+            <div class="demo-workspace">
+                <div class="code-panel">
+                    <div class="panel-header">
+                        <h3>Python Code</h3>
+                        <div class="panel-tools">
+                            <button id="copy-code" class="tool-btn" title="Copy code">📋</button>
+                            <button id="download-code" class="tool-btn" title="Download as .py file">💾</button>
+                        </div>
+                    </div>
+                    <div class="code-editor-container">
+                        <textarea id="code-editor" spellcheck="false" placeholder="# Your PhyNetPy code will appear here...
+# Loading demo examples..."></textarea>
+                        <div class="editor-line-numbers" id="line-numbers"></div>
+                    </div>
+                </div>
+                
+                <div class="output-panel">
+                    <div class="panel-header">
+                        <h3>Output</h3>
+                        <div class="panel-tools">
+                            <button id="copy-output" class="tool-btn" title="Copy output">📋</button>
+                            <div id="execution-time" class="execution-info"></div>
+                        </div>
+                    </div>
+                    <div id="output-container">
+                        <div id="output-content">
+                            <div class="demo-placeholder">
+                                <p>🐍 Python environment loading...</p>
+                                <div class="loading-spinner"></div>
+                                <p class="loading-details">This may take 10-30 seconds on first load</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo Information -->
+            <div class="demo-info">
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>🚀 Getting Started</h4>
+                        <ul>
+                            <li>Select an example from the dropdown</li>
+                            <li>Click "Run Code" to execute</li>
+                            <li>Modify the code and experiment freely</li>
+                            <li>Use "Reset Code" to restore original example</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4>📦 Available Packages</h4>
+                        <ul>
+                            <li><strong>NumPy</strong> - Numerical computing</li>
+                            <li><strong>NetworkX</strong> - Network analysis</li>
+                            <li><strong>Matplotlib</strong> - Plotting and visualization</li>
+                            <li><strong>PhyNetPy</strong> - Advanced network algorithms</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4>💡 Tips</h4>
+                        <ul>
+                            <li>Code runs entirely in your browser</li>
+                            <li>No data is sent to any server</li>
+                            <li>Refresh page if environment becomes unstable</li>
+                            <li>Larger computations may take longer</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Mark Kessler. Interactive demo powered by Pyodide</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="demo-script.js"></script>
+</body>
+</html>
