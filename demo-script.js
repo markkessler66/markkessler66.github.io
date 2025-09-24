@@ -283,8 +283,17 @@ function resetCode() {
     loadExample(currentExample);
 }
 
+function escapeHTML(str) {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
 // Python syntax highlighting function
 function highlightPythonSyntax(code) {
+    let code = escapeHTML(code);
+    
     // Python keywords, builtins, and operators
     const keywords = ['def', 'class', 'if', 'elif', 'else', 'for', 'while', 'in', 'not', 'and', 'or', 'is', 'import', 'from', 'as', 'try', 'except', 'finally', 'with', 'lambda', 'return', 'yield', 'break', 'continue', 'pass', 'global', 'nonlocal', 'async', 'await'];
     const constants = ['True', 'False', 'None'];
