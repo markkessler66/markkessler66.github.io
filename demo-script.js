@@ -264,22 +264,13 @@ function updateLineNumbers() {
     // Clear existing line numbers
     lineNumbers.innerHTML = '';
     
-    // Get computed styles from the textarea to match exactly
-    const computedStyle = window.getComputedStyle(codeEditor);
-    const lineHeight = computedStyle.lineHeight;
-    const fontSize = computedStyle.fontSize;
-    
     // Create individual div elements for each line number
     for (let i = 1; i <= lineCount; i++) {
         const lineDiv = document.createElement('div');
         lineDiv.textContent = i;
         lineDiv.className = 'line-number';
         
-        // Apply the exact same line height as the textarea
-        lineDiv.style.lineHeight = lineHeight;
-        lineDiv.style.fontSize = fontSize;
-        lineDiv.style.height = lineHeight;
-        
+        // Let CSS handle all styling - no inline styles
         lineNumbers.appendChild(lineDiv);
     }
     
