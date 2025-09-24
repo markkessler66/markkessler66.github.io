@@ -380,11 +380,13 @@ function updateSyntaxHighlighting() {
         
         // Use the clean text for highlighting
         const highlightedCode = highlightPythonSyntax(cleanText);
+        syntaxOverlay.textContent = ""; // clear old
         syntaxOverlay.innerHTML = highlightedCode;
     } else {
         // No contamination, proceed normally
         if (code && code.trim()) {
             const highlightedCode = highlightPythonSyntax(code);
+            syntaxOverlay.textContent = ""; // clear old
             syntaxOverlay.innerHTML = highlightedCode;
         } else {
             syntaxOverlay.innerHTML = '';
