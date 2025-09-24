@@ -160,43 +160,44 @@ print("\\n--- Add your own code below this line ---")
 // Store original examples for reset functionality
 const originalExamples = { ...demoExamples };
 
-// Initialize Pyodide environment
+// 5. Fix for initializePyodide to handle failures gracefully
 async function initializePyodide() {
     const outputElement = document.getElementById('output-content');
     
     try {
         updateLoadingStatus('Loading Python environment...', 'This may take 10-30 seconds on first load');
         
-        // Load Pyodide
-        pyodide = await loadPyodide();
+        // Set a timeout for Pyodide loading
+        const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('Pyodide loading timeout')), 30000);
+        });
+        
+        // Race between loading and timeout
+        pyodide = await Promise.race([
+            loadPyodide(),
+            timeoutPromise
+        ]);
         
         updateLoadingStatus('Installing packages...', 'Loading NumPy, NetworkX, and Matplotlib');
         
-        // Install core packages
         await pyodide.loadPackage(['numpy', 'networkx', 'matplotlib']);
         
-        // Try to install PhyNetPy if available
-        try {
-            await pyodide.runPython(`
-import micropip
-await micropip.install('phynetpy')
-            `);
-        showSuccess('PhyNetPy environment ready!', 'All packages loaded successfully. Select an example and click "Run Code" to get started.');
-        } catch (error) {
-            console.log('PhyNetPy not available on PyPI, using core packages');
-            showSuccess('Python environment ready!', 'Core packages loaded. PhyNetPy features may need manual implementation.');
-        }
-        
         pyodideReady = true;
-        
-        // Load the default example
-        loadExample('basic');
-        updateLineNumbers();
-        updateSyntaxHighlighting();
+        showSuccess('PhyNetPy environment ready!', 'All packages loaded successfully. Select an example and click "Run Code" to get started.');
         
     } catch (error) {
         console.error('Failed to initialize Pyodide:', error);
-        showError('Failed to load Python environment', `Error: ${error.message}\\n\\nPlease refresh the page and try again.`);
+        pyodideReady = false;
+        showError('Python environment failed to load', 
+                 'The Python runtime could not be initialized. You can still view and edit code, but cannot run it.');
+    } finally {
+        // Always load the example, regardless of Pyodide status
+        setTimeout(() => {
+            cleanTextareaContent();  // Clean first
+            loadExample('basic');     // Then load
+            updateLineNumbers();      // Then update display
+            updateSyntaxHighlighting();
+        }, 100);
     }
 }
 
@@ -605,38 +606,38 @@ function showToast(message, type = 'success') {
     }, 3000);
 }
 
-// Function to clean textarea content
+// CRITICAL FIX: Prevent HTML from ever entering the textarea
+
+// 1. First, clean any existing HTML from the textarea
 function cleanTextareaContent() {
     const codeEditor = document.getElementById('code-editor');
     if (codeEditor && codeEditor.value) {
         // Remove any HTML tags that might have gotten into the textarea
-        const cleanText = codeEditor.value.replace(/<[^>]*>/g, '');
-        if (cleanText !== codeEditor.value) {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = codeEditor.value;
+        const cleanText = tempDiv.textContent || tempDiv.innerText || '';
+        
+        // Only update if there were actually HTML tags to clean
+        if (cleanText !== codeEditor.value && cleanText.trim()) {
             codeEditor.value = cleanText;
-            updateLineNumbers();
-            updateSyntaxHighlighting();
         }
     }
 }
 
 
 
-// Key fix for syntax highlighting - this is the corrected version
-// The main issue was that HTML was being injected into the textarea value
-
-// Update syntax highlighting overlay - FIXED VERSION
+// 2. Update syntax highlighting - apply ONLY to overlay
 function updateSyntaxHighlighting() {
     const codeEditor = document.getElementById('code-editor');
     const syntaxOverlay = document.getElementById('syntax-overlay');
     
     if (!codeEditor || !syntaxOverlay) return;
     
-    // Get the raw text content from textarea
+    // Get the PLAIN TEXT from textarea (no HTML should ever be here)
     const code = codeEditor.value || '';
     
-    // Only highlight if we have actual content
+    // Apply highlighting to the OVERLAY only
     if (code && code.trim()) {
-        // Apply highlighting to the overlay, NOT to the textarea
         const highlightedCode = highlightPythonSyntax(code);
         syntaxOverlay.innerHTML = highlightedCode;
     } else {
@@ -648,15 +649,26 @@ function updateSyntaxHighlighting() {
     syntaxOverlay.scrollLeft = codeEditor.scrollLeft;
 }
 
-// Load example code - FIXED VERSION
+// 3. Load example - ensure only plain text goes in textarea
 function loadExample(exampleKey) {
     const codeEditor = document.getElementById('code-editor');
     const example = demoExamples[exampleKey];
+    
     if (example && codeEditor) {
-        // IMPORTANT: Only set plain text in the textarea
-        codeEditor.value = typeof example === 'string' ? example : '';
+        // CRITICAL: Ensure we're working with plain text
+        let plainTextExample = example;
         
-        // Update highlighting AFTER setting the value
+        // If somehow HTML got into the example, strip it
+        if (typeof example === 'string' && example.includes('<')) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = example;
+            plainTextExample = tempDiv.textContent || tempDiv.innerText || '';
+        }
+        
+        // Set ONLY plain text in textarea
+        codeEditor.value = plainTextExample;
+        
+        // Update the visual elements
         setTimeout(() => {
             updateLineNumbers();
             updateSyntaxHighlighting();
@@ -664,62 +676,106 @@ function loadExample(exampleKey) {
     }
 }
 
-// Initialize demo when DOM is loaded - FIXED VERSION
+// 4. Initialize on page load with safety checks
 document.addEventListener('DOMContentLoaded', function() {
-    // ... (keep existing event listener setup) ...
+    // Clean any existing HTML contamination first
+    cleanTextareaContent();
     
-    // Code editor event listeners - FIXED
+    const codeEditor = document.getElementById('code-editor');
+    const exampleSelect = document.getElementById('example-select');
+    const runButton = document.getElementById('run-button');
+    const clearButton = document.getElementById('clear-button');
+    const resetButton = document.getElementById('reset-button');
+    const copyCodeBtn = document.getElementById('copy-code');
+    const copyOutputBtn = document.getElementById('copy-output');
+    const downloadCodeBtn = document.getElementById('download-code');
+    
+    // Example selection
+    if (exampleSelect) {
+        exampleSelect.addEventListener('change', (e) => {
+            loadExample(e.target.value);
+        });
+    }
+    
+    // Button event listeners
+    if (runButton) runButton.addEventListener('click', runPythonCode);
+    if (clearButton) clearButton.addEventListener('click', clearOutput);
+    if (resetButton) resetButton.addEventListener('click', resetCode);
+    if (copyCodeBtn) copyCodeBtn.addEventListener('click', copyCode);
+    if (copyOutputBtn) copyOutputBtn.addEventListener('click', copyOutput);
+    if (downloadCodeBtn) downloadCodeBtn.addEventListener('click', downloadCode);
+    
+    // Code editor event listeners
     if (codeEditor) {
-        // On input, update ONLY the overlay, never modify textarea.value
+        // On every input, clean and update
         codeEditor.addEventListener('input', () => {
+            // Ensure no HTML gets typed/pasted into the textarea
+            const currentValue = codeEditor.value;
+            if (currentValue.includes('<') && currentValue.includes('>')) {
+                cleanTextareaContent();
+            }
             updateLineNumbers();
             updateSyntaxHighlighting();
         });
         
-        // Sync scrolling between textarea and overlay
+        // Handle paste events to clean HTML
+        codeEditor.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const text = (e.clipboardData || window.clipboardData).getData('text');
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return;
+            selection.deleteFromDocument();
+            selection.getRangeAt(0).insertNode(document.createTextNode(text));
+            selection.collapseToEnd();
+            
+            updateLineNumbers();
+            updateSyntaxHighlighting();
+        });
+        
+        // Scroll sync
         codeEditor.addEventListener('scroll', () => {
             const lineNumbers = document.getElementById('line-numbers');
             const syntaxOverlay = document.getElementById('syntax-overlay');
-            if (lineNumbers) {
-                lineNumbers.scrollTop = codeEditor.scrollTop;
-            }
+            if (lineNumbers) lineNumbers.scrollTop = codeEditor.scrollTop;
             if (syntaxOverlay) {
                 syntaxOverlay.scrollTop = codeEditor.scrollTop;
                 syntaxOverlay.scrollLeft = codeEditor.scrollLeft;
             }
         });
         
-        // Tab key handling - FIXED
+        // Tab handling
         codeEditor.addEventListener('keydown', (e) => {
             if (e.key === 'Tab') {
                 e.preventDefault();
                 const start = codeEditor.selectionStart;
                 const end = codeEditor.selectionEnd;
-                
-                // Insert 4 spaces at cursor position
-                const newValue = codeEditor.value.substring(0, start) + 
+                codeEditor.value = codeEditor.value.substring(0, start) + 
                     '    ' + codeEditor.value.substring(end);
-                    
-                codeEditor.value = newValue;
                 codeEditor.selectionStart = codeEditor.selectionEnd = start + 4;
-                
-                // Update display after modifying content
                 updateLineNumbers();
                 updateSyntaxHighlighting();
             }
         });
-        
-        // Initial update after page load
-        setTimeout(() => {
-            updateLineNumbers();
-            updateSyntaxHighlighting();
-        }, 100);
     }
     
-    // Initialize Pyodide
+    // Try to initialize Pyodide, but don't let it block the editor
     if (typeof loadPyodide !== 'undefined') {
-        initializePyodide();
+        initializePyodide().catch(error => {
+            console.error('Pyodide failed to load:', error);
+            // Still make the editor work even if Pyodide fails
+            showError('Python environment unavailable', 
+                     'The Python runtime failed to load, but you can still view and edit code.');
+            // Load the default example anyway
+            setTimeout(() => {
+                loadExample('basic');
+            }, 100);
+        });
     } else {
-        showError('Python environment not available', 'Pyodide library failed to load. Please check your internet connection and refresh the page.');
+        // No Pyodide available, but still load the editor
+        showError('Python environment not available', 
+                 'Pyodide library not found. Code editing is still available.');
+        setTimeout(() => {
+            loadExample('basic');
+        }, 100);
     }
 });

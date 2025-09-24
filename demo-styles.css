@@ -253,7 +253,9 @@
     font-kerning: none;
     text-rendering: optimizeSpeed;
     /* Add VS Code-like cursor */
-    caret-color: #ffffff;
+    caret-color: #ffffff !important;
+    -webkit-text-fill-color: transparent !important;  /* For Safari/Chrome */
+    -moz-text-fill-color: transparent !important;  /* For Firefox */
 }
 
 /* Syntax highlight overlay */
@@ -651,12 +653,6 @@
 }
 
 
-/* Critical fix - make textarea text transparent */
-#code-editor {
-    color: transparent !important;  /* Hide text but keep it editable */
-    caret-color: #ffffff;  /* Keep cursor visible */
-    -webkit-text-fill-color: transparent;  /* For Safari/Chrome */
-}
 
 /* Ensure overlay is properly positioned */
 .syntax-highlight-overlay {
