@@ -292,8 +292,8 @@ function escapeHTML(str) {
 
 // Python syntax highlighting function
 function highlightPythonSyntax(code) {
-    let code = escapeHTML(code);
-    
+    let escapedCode = escapeHTML(code);
+
     // Python keywords, builtins, and operators
     const keywords = ['def', 'class', 'if', 'elif', 'else', 'for', 'while', 'in', 'not', 'and', 'or', 'is', 'import', 'from', 'as', 'try', 'except', 'finally', 'with', 'lambda', 'return', 'yield', 'break', 'continue', 'pass', 'global', 'nonlocal', 'async', 'await'];
     const constants = ['True', 'False', 'None'];
@@ -302,59 +302,59 @@ function highlightPythonSyntax(code) {
     const modules = ['numpy', 'np', 'networkx', 'nx', 'matplotlib', 'plt', 'pandas', 'pd', 'scipy', 'sklearn', 'json', 'os', 'sys', 'math', 'random', 'time', 'datetime', 'collections', 'itertools', 'functools'];
 
     // Escape HTML entities
-    code = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    escapedCode = escapedCode.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     
     // Highlight strings (single and double quotes, including triple quotes and f-strings)
-    code = code.replace(/(f"""[\s\S]*?"""|f'''[\s\S]*?'''|f"(?:[^"\\]|\\.)*"|f'(?:[^'\\]|\\.)*'|"""[\s\S]*?"""|'''[\s\S]*?'''|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, '<span class="string">$1</span>');
+    escapedCode = escapedCode.replace(/(f"""[\s\S]*?"""|f'''[\s\S]*?'''|f"(?:[^"\\]|\\.)*"|f'(?:[^'\\]|\\.)*'|"""[\s\S]*?"""|'''[\s\S]*?'''|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, '<span class="string">$1</span>');
     
     // Highlight comments
-    code = code.replace(/(#.*$)/gm, '<span class="comment">$1</span>');
+    escapedCode = escapedCode.replace(/(#.*$)/gm, '<span class="comment">$1</span>');
     
     // Highlight numbers (integers, floats, scientific notation, hex, binary, octal)
-    code = code.replace(/\b(0[xX][0-9a-fA-F]+|0[bB][01]+|0[oO][0-7]+|\d+\.?\d*(?:[eE][+-]?\d+)?)\b/g, '<span class="number">$1</span>');
+    escapedCode = escapedCode.replace(/\b(0[xX][0-9a-fA-F]+|0[bB][01]+|0[oO][0-7]+|\d+\.?\d*(?:[eE][+-]?\d+)?)\b/g, '<span class="number">$1</span>');
     
     // Highlight constants (True, False, None)
     const constantPattern = new RegExp('\\b(' + constants.join('|') + ')\\b', 'g');
-    code = code.replace(constantPattern, '<span class="constant">$1</span>');
+    escapedCode = escapedCode.replace(constantPattern, '<span class="constant">$1</span>');
     
     // Highlight keywords
     const keywordPattern = new RegExp('\\b(' + keywords.join('|') + ')\\b', 'g');
-    code = code.replace(keywordPattern, '<span class="keyword">$1</span>');
+    escapedCode = escapedCode.replace(keywordPattern, '<span class="keyword">$1</span>');
     
     // Highlight built-in functions
     const builtinPattern = new RegExp('\\b(' + builtins.join('|') + ')(?=\\s*\\()', 'g');
-    code = code.replace(builtinPattern, '<span class="builtin">$1</span>');
+    escapedCode = escapedCode.replace(builtinPattern, '<span class="builtin">$1</span>');
     
     // Highlight module names after import
     const modulePattern = new RegExp('\\b(import|from)\\s+(' + modules.join('|') + ')\\b', 'g');
-    code = code.replace(modulePattern, '<span class="import">$1</span> <span class="module">$2</span>');
+    escapedCode = escapedCode.replace(modulePattern, '<span class="import">$1</span> <span class="module">$2</span>');
     
     // Highlight common methods
     const methodPattern = new RegExp('\\.(' + methods.join('|') + ')(?=\\s*\\()', 'g');
-    code = code.replace(methodPattern, '.<span class="method">$1</span>');
+    escapedCode = escapedCode.replace(methodPattern, '.<span class="method">$1</span>');
     
     // Highlight function definitions
-    code = code.replace(/\b(def)\s+(\w+)/g, '<span class="keyword">$1</span> <span class="function">$2</span>');
+    escapedCode = escapedCode.replace(/\b(def)\s+(\w+)/g, '<span class="keyword">$1</span> <span class="function">$2</span>');
     
     // Highlight class definitions
-    code = code.replace(/\b(class)\s+(\w+)/g, '<span class="keyword">$1</span> <span class="class">$2</span>');
+    escapedCode = escapedCode.replace(/\b(class)\s+(\w+)/g, '<span class="keyword">$1</span> <span class="class">$2</span>');
     
     // Highlight function parameters
-    code = code.replace(/\bdef\s+\w+\s*\(\s*([^)]*)\)/g, function(match, params) {
-        const highlightedParams = params.replace(/\b(\w+)(?=\s*[,=)])/g, '<span class="parameter">$1</span>');
+    escapedCode = escapedCode.replace(/\bdef\s+\w+\s*\(\s*([^)]*)\)/g, function(match, params) {
+        const highlightedParams = escapedParams.replace(/\b(\w+)(?=\s*[,=)])/g, '<span class="parameter">$1</span>');
         return match.replace(params, highlightedParams);
     });
     
     // Highlight decorators
-    code = code.replace(/(@\w+)/g, '<span class="decorator">$1</span>');
+    escapedCode = escapedCode.replace(/(@\w+)/g, '<span class="decorator">$1</span>');
     
     // Highlight operators
-    code = code.replace(/([+\-*/%=<>!&|^~]|==|!=|<=|>=|\/\/|\*\*|<<|>>|\+=|\-=|\*=|\/=|%=|&=|\|=|\^=|<<=|>>=)/g, '<span class="operator">$1</span>');
+    escapedCode = escapedCode.replace(/([+\-*/%=<>!&|^~]|==|!=|<=|>=|\/\/|\*\*|<<|>>|\+=|\-=|\*=|\/=|%=|&=|\|=|\^=|<<=|>>=)/g, '<span class="operator">$1</span>');
     
     // Highlight remaining import statements
-    code = code.replace(/\b(import|from|as)\b/g, '<span class="import">$1</span>');
+    escapedCode = escapedCode.replace(/\b(import|from|as)\b/g, '<span class="import">$1</span>');
     
-    return code;
+    return escapedCode;
 }
 
 // Update syntax highlighting - FIXED VERSION
