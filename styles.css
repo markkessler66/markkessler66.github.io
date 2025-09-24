@@ -37,7 +37,7 @@ header {
 nav {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: 1.25rem 2rem;
+    padding: 1.5rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -50,10 +50,10 @@ nav {
 }
 
 .logo img {
-    height: 60px;
+    height: 120px;
     width: auto;
     transition: all 0.3s ease;
-    border-radius: 8px;
+    border-radius: 20px;
     background-color: transparent;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
@@ -395,21 +395,23 @@ footer {
     }
 
     .logo img {
-        height: 50px;
+        height: 100px;
+        border-radius: 16px;
     }
 
     nav {
-        padding: 1rem 1.5rem;
+        padding: 1.25rem 1.5rem;
     }
 }
 
 @media (max-width: 480px) {
     .logo img {
-        height: 45px;
+        height: 80px;
+        border-radius: 14px;
     }
 
     nav {
-        padding: 0.75rem 1rem;
+        padding: 1rem 1rem;
     }
 
     .nav-links {

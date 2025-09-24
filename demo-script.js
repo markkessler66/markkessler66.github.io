@@ -246,7 +246,7 @@ function resetCode() {
     loadExample(currentExample);
 }
 
-// Update line numbers - Safari compatible
+// Update line numbers - Safari compatible with individual elements
 function updateLineNumbers() {
     const codeEditor = document.getElementById('code-editor');
     const lineNumbers = document.getElementById('line-numbers');
@@ -256,17 +256,16 @@ function updateLineNumbers() {
     const lines = codeEditor.value.split('\\n');
     const lineCount = Math.max(lines.length, 1);
     
-    // Create line numbers with exact same line height as textarea
-    const numberLines = Array.from({length: lineCount}, (_, i) => i + 1).join('\\n');
+    // Clear existing line numbers
+    lineNumbers.innerHTML = '';
     
-    // Update content
-    lineNumbers.textContent = numberLines;
-    
-    // Force same styling as code editor
-    const computedStyle = window.getComputedStyle(codeEditor);
-    lineNumbers.style.lineHeight = computedStyle.lineHeight;
-    lineNumbers.style.fontSize = computedStyle.fontSize;
-    lineNumbers.style.fontFamily = computedStyle.fontFamily;
+    // Create individual div elements for each line number
+    for (let i = 1; i <= lineCount; i++) {
+        const lineDiv = document.createElement('div');
+        lineDiv.textContent = i;
+        lineDiv.className = 'line-number';
+        lineNumbers.appendChild(lineDiv);
+    }
     
     // Sync scroll position
     lineNumbers.scrollTop = codeEditor.scrollTop;

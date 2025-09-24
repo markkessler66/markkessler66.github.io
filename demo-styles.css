@@ -212,13 +212,19 @@
     text-align: right;
     user-select: none;
     border-right: 1px solid #404040;
-    white-space: pre;
     overflow: hidden;
     pointer-events: none;
     box-sizing: border-box;
-    /* Ensure consistent line height */
-    letter-spacing: 0;
-    word-spacing: 0;
+}
+
+.line-number {
+    height: 1.6em;
+    line-height: 1.6;
+    font-size: 0.875rem;
+    text-align: right;
+    color: #858585;
+    padding-right: 0.5rem;
+    box-sizing: border-box;
 }
 
 /* Enhanced Output Panel */
