@@ -264,13 +264,69 @@ function updateLineNumbers() {
     // Clear existing line numbers
     lineNumbers.innerHTML = '';
     
+    // Detect browser for specific handling
+    const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const isChrome = /chrome/i.test(navigator.userAgent) && !/edge|edg/i.test(navigator.userAgent);
+    
+    // Create a test element that exactly mimics the textarea
+    const testElement = document.createElement('div');
+    const computedStyle = window.getComputedStyle(codeEditor);
+    
+    // Copy all relevant styles to match textarea exactly
+    testElement.style.fontFamily = computedStyle.fontFamily;
+    testElement.style.fontSize = computedStyle.fontSize;
+    testElement.style.fontWeight = computedStyle.fontWeight;
+    testElement.style.lineHeight = computedStyle.lineHeight;
+    testElement.style.letterSpacing = computedStyle.letterSpacing;
+    testElement.style.wordSpacing = computedStyle.wordSpacing;
+    testElement.style.position = 'absolute';
+    testElement.style.visibility = 'hidden';
+    testElement.style.top = '-9999px';
+    testElement.style.left = '-9999px';
+    testElement.style.whiteSpace = 'pre';
+    testElement.style.padding = '0';
+    testElement.style.margin = '0';
+    testElement.style.border = 'none';
+    testElement.style.width = 'auto';
+    testElement.style.height = 'auto';
+    
+    // Add test content with multiple lines to measure line height accurately
+    testElement.textContent = 'M\nM';
+    document.body.appendChild(testElement);
+    
+    // Measure the height of two lines to get accurate line height
+    const totalHeight = testElement.offsetHeight;
+    const singleLineHeight = totalHeight / 2;
+    
+    document.body.removeChild(testElement);
+    
+    // Browser-specific adjustments
+    let adjustedLineHeight = singleLineHeight;
+    if (isSafari) {
+        // Safari sometimes renders lines slightly differently
+        adjustedLineHeight = Math.round(singleLineHeight * 1.001);
+    } else if (isFirefox) {
+        // Firefox has different line height handling
+        adjustedLineHeight = Math.ceil(singleLineHeight);
+    }
+    
     // Create individual div elements for each line number
     for (let i = 1; i <= lineCount; i++) {
         const lineDiv = document.createElement('div');
         lineDiv.textContent = i;
         lineDiv.className = 'line-number';
         
-        // Let CSS handle all styling - no inline styles
+        // Apply browser-specific styles
+        lineDiv.style.height = adjustedLineHeight + 'px';
+        lineDiv.style.lineHeight = adjustedLineHeight + 'px';
+        lineDiv.style.fontSize = computedStyle.fontSize;
+        lineDiv.style.fontFamily = computedStyle.fontFamily;
+        lineDiv.style.fontWeight = computedStyle.fontWeight;
+        lineDiv.style.boxSizing = 'border-box';
+        lineDiv.style.margin = '0';
+        lineDiv.style.padding = '0';
+        
         lineNumbers.appendChild(lineDiv);
     }
     

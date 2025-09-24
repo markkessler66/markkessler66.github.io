@@ -244,8 +244,19 @@
     letter-spacing: 0;
     word-spacing: 0;
     white-space: pre-wrap;
-    /* Remove default textarea margins/padding */
+    /* Remove all default textarea styles that could affect line height */
     margin: 0;
+    vertical-align: top;
+    /* Force consistent line height behavior across browsers */
+    font-variant-ligatures: none;
+    font-feature-settings: normal;
+    /* Browser-specific line height fixes */
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* Ensure consistent rendering */
+    font-kerning: none;
+    text-rendering: optimizeSpeed;
 }
 
 /* Python syntax highlighting */
@@ -270,7 +281,6 @@
     color: #858585;
     font-family: 'SF Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
     font-size: 0.875rem;
-    line-height: 1.4;
     padding: 1.5rem 0.25rem 1.5rem 0.5rem;
     text-align: right;
     user-select: none;
@@ -280,10 +290,10 @@
     box-sizing: border-box;
     box-shadow: inset -1px 0 0 rgba(14, 165, 233, 0.2);
     margin: 0;
+    /* Remove line-height from container to avoid conflicts */
 }
 
 .line-number {
-    height: calc(0.875rem * 1.4);
     line-height: 1.4;
     font-size: 0.875rem;
     text-align: right;
@@ -292,6 +302,7 @@
     margin: 0;
     padding: 0;
     display: block;
+    /* Let the line-height naturally determine the height */
 }
 
 /* Enhanced Output Panel */
