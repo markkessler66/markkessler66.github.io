@@ -249,45 +249,7 @@ function resetCode() {
     loadExample(currentExample);
 }
 
-// Python syntax highlighting
-function highlightPython(code) {
-    // Python keywords
-    const keywords = /\b(and|as|assert|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield|True|False|None)\b/g;
-    
-    // Built-in functions
-    const builtins = /\b(abs|all|any|bin|bool|bytearray|bytes|callable|chr|classmethod|compile|complex|delattr|dict|dir|divmod|enumerate|eval|exec|filter|float|format|frozenset|getattr|globals|hasattr|hash|help|hex|id|input|int|isinstance|issubclass|iter|len|list|locals|map|max|memoryview|min|next|object|oct|open|ord|pow|print|property|range|repr|reversed|round|set|setattr|slice|sorted|staticmethod|str|sum|super|tuple|type|vars|zip)\b/g;
-    
-    // Strings (single and double quotes)
-    const strings = /(["'])((?:\\.|(?!\1)[^\\\r\n])*)\1/g;
-    
-    // Comments
-    const comments = /#.*/g;
-    
-    // Numbers
-    const numbers = /\b\d+\.?\d*\b/g;
-    
-    // Function definitions
-    const functions = /\bdef\s+(\w+)/g;
-    
-    // Replace special characters for HTML
-    let highlighted = code
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-    
-    // Apply syntax highlighting
-    highlighted = highlighted
-        .replace(comments, '<span class="comment">$&</span>')
-        .replace(strings, '<span class="string">$&</span>')
-        .replace(keywords, '<span class="keyword">$&</span>')
-        .replace(builtins, '<span class="builtin">$&</span>')
-        .replace(numbers, '<span class="number">$&</span>')
-        .replace(/\bdef\s+(\w+)/g, 'def <span class="function-def">$1</span>');
-    
-    return highlighted;
-}
-
-// Update line numbers and syntax highlighting
+// Update line numbers
 function updateLineNumbers() {
     const codeEditor = document.getElementById('code-editor');
     const lineNumbers = document.getElementById('line-numbers');
@@ -321,36 +283,8 @@ function updateLineNumbers() {
         lineNumbers.appendChild(lineDiv);
     }
     
-    // Update syntax highlighting overlay
-    updateSyntaxHighlighting();
-    
     // Sync scroll position
     lineNumbers.scrollTop = codeEditor.scrollTop;
-}
-
-// Update syntax highlighting overlay
-function updateSyntaxHighlighting() {
-    const codeEditor = document.getElementById('code-editor');
-    let syntaxOverlay = document.getElementById('syntax-overlay');
-    
-    if (!codeEditor) return;
-    
-    // Create syntax overlay if it doesn't exist
-    if (!syntaxOverlay) {
-        syntaxOverlay = document.createElement('div');
-        syntaxOverlay.id = 'syntax-overlay';
-        syntaxOverlay.className = 'syntax-overlay';
-        codeEditor.parentNode.appendChild(syntaxOverlay);
-    }
-    
-    const content = codeEditor.value || '';
-    const highlighted = highlightPython(content);
-    
-    syntaxOverlay.innerHTML = highlighted;
-    
-    // Sync scroll position
-    syntaxOverlay.scrollTop = codeEditor.scrollTop;
-    syntaxOverlay.scrollLeft = codeEditor.scrollLeft;
 }
 
 // Run Python code
@@ -594,13 +528,8 @@ document.addEventListener('DOMContentLoaded', function() {
             codeEditor.addEventListener('input', updateLineNumbers);
             codeEditor.addEventListener('scroll', () => {
                 const lineNumbers = document.getElementById('line-numbers');
-                const syntaxOverlay = document.getElementById('syntax-overlay');
                 if (lineNumbers) {
                     lineNumbers.scrollTop = codeEditor.scrollTop;
-                }
-                if (syntaxOverlay) {
-                    syntaxOverlay.scrollTop = codeEditor.scrollTop;
-                    syntaxOverlay.scrollLeft = codeEditor.scrollLeft;
                 }
             });
             
