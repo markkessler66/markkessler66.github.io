@@ -1,11 +1,10 @@
 // PhyNetPy Interactive Demo Script with CodeMirror 6
 
-import { EditorView, basicSetup } from '@codemirror/basic-setup';
-import { EditorState } from '@codemirror/state';
-import { python } from '@codemirror/lang-python';
-import { oneDark } from '@codemirror/theme-one-dark';
-import { keymap } from '@codemirror/view';
-import { indentWithTab } from '@codemirror/commands';
+import { EditorView, keymap, lineNumbers } from 'https://esm.sh/@codemirror/view@6.21.3';
+import { EditorState } from 'https://esm.sh/@codemirror/state@6.2.1';
+import { defaultKeymap, indentWithTab } from 'https://esm.sh/@codemirror/commands@6.3.0';
+import { python } from 'https://esm.sh/@codemirror/lang-python@6.1.3';
+import { oneDark } from 'https://esm.sh/@codemirror/theme-one-dark@6.1.2';
 
 let pyodide = null;
 let pyodideReady = false;
@@ -177,14 +176,14 @@ function initializeEditor() {
         return;
     }
 
-    // Create editor state with extensions
+    // Create editor state with minimal extensions
     const state = EditorState.create({
         doc: demoExamples.basic,
         extensions: [
-            basicSetup,
+            lineNumbers(),
             python(),
             oneDark,
-            keymap.of([indentWithTab]),
+            keymap.of([...defaultKeymap, indentWithTab]),
             EditorView.theme({
                 '&': {
                     height: '500px',
@@ -242,6 +241,11 @@ async function initializePyodide() {
     try {
         updateLoadingStatus('Loading Python environment...', 'This may take 10-30 seconds on first load');
         
+        // Check if loadPyodide is available
+        if (typeof window.loadPyodide !== 'function') {
+            throw new Error('Pyodide library not loaded');
+        }
+        
         // Set a timeout for Pyodide loading
         const timeoutPromise = new Promise((_, reject) => {
             setTimeout(() => reject(new Error('Pyodide loading timeout')), 30000);
@@ -249,7 +253,7 @@ async function initializePyodide() {
         
         // Race between loading and timeout
         pyodide = await Promise.race([
-            loadPyodide(),
+            window.loadPyodide(),
             timeoutPromise
         ]);
         
@@ -519,6 +523,8 @@ function showToast(message, type = 'success') {
 
 // Initialize demo when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Demo script starting...');
+    console.log('loadPyodide available:', typeof window.loadPyodide !== 'undefined');
     const exampleSelect = document.getElementById('example-select');
     const runButton = document.getElementById('run-button');
     const clearButton = document.getElementById('clear-button');
@@ -546,23 +552,28 @@ document.addEventListener('DOMContentLoaded', function() {
     if (downloadCodeBtn) downloadCodeBtn.addEventListener('click', downloadCode);
     
     // Try to initialize Pyodide, but don't let it block the editor
-    if (typeof loadPyodide !== 'undefined') {
-        initializePyodide().catch(error => {
-            console.error('Pyodide failed to load:', error);
-            // Still make the editor work even if Pyodide fails
-            showError('Python environment unavailable', 
-                     'The Python runtime failed to load, but you can still view and edit code.');
-            // Load the default example anyway
+    // Add delay to ensure Pyodide script has time to load
+    setTimeout(() => {
+        console.log('Checking for Pyodide after delay:', typeof window.loadPyodide !== 'undefined');
+        if (typeof window.loadPyodide !== 'undefined') {
+            initializePyodide().catch(error => {
+                console.error('Pyodide failed to load:', error);
+                // Still make the editor work even if Pyodide fails
+                showError('Python environment unavailable', 
+                         'The Python runtime failed to load, but you can still view and edit code.');
+                // Load the default example anyway
+                setTimeout(() => {
+                    loadExample('basic');
+                }, 100);
+            });
+        } else {
+            // No Pyodide available, but still load the editor
+            console.warn('Pyodide library not found');
+            showError('Python environment not available', 
+                     'Pyodide library not found. Code editing is still available.');
             setTimeout(() => {
                 loadExample('basic');
             }, 100);
-        });
-    } else {
-        // No Pyodide available, but still load the editor
-        showError('Python environment not available', 
-                 'Pyodide library not found. Code editing is still available.');
-        setTimeout(() => {
-            loadExample('basic');
-        }, 100);
-    }
+        }
+    }, 500); // Give Pyodide 500ms to load
 });
