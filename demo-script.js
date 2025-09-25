@@ -337,10 +337,6 @@ function highlightPythonSyntax(code) {
     // Highlight class definitions
     escapedCode = escapedCode.replace(/\b(class)\s+(\w+)/g, '<span class="keyword">$1</span> <span class="class">$2</span>');
     
-    // FIX: Remove the broken function parameter highlighting section
-    // This section had a bug - escapedParams was undefined
-    // We'll skip this for now as it's not critical
-    
     // Highlight decorators
     escapedCode = escapedCode.replace(/(@\w+)/g, '<span class="decorator">$1</span>');
     
@@ -391,7 +387,7 @@ function updateSyntaxHighlighting() {
     syntaxOverlay.scrollLeft = codeEditor.scrollLeft;
 }
 
-// Update line numbers - NO CHANGES NEEDED
+// Update line numbers
 function updateLineNumbers() {
     const codeEditor = document.getElementById('code-editor');
     const lineNumbers = document.getElementById('line-numbers');
@@ -474,3 +470,343 @@ function updateLineNumbers() {
     
     // DON'T call updateSyntaxHighlighting here - it creates a circular dependency
 }
+
+// Run Python code
+async function runPythonCode() {
+    if (!pyodideReady) {
+        alert('Python environment is still loading. Please wait...');
+        return;
+    }
+    
+    const codeEditor = document.getElementById('code-editor');
+    const outputElement = document.getElementById('output-content');
+    const runButton = document.getElementById('run-button');
+    const runText = document.getElementById('run-text');
+    const loadingText = document.getElementById('loading-text');
+    const executionTime = document.getElementById('execution-time');
+    
+    const code = codeEditor.value.trim();
+    if (!code) {
+        showError('No code to run', 'Please enter some Python code to execute.');
+        return;
+    }
+    
+    // Show loading state
+    runButton.disabled = true;
+    runText.style.display = 'none';
+    loadingText.style.display = 'inline';
+    
+    const startTime = performance.now();
+    
+    try {
+        // Capture stdout and stderr
+        pyodide.runPython(`
+import sys
+from io import StringIO
+import traceback
+
+# Capture both stdout and stderr
+sys.stdout = StringIO()
+sys.stderr = StringIO()
+        `);
+        
+        // Run the user code
+        await pyodide.runPythonAsync(code);
+        
+        // Get the output
+        const stdout = pyodide.runPython("sys.stdout.getvalue()");
+        const stderr = pyodide.runPython("sys.stderr.getvalue()");
+        
+        // Reset stdout and stderr
+        pyodide.runPython(`
+sys.stdout = sys.__stdout__
+sys.stderr = sys.__stderr__
+        `);
+        
+        const endTime = performance.now();
+        const executionTimeMs = (endTime - startTime).toFixed(2);
+        
+        // Display output
+        let output = '';
+        if (stdout.trim()) {
+            output += stdout;
+        }
+        if (stderr.trim()) {
+            output += '\\n' + stderr;
+        }
+        
+        if (output.trim()) {
+            // IMPORTANT: Escape HTML in output to prevent injection
+            outputElement.innerHTML = `<pre class="output-success">${escapeHTML(output)}</pre>`;
+        } else {
+            outputElement.innerHTML = '<div class="output-info">✓ Code executed successfully (no output)</div>';
+        }
+        
+        // Update execution time
+        if (executionTime) {
+            executionTime.textContent = `Executed in ${executionTimeMs}ms`;
+        }
+        
+    } catch (error) {
+        const endTime = performance.now();
+        const executionTimeMs = (endTime - startTime).toFixed(2);
+        
+        console.error('Python execution error:', error);
+        showError('Execution Error', error.message);
+        
+        if (executionTime) {
+            executionTime.textContent = `Failed after ${executionTimeMs}ms`;
+        }
+        
+    } finally {
+        // Reset button state
+        runButton.disabled = false;
+        runText.style.display = 'inline';
+        loadingText.style.display = 'none';
+    }
+}
+
+// Clear output
+function clearOutput() {
+    const outputElement = document.getElementById('output-content');
+    const executionTime = document.getElementById('execution-time');
+    
+    outputElement.innerHTML = '<div class="demo-placeholder"><p>Output cleared. Run some code to see results here.</p></div>';
+    
+    if (executionTime) {
+        executionTime.textContent = '';
+    }
+}
+
+// Copy code to clipboard
+async function copyCode() {
+    const codeEditor = document.getElementById('code-editor');
+    try {
+        await navigator.clipboard.writeText(codeEditor.value);
+        showToast('Code copied to clipboard!');
+    } catch (error) {
+        console.error('Failed to copy code:', error);
+        showToast('Failed to copy code', 'error');
+    }
+}
+
+// Copy output to clipboard
+async function copyOutput() {
+    const outputElement = document.getElementById('output-content');
+    const text = outputElement.textContent || outputElement.innerText;
+    try {
+        await navigator.clipboard.writeText(text);
+        showToast('Output copied to clipboard!');
+    } catch (error) {
+        console.error('Failed to copy output:', error);
+        showToast('Failed to copy output', 'error');
+    }
+}
+
+// Download code as Python file
+function downloadCode() {
+    const codeEditor = document.getElementById('code-editor');
+    const exampleSelect = document.getElementById('example-select');
+    
+    const code = codeEditor.value;
+    const filename = `phynetpy_${exampleSelect.value}_demo.py`;
+    
+    const blob = new Blob([code], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    
+    window.URL.revokeObjectURL(url);
+    showToast(`Downloaded ${filename}`);
+}
+
+// Show toast notification
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    
+    // Add toast styles if not already present
+    if (!document.querySelector('style[data-toast]')) {
+        const style = document.createElement('style');
+        style.setAttribute('data-toast', 'true');
+        style.textContent = `
+            .toast {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 12px 20px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 1000;
+                animation: slideIn 0.3s ease-out;
+            }
+            .toast-success { background-color: #51cf66; }
+            .toast-error { background-color: #ff6b6b; }
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+
+// Initialize demo when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Clean any existing HTML contamination first
+    cleanTextareaContent();
+    
+    const codeEditor = document.getElementById('code-editor');
+    const exampleSelect = document.getElementById('example-select');
+    const runButton = document.getElementById('run-button');
+    const clearButton = document.getElementById('clear-button');
+    const resetButton = document.getElementById('reset-button');
+    const copyCodeBtn = document.getElementById('copy-code');
+    const copyOutputBtn = document.getElementById('copy-output');
+    const downloadCodeBtn = document.getElementById('download-code');
+    
+    // Example selection
+    if (exampleSelect) {
+        exampleSelect.addEventListener('change', (e) => {
+            loadExample(e.target.value);
+        });
+    }
+    
+    // Button event listeners
+    if (runButton) runButton.addEventListener('click', runPythonCode);
+    if (clearButton) clearButton.addEventListener('click', clearOutput);
+    if (resetButton) resetButton.addEventListener('click', resetCode);
+    if (copyCodeBtn) copyCodeBtn.addEventListener('click', copyCode);
+    if (copyOutputBtn) copyOutputBtn.addEventListener('click', copyOutput);
+    if (downloadCodeBtn) downloadCodeBtn.addEventListener('click', downloadCode);
+    
+    // Code editor event listeners - IMPROVED VERSION
+    if (codeEditor) {
+        // Prevent any modification of textarea value during input
+        let isUpdating = false;
+        
+        codeEditor.addEventListener('input', () => {
+            if (isUpdating) return; // Prevent recursive updates
+            
+            isUpdating = true;
+            
+            // Store current state
+            const cursorPos = codeEditor.selectionStart;
+            const currentValue = codeEditor.value;
+            
+            // Check for HTML contamination (more specific check)
+            if (currentValue.includes('<span') || currentValue.includes('</span>') || 
+                (currentValue.includes('class=') && currentValue.includes('"'))) {
+                // HTML has contaminated the textarea! Clean it immediately
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = currentValue;
+                const cleanText = tempDiv.textContent || tempDiv.innerText || '';
+                
+                // Restore clean text to textarea
+                codeEditor.value = cleanText;
+                
+                // Restore cursor position
+                if (codeEditor.setSelectionRange) {
+                    const newPos = Math.min(cursorPos, cleanText.length);
+                    codeEditor.setSelectionRange(newPos, newPos);
+                }
+            }
+            
+            // Update display elements
+            updateLineNumbers();
+            updateSyntaxHighlighting();
+            
+            isUpdating = false;
+        });
+        
+        // Safety check on focus
+        codeEditor.addEventListener('focus', () => {
+            const currentValue = codeEditor.value;
+            if (currentValue.includes('<span') || currentValue.includes('class=')) {
+                // Clean on focus if contaminated
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = currentValue;
+                codeEditor.value = tempDiv.textContent || tempDiv.innerText || '';
+                updateLineNumbers();
+                updateSyntaxHighlighting();
+            }
+        });
+        
+        // Handle paste events to clean HTML
+        codeEditor.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const text = (e.clipboardData || window.clipboardData).getData('text');
+            
+            // Insert plain text at cursor position
+            const start = codeEditor.selectionStart;
+            const end = codeEditor.selectionEnd;
+            const before = codeEditor.value.substring(0, start);
+            const after = codeEditor.value.substring(end);
+            
+            codeEditor.value = before + text + after;
+            codeEditor.selectionStart = codeEditor.selectionEnd = start + text.length;
+            
+            updateLineNumbers();
+            updateSyntaxHighlighting();
+        });
+        
+        // Scroll sync
+        codeEditor.addEventListener('scroll', () => {
+            const lineNumbers = document.getElementById('line-numbers');
+            const syntaxOverlay = document.getElementById('syntax-overlay');
+            if (lineNumbers) lineNumbers.scrollTop = codeEditor.scrollTop;
+            if (syntaxOverlay) {
+                syntaxOverlay.scrollTop = codeEditor.scrollTop;
+                syntaxOverlay.scrollLeft = codeEditor.scrollLeft;
+            }
+        });
+        
+        // Tab handling
+        codeEditor.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = codeEditor.selectionStart;
+                const end = codeEditor.selectionEnd;
+                codeEditor.value = codeEditor.value.substring(0, start) + 
+                    '    ' + codeEditor.value.substring(end);
+                codeEditor.selectionStart = codeEditor.selectionEnd = start + 4;
+                updateLineNumbers();
+                updateSyntaxHighlighting();
+            }
+        });
+    }
+    
+    // Try to initialize Pyodide, but don't let it block the editor
+    if (typeof loadPyodide !== 'undefined') {
+        initializePyodide().catch(error => {
+            console.error('Pyodide failed to load:', error);
+            // Still make the editor work even if Pyodide fails
+            showError('Python environment unavailable', 
+                     'The Python runtime failed to load, but you can still view and edit code.');
+            // Load the default example anyway
+            setTimeout(() => {
+                loadExample('basic');
+            }, 100);
+        });
+    } else {
+        // No Pyodide available, but still load the editor
+        showError('Python environment not available', 
+                 'Pyodide library not found. Code editing is still available.');
+        setTimeout(() => {
+            loadExample('basic');
+        }, 100);
+    }
+});
