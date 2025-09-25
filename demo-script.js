@@ -1,14 +1,7 @@
-// PhyNetPy Interactive Demo Script with CodeMirror 6
-
-import { EditorView, keymap, lineNumbers } from 'https://esm.sh/@codemirror/view@6.21.3';
-import { EditorState } from 'https://esm.sh/@codemirror/state@6.2.1';
-import { defaultKeymap, indentWithTab } from 'https://esm.sh/@codemirror/commands@6.3.0';
-import { python } from 'https://esm.sh/@codemirror/lang-python@6.1.3';
-import { oneDark } from 'https://esm.sh/@codemirror/theme-one-dark@6.1.2';
+// PhyNetPy Interactive Demo Script with Prism.js
 
 let pyodide = null;
 let pyodideReady = false;
-let editor = null;
 
 // Demo examples with more sophisticated code
 const demoExamples = {
@@ -167,71 +160,102 @@ print("\\n--- Add your own code below this line ---")
 // Store original examples for reset functionality
 const originalExamples = { ...demoExamples };
 
-// Initialize CodeMirror 6 editor
+// Initialize editor
 function initializeEditor() {
-    const editorContainer = document.getElementById('code-editor');
+    const codeEditor = document.getElementById('code-editor');
+    const codeDisplay = document.getElementById('code-display');
+    const codeHighlight = document.getElementById('code-highlight');
     
-    if (!editorContainer) {
-        console.error('Editor container not found');
+    if (!codeEditor || !codeDisplay || !codeHighlight) {
+        console.error('Editor elements not found');
         return;
     }
 
-    // Create editor state with minimal extensions
-    const state = EditorState.create({
-        doc: demoExamples.basic,
-        extensions: [
-            lineNumbers(),
-            python(),
-            oneDark,
-            keymap.of([...defaultKeymap, indentWithTab]),
-            EditorView.theme({
-                '&': {
-                    height: '500px',
-                    fontSize: '14px'
-                },
-                '.cm-content': {
-                    fontFamily: "'Consolas', 'Courier New', 'SF Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace",
-                    padding: '1rem'
-                },
-                '.cm-focused': {
-                    outline: 'none'
-                },
-                '.cm-editor': {
-                    height: '100%'
-                },
-                '.cm-scroller': {
-                    height: '100%'
-                }
-            }),
-            EditorView.lineWrapping
-        ]
+    // Set initial content
+    codeEditor.value = demoExamples.basic;
+    updateSyntaxHighlighting();
+
+    // Handle input changes
+    codeEditor.addEventListener('input', updateSyntaxHighlighting);
+    
+    // Handle tab key for indentation
+    codeEditor.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            const start = codeEditor.selectionStart;
+            const end = codeEditor.selectionEnd;
+            
+            // Insert 4 spaces
+            codeEditor.value = codeEditor.value.substring(0, start) + 
+                '    ' + codeEditor.value.substring(end);
+            
+            // Restore cursor position
+            codeEditor.selectionStart = codeEditor.selectionEnd = start + 4;
+            updateSyntaxHighlighting();
+        }
     });
 
-    // Create the editor view
-    editor = new EditorView({
-        state,
-        parent: editorContainer
+    // Sync scrolling between textarea and display
+    codeEditor.addEventListener('scroll', () => {
+        codeDisplay.scrollTop = codeEditor.scrollTop;
+        codeDisplay.scrollLeft = codeEditor.scrollLeft;
     });
 
-    return editor;
+    console.log('Editor initialized successfully');
+}
+
+// Update syntax highlighting using Prism.js
+function updateSyntaxHighlighting() {
+    const codeEditor = document.getElementById('code-editor');
+    const codeHighlight = document.getElementById('code-highlight');
+    
+    if (!codeEditor || !codeHighlight) return;
+    
+    // Update the display with the current code
+    codeHighlight.textContent = codeEditor.value;
+    
+    // Apply Prism.js highlighting
+    if (window.Prism) {
+        Prism.highlightElement(codeHighlight);
+    }
 }
 
 // Get editor content
 function getEditorContent() {
-    return editor ? editor.state.doc.toString() : '';
+    const codeEditor = document.getElementById('code-editor');
+    return codeEditor ? codeEditor.value : '';
 }
 
 // Set editor content
 function setEditorContent(content) {
-    if (editor) {
-        editor.dispatch({
-            changes: {
-                from: 0,
-                to: editor.state.doc.length,
-                insert: content
-            }
-        });
+    const codeEditor = document.getElementById('code-editor');
+    if (codeEditor) {
+        codeEditor.value = content;
+        updateSyntaxHighlighting();
     }
+}
+
+// Load example code
+function loadExample(exampleKey) {
+    const example = demoExamples[exampleKey];
+    if (example) {
+        setEditorContent(example);
+    }
+}
+
+// Reset code to original example
+function resetCode() {
+    const exampleSelect = document.getElementById('example-select');
+    const currentExample = exampleSelect.value;
+    demoExamples[currentExample] = originalExamples[currentExample];
+    loadExample(currentExample);
+}
+
+// Proper HTML escaping function
+function escapeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
 }
 
 // Initialize Pyodide environment
@@ -304,30 +328,6 @@ function showSuccess(title, message) {
 function showError(title, message) {
     const outputElement = document.getElementById('output-content');
     outputElement.innerHTML = `<div class="output-error">${title}\\n\\n${message}</div>`;
-}
-
-// Load example code
-function loadExample(exampleKey) {
-    const example = demoExamples[exampleKey];
-    
-    if (example && editor) {
-        setEditorContent(example);
-    }
-}
-
-// Reset code to original example
-function resetCode() {
-    const exampleSelect = document.getElementById('example-select');
-    const currentExample = exampleSelect.value;
-    demoExamples[currentExample] = originalExamples[currentExample];
-    loadExample(currentExample);
-}
-
-// Proper HTML escaping function
-function escapeHTML(str) {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
 }
 
 // Run Python code
@@ -524,7 +524,7 @@ function showToast(message, type = 'success') {
 // Initialize demo when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Demo script starting...');
-    console.log('loadPyodide available:', typeof window.loadPyodide !== 'undefined');
+    
     const exampleSelect = document.getElementById('example-select');
     const runButton = document.getElementById('run-button');
     const clearButton = document.getElementById('clear-button');
@@ -533,7 +533,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const copyOutputBtn = document.getElementById('copy-output');
     const downloadCodeBtn = document.getElementById('download-code');
     
-    // Initialize CodeMirror editor
+    // Initialize editor
     initializeEditor();
     
     // Example selection
@@ -551,23 +551,19 @@ document.addEventListener('DOMContentLoaded', function() {
     if (copyOutputBtn) copyOutputBtn.addEventListener('click', copyOutput);
     if (downloadCodeBtn) downloadCodeBtn.addEventListener('click', downloadCode);
     
-    // Try to initialize Pyodide, but don't let it block the editor
-    // Add delay to ensure Pyodide script has time to load
+    // Try to initialize Pyodide with delay
     setTimeout(() => {
-        console.log('Checking for Pyodide after delay:', typeof window.loadPyodide !== 'undefined');
+        console.log('Checking for Pyodide:', typeof window.loadPyodide !== 'undefined');
         if (typeof window.loadPyodide !== 'undefined') {
             initializePyodide().catch(error => {
                 console.error('Pyodide failed to load:', error);
-                // Still make the editor work even if Pyodide fails
                 showError('Python environment unavailable', 
                          'The Python runtime failed to load, but you can still view and edit code.');
-                // Load the default example anyway
                 setTimeout(() => {
                     loadExample('basic');
                 }, 100);
             });
         } else {
-            // No Pyodide available, but still load the editor
             console.warn('Pyodide library not found');
             showError('Python environment not available', 
                      'Pyodide library not found. Code editing is still available.');
@@ -575,5 +571,5 @@ document.addEventListener('DOMContentLoaded', function() {
                 loadExample('basic');
             }, 100);
         }
-    }, 500); // Give Pyodide 500ms to load
+    }, 500);
 });
