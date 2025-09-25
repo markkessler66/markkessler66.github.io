@@ -1,7 +1,15 @@
-// PhyNetPy Interactive Demo Script
+// PhyNetPy Interactive Demo Script with CodeMirror 6
+
+import { EditorView, basicSetup } from '@codemirror/basic-setup';
+import { EditorState } from '@codemirror/state';
+import { python } from '@codemirror/lang-python';
+import { oneDark } from '@codemirror/theme-one-dark';
+import { keymap } from '@codemirror/view';
+import { indentWithTab } from '@codemirror/commands';
 
 let pyodide = null;
 let pyodideReady = false;
+let editor = null;
 
 // Demo examples with more sophisticated code
 const demoExamples = {
@@ -160,21 +168,70 @@ print("\\n--- Add your own code below this line ---")
 // Store original examples for reset functionality
 const originalExamples = { ...demoExamples };
 
-// Clean any HTML from textarea
-function cleanTextareaContent() {
-    const codeEditor = document.getElementById('code-editor');
-    if (codeEditor && codeEditor.value) {
-        // Check if there's HTML in the content
-        if (codeEditor.value.includes('<') || codeEditor.value.includes('>')) {
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = codeEditor.value;
-            const cleanText = tempDiv.textContent || tempDiv.innerText || '';
-            
-            // Only update if there were actually HTML tags to clean
-            if (cleanText !== codeEditor.value && cleanText.trim()) {
-                codeEditor.value = cleanText;
+// Initialize CodeMirror 6 editor
+function initializeEditor() {
+    const editorContainer = document.getElementById('code-editor');
+    
+    if (!editorContainer) {
+        console.error('Editor container not found');
+        return;
+    }
+
+    // Create editor state with extensions
+    const state = EditorState.create({
+        doc: demoExamples.basic,
+        extensions: [
+            basicSetup,
+            python(),
+            oneDark,
+            keymap.of([indentWithTab]),
+            EditorView.theme({
+                '&': {
+                    height: '500px',
+                    fontSize: '14px'
+                },
+                '.cm-content': {
+                    fontFamily: "'Consolas', 'Courier New', 'SF Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace",
+                    padding: '1rem'
+                },
+                '.cm-focused': {
+                    outline: 'none'
+                },
+                '.cm-editor': {
+                    height: '100%'
+                },
+                '.cm-scroller': {
+                    height: '100%'
+                }
+            }),
+            EditorView.lineWrapping
+        ]
+    });
+
+    // Create the editor view
+    editor = new EditorView({
+        state,
+        parent: editorContainer
+    });
+
+    return editor;
+}
+
+// Get editor content
+function getEditorContent() {
+    return editor ? editor.state.doc.toString() : '';
+}
+
+// Set editor content
+function setEditorContent(content) {
+    if (editor) {
+        editor.dispatch({
+            changes: {
+                from: 0,
+                to: editor.state.doc.length,
+                insert: content
             }
-        }
+        });
     }
 }
 
@@ -211,10 +268,7 @@ async function initializePyodide() {
     } finally {
         // Always load the example, regardless of Pyodide status
         setTimeout(() => {
-            cleanTextareaContent();  // Clean first
-            loadExample('basic');     // Then load
-            updateLineNumbers();      // Then update display
-            updateSyntaxHighlighting();
+            loadExample('basic');
         }, 100);
     }
 }
@@ -250,28 +304,10 @@ function showError(title, message) {
 
 // Load example code
 function loadExample(exampleKey) {
-    const codeEditor = document.getElementById('code-editor');
     const example = demoExamples[exampleKey];
     
-    if (example && codeEditor) {
-        // CRITICAL: Ensure we're working with plain text
-        let plainTextExample = example;
-        
-        // If somehow HTML got into the example, strip it
-        if (typeof example === 'string' && example.includes('<')) {
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = example;
-            plainTextExample = tempDiv.textContent || tempDiv.innerText || '';
-        }
-        
-        // Set ONLY plain text in textarea
-        codeEditor.value = plainTextExample;
-        
-        // Update the visual elements
-        setTimeout(() => {
-            updateLineNumbers();
-            updateSyntaxHighlighting();
-        }, 10);
+    if (example && editor) {
+        setEditorContent(example);
     }
 }
 
@@ -290,187 +326,6 @@ function escapeHTML(str) {
     return div.innerHTML;
 }
 
-// Python syntax highlighting function - FIXED VERSION
-function highlightPythonSyntax(code) {
-    // CRITICAL FIX: First escape ALL HTML entities to prevent double-encoding issues
-    let escapedCode = escapeHTML(code);
-
-    // Python keywords, builtins, and operators
-    const keywords = ['def', 'class', 'if', 'elif', 'else', 'for', 'while', 'in', 'not', 'and', 'or', 'is', 'import', 'from', 'as', 'try', 'except', 'finally', 'with', 'lambda', 'return', 'yield', 'break', 'continue', 'pass', 'global', 'nonlocal', 'async', 'await'];
-    const constants = ['True', 'False', 'None'];
-    const builtins = ['print', 'len', 'range', 'enumerate', 'zip', 'map', 'filter', 'sum', 'max', 'min', 'sorted', 'list', 'dict', 'set', 'tuple', 'str', 'int', 'float', 'bool', 'type', 'isinstance', 'hasattr', 'getattr', 'setattr', 'open', 'abs', 'all', 'any', 'bin', 'chr', 'dir', 'divmod', 'hex', 'id', 'input', 'iter', 'next', 'oct', 'ord', 'pow', 'repr', 'round', 'slice', 'super', 'vars'];
-    const methods = ['append', 'extend', 'insert', 'remove', 'pop', 'clear', 'index', 'count', 'sort', 'reverse', 'copy', 'keys', 'values', 'items', 'get', 'update', 'split', 'join', 'strip', 'replace', 'upper', 'lower', 'format', 'startswith', 'endswith', 'find', 'rfind', 'isdigit', 'isalpha', 'isalnum', 'add', 'discard', 'union', 'intersection', 'difference'];
-    const modules = ['numpy', 'np', 'networkx', 'nx', 'matplotlib', 'plt', 'pandas', 'pd', 'scipy', 'sklearn', 'json', 'os', 'sys', 'math', 'random', 'time', 'datetime', 'collections', 'itertools', 'functools'];
-    
-    // Highlight strings (single and double quotes, including triple quotes and f-strings)
-    escapedCode = escapedCode.replace(/(f"""[\s\S]*?"""|f'''[\s\S]*?'''|f"(?:[^"\\]|\\.)*"|f'(?:[^'\\]|\\.)*'|"""[\s\S]*?"""|'''[\s\S]*?'''|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, '<span class="string">$1</span>');
-    
-    // Highlight comments
-    escapedCode = escapedCode.replace(/(#.*$)/gm, '<span class="comment">$1</span>');
-    
-    // Highlight numbers (integers, floats, scientific notation, hex, binary, octal)
-    escapedCode = escapedCode.replace(/\b(0[xX][0-9a-fA-F]+|0[bB][01]+|0[oO][0-7]+|\d+\.?\d*(?:[eE][+-]?\d+)?)\b/g, '<span class="number">$1</span>');
-    
-    // Highlight constants (True, False, None)
-    const constantPattern = new RegExp('\\b(' + constants.join('|') + ')\\b', 'g');
-    escapedCode = escapedCode.replace(constantPattern, '<span class="constant">$1</span>');
-    
-    // Highlight keywords
-    const keywordPattern = new RegExp('\\b(' + keywords.join('|') + ')\\b', 'g');
-    escapedCode = escapedCode.replace(keywordPattern, '<span class="keyword">$1</span>');
-    
-    // Highlight built-in functions
-    const builtinPattern = new RegExp('\\b(' + builtins.join('|') + ')(?=\\s*\\()', 'g');
-    escapedCode = escapedCode.replace(builtinPattern, '<span class="builtin">$1</span>');
-    
-    // Highlight module names after import
-    const modulePattern = new RegExp('\\b(import|from)\\s+(' + modules.join('|') + ')\\b', 'g');
-    escapedCode = escapedCode.replace(modulePattern, '<span class="import">$1</span> <span class="module">$2</span>');
-    
-    // Highlight common methods
-    const methodPattern = new RegExp('\\.(' + methods.join('|') + ')(?=\\s*\\()', 'g');
-    escapedCode = escapedCode.replace(methodPattern, '.<span class="method">$1</span>');
-    
-    // Highlight function definitions
-    escapedCode = escapedCode.replace(/\b(def)\s+(\w+)/g, '<span class="keyword">$1</span> <span class="function">$2</span>');
-    
-    // Highlight class definitions
-    escapedCode = escapedCode.replace(/\b(class)\s+(\w+)/g, '<span class="keyword">$1</span> <span class="class">$2</span>');
-    
-    // Highlight decorators
-    escapedCode = escapedCode.replace(/(@\w+)/g, '<span class="decorator">$1</span>');
-    
-    // Highlight operators
-    escapedCode = escapedCode.replace(/([+\-*/%=<>!&|^~]|==|!=|<=|>=|\/\/|\*\*|<<|>>|\+=|\-=|\*=|\/=|%=|&=|\|=|\^=|<<=|>>=)/g, '<span class="operator">$1</span>');
-    
-    // Highlight remaining import statements
-    escapedCode = escapedCode.replace(/\b(import|from|as)\b/g, '<span class="import">$1</span>');
-    
-    return escapedCode;
-}
-
-// Update syntax highlighting - IMPROVED VERSION
-function updateSyntaxHighlighting() {
-    const codeEditor = document.getElementById('code-editor');
-    const syntaxOverlay = document.getElementById('syntax-overlay');
-    
-    if (!codeEditor || !syntaxOverlay) return;
-    
-    // Get the PLAIN TEXT from textarea
-    const code = codeEditor.value || '';
-    
-    // SAFETY CHECK: Ensure no HTML has contaminated the textarea
-    if (code.includes('<') && (code.includes('<span') || code.includes('class='))) {
-        // HTML detected in textarea - clean it immediately
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = code;
-        const cleanText = tempDiv.textContent || tempDiv.innerText || '';
-        
-        // Update textarea with clean text
-        codeEditor.value = cleanText;
-        
-        // Highlight the clean text
-        const highlightedCode = highlightPythonSyntax(cleanText);
-        syntaxOverlay.innerHTML = highlightedCode;
-    } else {
-        // No contamination, proceed normally
-        if (code && code.trim()) {
-            const highlightedCode = highlightPythonSyntax(code);
-            syntaxOverlay.innerHTML = highlightedCode;
-        } else {
-            syntaxOverlay.innerHTML = '';
-        }
-    }
-    
-    // Sync scroll position
-    syntaxOverlay.scrollTop = codeEditor.scrollTop;
-    syntaxOverlay.scrollLeft = codeEditor.scrollLeft;
-}
-
-// Update line numbers
-function updateLineNumbers() {
-    const codeEditor = document.getElementById('code-editor');
-    const lineNumbers = document.getElementById('line-numbers');
-    
-    if (!lineNumbers || !codeEditor) return;
-    
-    // Get the actual content and split by newlines
-    const content = codeEditor.value || '';
-    const lines = content.split('\n');
-    const lineCount = lines.length;
-    
-    // Clear existing line numbers
-    lineNumbers.innerHTML = '';
-    
-    // Detect browser for specific handling
-    const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    
-    // Create a test element that exactly mimics the textarea
-    const testElement = document.createElement('div');
-    const computedStyle = window.getComputedStyle(codeEditor);
-    
-    // Copy all relevant styles to match textarea exactly
-    testElement.style.fontFamily = computedStyle.fontFamily;
-    testElement.style.fontSize = computedStyle.fontSize;
-    testElement.style.fontWeight = computedStyle.fontWeight;
-    testElement.style.lineHeight = computedStyle.lineHeight;
-    testElement.style.letterSpacing = computedStyle.letterSpacing;
-    testElement.style.wordSpacing = computedStyle.wordSpacing;
-    testElement.style.position = 'absolute';
-    testElement.style.visibility = 'hidden';
-    testElement.style.top = '-9999px';
-    testElement.style.left = '-9999px';
-    testElement.style.whiteSpace = 'pre';
-    testElement.style.padding = '0';
-    testElement.style.margin = '0';
-    testElement.style.border = 'none';
-    testElement.style.width = 'auto';
-    testElement.style.height = 'auto';
-    
-    // Add test content with multiple lines to measure line height accurately
-    testElement.textContent = 'M\nM';
-    document.body.appendChild(testElement);
-    
-    // Measure the height of two lines to get accurate line height
-    const totalHeight = testElement.offsetHeight;
-    const singleLineHeight = totalHeight / 2;
-    
-    document.body.removeChild(testElement);
-    
-    // Browser-specific adjustments
-    let adjustedLineHeight = singleLineHeight;
-    if (isSafari) {
-        adjustedLineHeight = Math.round(singleLineHeight * 1.001);
-    } else if (isFirefox) {
-        adjustedLineHeight = Math.ceil(singleLineHeight);
-    }
-    
-    // Create individual div elements for each line number
-    for (let i = 1; i <= lineCount; i++) {
-        const lineDiv = document.createElement('div');
-        lineDiv.textContent = i;
-        lineDiv.className = 'line-number';
-        
-        // Apply browser-specific styles
-        lineDiv.style.height = adjustedLineHeight + 'px';
-        lineDiv.style.lineHeight = adjustedLineHeight + 'px';
-        lineDiv.style.fontSize = computedStyle.fontSize;
-        lineDiv.style.fontFamily = computedStyle.fontFamily;
-        lineDiv.style.fontWeight = computedStyle.fontWeight;
-        lineDiv.style.boxSizing = 'border-box';
-        lineDiv.style.margin = '0';
-        lineDiv.style.padding = '0';
-        
-        lineNumbers.appendChild(lineDiv);
-    }
-    
-    // Sync scroll position
-    lineNumbers.scrollTop = codeEditor.scrollTop;
-    
-    // DON'T call updateSyntaxHighlighting here - it creates a circular dependency
-}
-
 // Run Python code
 async function runPythonCode() {
     if (!pyodideReady) {
@@ -478,14 +333,13 @@ async function runPythonCode() {
         return;
     }
     
-    const codeEditor = document.getElementById('code-editor');
     const outputElement = document.getElementById('output-content');
     const runButton = document.getElementById('run-button');
     const runText = document.getElementById('run-text');
     const loadingText = document.getElementById('loading-text');
     const executionTime = document.getElementById('execution-time');
     
-    const code = codeEditor.value.trim();
+    const code = getEditorContent().trim();
     if (!code) {
         showError('No code to run', 'Please enter some Python code to execute.');
         return;
@@ -580,9 +434,9 @@ function clearOutput() {
 
 // Copy code to clipboard
 async function copyCode() {
-    const codeEditor = document.getElementById('code-editor');
     try {
-        await navigator.clipboard.writeText(codeEditor.value);
+        const code = getEditorContent();
+        await navigator.clipboard.writeText(code);
         showToast('Code copied to clipboard!');
     } catch (error) {
         console.error('Failed to copy code:', error);
@@ -605,10 +459,9 @@ async function copyOutput() {
 
 // Download code as Python file
 function downloadCode() {
-    const codeEditor = document.getElementById('code-editor');
     const exampleSelect = document.getElementById('example-select');
     
-    const code = codeEditor.value;
+    const code = getEditorContent();
     const filename = `phynetpy_${exampleSelect.value}_demo.py`;
     
     const blob = new Blob([code], { type: 'text/plain' });
@@ -666,10 +519,6 @@ function showToast(message, type = 'success') {
 
 // Initialize demo when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Clean any existing HTML contamination first
-    cleanTextareaContent();
-    
-    const codeEditor = document.getElementById('code-editor');
     const exampleSelect = document.getElementById('example-select');
     const runButton = document.getElementById('run-button');
     const clearButton = document.getElementById('clear-button');
@@ -677,6 +526,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const copyCodeBtn = document.getElementById('copy-code');
     const copyOutputBtn = document.getElementById('copy-output');
     const downloadCodeBtn = document.getElementById('download-code');
+    
+    // Initialize CodeMirror editor
+    initializeEditor();
     
     // Example selection
     if (exampleSelect) {
@@ -692,102 +544,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (copyCodeBtn) copyCodeBtn.addEventListener('click', copyCode);
     if (copyOutputBtn) copyOutputBtn.addEventListener('click', copyOutput);
     if (downloadCodeBtn) downloadCodeBtn.addEventListener('click', downloadCode);
-    
-    // Code editor event listeners - IMPROVED VERSION
-    if (codeEditor) {
-        // Prevent any modification of textarea value during input
-        let isUpdating = false;
-        
-        codeEditor.addEventListener('input', () => {
-            if (isUpdating) return; // Prevent recursive updates
-            
-            isUpdating = true;
-            
-            // Store current state
-            const cursorPos = codeEditor.selectionStart;
-            const currentValue = codeEditor.value;
-            
-            // Check for HTML contamination (more specific check)
-            if (currentValue.includes('<span') || currentValue.includes('</span>') || 
-                (currentValue.includes('class=') && currentValue.includes('"'))) {
-                // HTML has contaminated the textarea! Clean it immediately
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = currentValue;
-                const cleanText = tempDiv.textContent || tempDiv.innerText || '';
-                
-                // Restore clean text to textarea
-                codeEditor.value = cleanText;
-                
-                // Restore cursor position
-                if (codeEditor.setSelectionRange) {
-                    const newPos = Math.min(cursorPos, cleanText.length);
-                    codeEditor.setSelectionRange(newPos, newPos);
-                }
-            }
-            
-            // Update display elements
-            updateLineNumbers();
-            updateSyntaxHighlighting();
-            
-            isUpdating = false;
-        });
-        
-        // Safety check on focus
-        codeEditor.addEventListener('focus', () => {
-            const currentValue = codeEditor.value;
-            if (currentValue.includes('<span') || currentValue.includes('class=')) {
-                // Clean on focus if contaminated
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = currentValue;
-                codeEditor.value = tempDiv.textContent || tempDiv.innerText || '';
-                updateLineNumbers();
-                updateSyntaxHighlighting();
-            }
-        });
-        
-        // Handle paste events to clean HTML
-        codeEditor.addEventListener('paste', (e) => {
-            e.preventDefault();
-            const text = (e.clipboardData || window.clipboardData).getData('text');
-            
-            // Insert plain text at cursor position
-            const start = codeEditor.selectionStart;
-            const end = codeEditor.selectionEnd;
-            const before = codeEditor.value.substring(0, start);
-            const after = codeEditor.value.substring(end);
-            
-            codeEditor.value = before + text + after;
-            codeEditor.selectionStart = codeEditor.selectionEnd = start + text.length;
-            
-            updateLineNumbers();
-            updateSyntaxHighlighting();
-        });
-        
-        // Scroll sync
-        codeEditor.addEventListener('scroll', () => {
-            const lineNumbers = document.getElementById('line-numbers');
-            const syntaxOverlay = document.getElementById('syntax-overlay');
-            if (lineNumbers) lineNumbers.scrollTop = codeEditor.scrollTop;
-            if (syntaxOverlay) {
-                syntaxOverlay.scrollTop = codeEditor.scrollTop;
-                syntaxOverlay.scrollLeft = codeEditor.scrollLeft;
-            }
-        });
-        
-        // Tab handling
-        codeEditor.addEventListener('keydown', (e) => {
-            if (e.key === 'Tab') {
-                e.preventDefault();
-                const start = codeEditor.selectionStart;
-                const end = codeEditor.selectionEnd;
-                codeEditor.value = codeEditor.value.substring(0, start) + 
-                    '    ' + codeEditor.value.substring(end);
-                codeEditor.selectionStart = codeEditor.selectionEnd = start + 4;
-                updateLineNumbers();
-                updateSyntaxHighlighting();
-            }
-        });
-    }
     
     // Try to initialize Pyodide, but don't let it block the editor
     if (typeof loadPyodide !== 'undefined') {

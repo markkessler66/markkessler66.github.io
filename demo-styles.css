@@ -217,194 +217,96 @@
     font-weight: 500;
 }
 
-/* Enhanced Code Editor with VS Code styling */
+/* CodeMirror 6 Editor Styling */
 .code-editor-container {
     flex: 1;
     position: relative;
-    display: flex;
     background-color: #1e1e1e;
+    border-radius: 0 0 0 12px;
 }
 
 #code-editor {
-    flex: 1;
     height: 500px;
-    padding: 1.5rem 1.5rem 1.5rem 4rem;
-    border: none;
-    background-color: #1e1e1e;
-    color: transparent !important;
-    font-family: 'Consolas', 'Courier New', 'SF Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-    font-size: 14px;
-    line-height: 1.4;
-    resize: none;
-    outline: none;
-    tab-size: 4;
     border-right: 1px solid var(--border-color);
-    box-sizing: border-box;
-    letter-spacing: 0;
-    word-spacing: 0;
-    white-space: pre-wrap;
-    margin: 0;
-    vertical-align: top;
-    font-variant-ligatures: none;
-    font-feature-settings: normal;
-    -webkit-text-size-adjust: 100%;
-    -moz-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-    font-kerning: none;
-    text-rendering: optimizeSpeed;
-    /* Add VS Code-like cursor */
-    caret-color: #ffffff !important;
-    -webkit-text-fill-color: transparent !important;  /* For Safari/Chrome */
-    -moz-text-fill-color: transparent !important;  /* For Firefox */
 }
 
-/* Syntax highlight overlay */
-.syntax-highlight-overlay {
-    position: absolute;
-    top: 0;
-    left: 4rem;
-    right: 0;
-    bottom: 0;
-    padding: 1.5rem 1.5rem 1.5rem 0;
-    pointer-events: none;
-    font-family: 'Consolas', 'Courier New', 'SF Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-    font-size: 14px;
-    line-height: 1.4;
-    white-space: pre-wrap;
-    overflow: hidden;
-    background: transparent;
-    z-index: 1;
-    color: #d4d4d4; /* Default text color */
+/* CodeMirror 6 custom styling */
+#code-editor .cm-editor {
+    height: 100%;
+    border: none;
+    outline: none;
 }
 
-#code-editor {
-    position: relative;
-    z-index: 2;
-    background: transparent;
-    color: rgba(255, 255, 255, 0.01);
-    caret-color: #ffffff;
-}
-
-.code-editor-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #1e1e1e;
-    z-index: 0;
-}
-
-/* VS Code syntax highlighting colors */
-.syntax-highlight-overlay .keyword {
-    color: #569cd6; /* VS Code blue for keywords */
-    font-weight: normal;
-}
-
-.syntax-highlight-overlay .string {
-    color: #ce9178; /* VS Code orange for strings */
-}
-
-.syntax-highlight-overlay .comment {
-    color: #6a9955; /* VS Code green for comments */
-    font-style: italic;
-}
-
-.syntax-highlight-overlay .number {
-    color: #b5cea8; /* VS Code light green for numbers */
-}
-
-.syntax-highlight-overlay .function {
-    color: #dcdcaa; /* VS Code yellow for functions */
-}
-
-.syntax-highlight-overlay .class {
-    color: #4ec9b0; /* VS Code teal for classes */
-}
-
-.syntax-highlight-overlay .operator {
-    color: #d4d4d4; /* VS Code light gray for operators */
-}
-
-.syntax-highlight-overlay .builtin {
-    color: #569cd6; /* VS Code blue for builtins */
-}
-
-.syntax-highlight-overlay .import {
-    color: #c586c0; /* VS Code purple for imports */
-}
-
-.syntax-highlight-overlay .variable {
-    color: #9cdcfe; /* VS Code light blue for variables */
-}
-
-.syntax-highlight-overlay .decorator {
-    color: #ffd700; /* VS Code gold for decorators */
-}
-
-.syntax-highlight-overlay .method {
-    color: #dcdcaa; /* VS Code yellow for methods */
-}
-
-.syntax-highlight-overlay .module {
-    color: #4ec9b0; /* VS Code teal for module names */
-}
-
-.syntax-highlight-overlay .constant {
-    color: #4fc1ff; /* VS Code light blue for constants */
-}
-
-.syntax-highlight-overlay .parameter {
-    color: #9cdcfe; /* VS Code light blue for parameters */
-}
-
-/* Python syntax highlighting */
-#code-editor:focus {
-    background-color: transparent;
+#code-editor .cm-focused {
+    outline: none;
     box-shadow: inset 0 0 0 2px rgba(14, 165, 233, 0.3);
 }
 
-#code-editor::placeholder {
-    color: #6a6a6a;
-}
-
-/* Line Numbers - VS Code style */
-.editor-line-numbers {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 3rem;
-    height: 100%;
-    background-color: #1e1e1e;
-    color: #858585;
+#code-editor .cm-content {
     font-family: 'Consolas', 'Courier New', 'SF Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
     font-size: 14px;
-    padding: 1.5rem 0.25rem 1.5rem 0.5rem;
-    text-align: right;
-    user-select: none;
-    border-right: 1px solid #2d2d2d;
-    overflow: hidden;
-    pointer-events: none;
-    box-sizing: border-box;
-    margin: 0;
-    z-index: 3;
-}
-
-.line-number {
     line-height: 1.4;
-    font-size: 14px;
-    text-align: right;
-    color: #858585;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    display: block;
-    transition: color 0.2s ease;
+    padding: 1rem;
 }
 
-.line-number:hover {
-    color: #c5c5c5;
+#code-editor .cm-gutters {
+    background-color: #1e1e1e;
+    border-right: 1px solid #2d2d2d;
+    color: #858585;
+}
+
+#code-editor .cm-lineNumbers .cm-gutterElement {
+    color: #858585;
+    font-size: 14px;
+    min-width: 3rem;
+    text-align: right;
+    padding-right: 0.5rem;
+}
+
+#code-editor .cm-activeLineGutter {
+    background-color: #2d2d2d;
+}
+
+#code-editor .cm-activeLine {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+#code-editor .cm-selectionBackground,
+#code-editor .cm-focused .cm-selectionBackground {
+    background-color: rgba(14, 165, 233, 0.3);
+}
+
+#code-editor .cm-cursor {
+    border-left-color: #ffffff;
+}
+
+/* Override One Dark theme colors for better integration */
+#code-editor .cm-editor.cm-focused {
+    outline: none;
+}
+
+/* Scrollbar styling for CodeMirror */
+#code-editor .cm-scroller {
+    scrollbar-width: thin;
+    scrollbar-color: #404040 #1e1e1e;
+}
+
+#code-editor .cm-scroller::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+#code-editor .cm-scroller::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+#code-editor .cm-scroller::-webkit-scrollbar-thumb {
+    background: #404040;
+    border-radius: 4px;
+}
+
+#code-editor .cm-scroller::-webkit-scrollbar-thumb:hover {
+    background: #555555;
 }
 
 /* Enhanced Output Panel */
@@ -653,8 +555,3 @@
 }
 
 
-
-/* Ensure overlay is properly positioned */
-.syntax-highlight-overlay {
-    pointer-events: none !important;  /* Never intercept mouse events */
-}
