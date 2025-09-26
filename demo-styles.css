@@ -233,9 +233,9 @@
     background-color: #2d3748;
     color: #858585;
     font-family: 'Consolas', 'Courier New', 'SF Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-    font-size: 14px;
-    line-height: 1.5;
-    padding: 1rem 0.5rem 1rem 0.25rem;
+    font-size: 13px;
+    line-height: 20px;
+    padding: 16px 8px 16px 4px;
     text-align: right;
     user-select: none;
     border-right: 1px solid #4a5568;
@@ -255,9 +255,10 @@
     display: block;
     color: #858585;
     transition: color 0.2s ease;
-    line-height: 1.5;
-    font-size: 14px;
+    line-height: 20px;
+    font-size: 13px;
     text-align: right;
+    height: 20px;
 }
 
 .line-number:hover {
@@ -270,14 +271,14 @@
     left: 3rem;
     width: calc(100% - 3rem);
     height: 100%;
-    padding: 1rem;
+    padding: 16px;
     margin: 0;
     border: none;
     background-color: transparent;
     color: transparent;
     font-family: 'Consolas', 'Courier New', 'SF Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 13px;
+    line-height: 20px;
     resize: none;
     outline: none;
     tab-size: 4;
@@ -310,15 +311,15 @@
     left: 3rem;
     width: calc(100% - 3rem);
     height: 100%;
-    padding: 1rem;
+    padding: 16px;
     margin: 0;
     border: none;
     background-color: transparent;
     font-family: 'Consolas', 'Courier New', 'SF Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 13px;
+    line-height: 20px;
     white-space: pre;
-    overflow: auto;
+    overflow: hidden;
     pointer-events: none;
     z-index: 1;
     box-sizing: border-box;
@@ -354,6 +355,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     display: block;
+    height: 100%;
 }
 
 /* Override Prism.js default styles for dark theme */

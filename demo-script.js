@@ -198,21 +198,19 @@ function initializeEditor() {
         }
     });
 
-    // Sync scrolling between textarea, display, and line numbers
+    // Sync scrolling between textarea and line numbers
     codeEditor.addEventListener('scroll', () => {
-        codeDisplay.scrollTop = codeEditor.scrollTop;
-        codeDisplay.scrollLeft = codeEditor.scrollLeft;
-        
+        // Sync line numbers
         const lineNumbers = document.getElementById('line-numbers');
         if (lineNumbers) {
             lineNumbers.scrollTop = codeEditor.scrollTop;
         }
-    });
-
-    // Also sync the other direction (though display is pointer-events: none)
-    codeDisplay.addEventListener('scroll', () => {
-        codeEditor.scrollTop = codeDisplay.scrollTop;
-        codeEditor.scrollLeft = codeDisplay.scrollLeft;
+        
+        // Manually position the display using transform for better performance
+        const codeHighlight = document.getElementById('code-highlight');
+        if (codeHighlight) {
+            codeHighlight.style.transform = `translate(${-codeEditor.scrollLeft}px, ${-codeEditor.scrollTop}px)`;
+        }
     });
 
     // Initialize line numbers
@@ -224,10 +222,9 @@ function initializeEditor() {
 // Update syntax highlighting using Prism.js
 function updateSyntaxHighlighting() {
     const codeEditor = document.getElementById('code-editor');
-    const codeDisplay = document.getElementById('code-display');
     const codeHighlight = document.getElementById('code-highlight');
     
-    if (!codeEditor || !codeHighlight || !codeDisplay) return;
+    if (!codeEditor || !codeHighlight) return;
     
     // Store current scroll positions
     const scrollTop = codeEditor.scrollTop;
@@ -241,12 +238,11 @@ function updateSyntaxHighlighting() {
         Prism.highlightElement(codeHighlight);
     }
     
-    // Restore scroll positions after highlighting
+    // Restore scroll positions after highlighting using transform
     setTimeout(() => {
         codeEditor.scrollTop = scrollTop;
         codeEditor.scrollLeft = scrollLeft;
-        codeDisplay.scrollTop = scrollTop;
-        codeDisplay.scrollLeft = scrollLeft;
+        codeHighlight.style.transform = `translate(${-scrollLeft}px, ${-scrollTop}px)`;
     }, 0);
 }
 
