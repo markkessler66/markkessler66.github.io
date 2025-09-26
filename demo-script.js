@@ -176,7 +176,10 @@ function initializeEditor() {
     updateSyntaxHighlighting();
 
     // Handle input changes
-    codeEditor.addEventListener('input', updateSyntaxHighlighting);
+    codeEditor.addEventListener('input', () => {
+        updateSyntaxHighlighting();
+        updateLineNumbers();
+    });
     
     // Handle tab key for indentation
     codeEditor.addEventListener('keydown', (e) => {
@@ -195,11 +198,25 @@ function initializeEditor() {
         }
     });
 
-    // Sync scrolling between textarea and display
+    // Sync scrolling between textarea, display, and line numbers
     codeEditor.addEventListener('scroll', () => {
         codeDisplay.scrollTop = codeEditor.scrollTop;
         codeDisplay.scrollLeft = codeEditor.scrollLeft;
+        
+        const lineNumbers = document.getElementById('line-numbers');
+        if (lineNumbers) {
+            lineNumbers.scrollTop = codeEditor.scrollTop;
+        }
     });
+
+    // Also sync the other direction (though display is pointer-events: none)
+    codeDisplay.addEventListener('scroll', () => {
+        codeEditor.scrollTop = codeDisplay.scrollTop;
+        codeEditor.scrollLeft = codeDisplay.scrollLeft;
+    });
+
+    // Initialize line numbers
+    updateLineNumbers();
 
     console.log('Editor initialized successfully');
 }
@@ -207,9 +224,14 @@ function initializeEditor() {
 // Update syntax highlighting using Prism.js
 function updateSyntaxHighlighting() {
     const codeEditor = document.getElementById('code-editor');
+    const codeDisplay = document.getElementById('code-display');
     const codeHighlight = document.getElementById('code-highlight');
     
-    if (!codeEditor || !codeHighlight) return;
+    if (!codeEditor || !codeHighlight || !codeDisplay) return;
+    
+    // Store current scroll positions
+    const scrollTop = codeEditor.scrollTop;
+    const scrollLeft = codeEditor.scrollLeft;
     
     // Update the display with the current code
     codeHighlight.textContent = codeEditor.value;
@@ -218,6 +240,14 @@ function updateSyntaxHighlighting() {
     if (window.Prism) {
         Prism.highlightElement(codeHighlight);
     }
+    
+    // Restore scroll positions after highlighting
+    setTimeout(() => {
+        codeEditor.scrollTop = scrollTop;
+        codeEditor.scrollLeft = scrollLeft;
+        codeDisplay.scrollTop = scrollTop;
+        codeDisplay.scrollLeft = scrollLeft;
+    }, 0);
 }
 
 // Get editor content
@@ -232,7 +262,34 @@ function setEditorContent(content) {
     if (codeEditor) {
         codeEditor.value = content;
         updateSyntaxHighlighting();
+        updateLineNumbers();
     }
+}
+
+// Update line numbers
+function updateLineNumbers() {
+    const codeEditor = document.getElementById('code-editor');
+    const lineNumbers = document.getElementById('line-numbers');
+    
+    if (!codeEditor || !lineNumbers) return;
+    
+    const content = codeEditor.value || '';
+    const lines = content.split('\n');
+    const lineCount = lines.length;
+    
+    // Clear existing line numbers
+    lineNumbers.innerHTML = '';
+    
+    // Create line numbers
+    for (let i = 1; i <= lineCount; i++) {
+        const lineDiv = document.createElement('div');
+        lineDiv.textContent = i;
+        lineDiv.className = 'line-number';
+        lineNumbers.appendChild(lineDiv);
+    }
+    
+    // Sync scroll position
+    lineNumbers.scrollTop = codeEditor.scrollTop;
 }
 
 // Load example code

@@ -224,15 +224,54 @@
     background-color: #2d3748;
     border-radius: 0 0 0 12px;
     height: 500px;
+    display: flex;
+}
+
+.line-numbers {
+    position: relative;
+    width: 3rem;
+    background-color: #2d3748;
+    color: #858585;
+    font-family: 'Consolas', 'Courier New', 'SF Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 1rem 0.5rem 1rem 0.25rem;
+    text-align: right;
+    user-select: none;
+    border-right: 1px solid #4a5568;
+    overflow: hidden;
+    box-sizing: border-box;
+    z-index: 4;
+    letter-spacing: 0;
+    word-spacing: 0;
+    font-variant-ligatures: none;
+    font-feature-settings: normal;
+    text-rendering: optimizeSpeed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.line-number {
+    display: block;
+    color: #858585;
+    transition: color 0.2s ease;
+    line-height: 1.5;
+    font-size: 14px;
+    text-align: right;
+}
+
+.line-number:hover {
+    color: #c5c5c5;
 }
 
 .code-input {
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
+    left: 3rem;
+    width: calc(100% - 3rem);
     height: 100%;
     padding: 1rem;
+    margin: 0;
     border: none;
     background-color: transparent;
     color: transparent;
@@ -245,11 +284,19 @@
     box-sizing: border-box;
     caret-color: #ffffff;
     white-space: pre;
+    overflow: auto;
     overflow-wrap: normal;
     word-wrap: normal;
     word-break: normal;
     z-index: 2;
     border-right: 1px solid var(--border-color);
+    letter-spacing: 0;
+    word-spacing: 0;
+    font-variant-ligatures: none;
+    font-feature-settings: normal;
+    text-rendering: optimizeSpeed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .code-input:focus {
@@ -260,8 +307,8 @@
 .code-display {
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
+    left: 3rem;
+    width: calc(100% - 3rem);
     height: 100%;
     padding: 1rem;
     margin: 0;
@@ -278,6 +325,13 @@
     overflow-wrap: normal;
     word-wrap: normal;
     word-break: normal;
+    letter-spacing: 0;
+    word-spacing: 0;
+    font-variant-ligatures: none;
+    font-feature-settings: normal;
+    text-rendering: optimizeSpeed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .code-display code {
@@ -292,6 +346,14 @@
     overflow-wrap: normal;
     word-wrap: normal;
     word-break: normal;
+    letter-spacing: 0;
+    word-spacing: 0;
+    font-variant-ligatures: none;
+    font-feature-settings: normal;
+    text-rendering: optimizeSpeed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: block;
 }
 
 /* Override Prism.js default styles for dark theme */
