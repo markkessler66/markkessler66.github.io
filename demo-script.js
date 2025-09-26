@@ -160,6 +160,146 @@ print("\\n--- Add your own code below this line ---")
 // Store original examples for reset functionality
 const originalExamples = { ...demoExamples };
 
+// PhyNetPy Demo Script with new Prism Editor
+let editor = null; // Store editor instance
+
+// Initialize Pyodide (your existing function stays mostly the same)
+async function initializePyodide() {
+    const outputElement = document.getElementById('output');
+    
+    try {
+        updateLoadingStatus('Loading Python environment...', 'This may take 10-30 seconds on first load');
+        
+        if (typeof window.loadPyodide !== 'function') {
+            throw new Error('Pyodide library not loaded');
+        }
+        
+        pyodide = await window.loadPyodide();
+        
+        updateLoadingStatus('Installing packages...', 'Loading NumPy, NetworkX, and Matplotlib');
+        await pyodide.loadPackage(['numpy', 'networkx', 'matplotlib']);
+        
+        pyodideReady = true;
+        
+        // Update the editor's output panel
+        if (editor) {
+            editor.setOutput('PhyNetPy environment ready! All packages loaded successfully.', 'success');
+        }
+        
+    } catch (error) {
+        console.error('Failed to initialize Pyodide:', error);
+        pyodideReady = false;
+        if (editor) {
+            editor.setOutput('Python environment failed to load. You can still view and edit code.', 'error');
+        }
+    }
+}
+
+// Custom run handler for Pyodide
+async function runPythonCode(code, outputElement) {
+    if (!pyodideReady) {
+        outputElement.textContent = 'Python environment is still loading. Please wait...';
+        outputElement.className = 'output-panel error';
+        return;
+    }
+    
+    outputElement.textContent = '>>> Running Python code...\n\n';
+    outputElement.className = 'output-panel';
+    
+    const startTime = performance.now();
+    
+    try {
+        // Set up output capture
+        pyodide.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+sys.stderr = StringIO()
+        `);
+        
+        // Run the code
+        await pyodide.runPythonAsync(code);
+        
+        // Get output
+        const stdout = pyodide.runPython("sys.stdout.getvalue()");
+        const stderr = pyodide.runPython("sys.stderr.getvalue()");
+        
+        // Reset streams
+        pyodide.runPython(`
+sys.stdout = sys.__stdout__
+sys.stderr = sys.__stderr__
+        `);
+        
+        const endTime = performance.now();
+        const executionTime = (endTime - startTime).toFixed(2);
+        
+        // Display results
+        let output = '';
+        if (stdout.trim()) {
+            output += stdout;
+        }
+        if (stderr.trim()) {
+            output += '\n' + stderr;
+        }
+        
+        if (output.trim()) {
+            outputElement.textContent = output;
+            outputElement.className = 'output-panel success';
+        } else {
+            outputElement.textContent = '✓ Code executed successfully (no output)';
+            outputElement.className = 'output-panel success';
+        }
+        
+        // Add execution time
+        outputElement.textContent += `\n\nExecuted in ${executionTime}ms`;
+        
+    } catch (error) {
+        outputElement.textContent = `Error: ${error.message}`;
+        outputElement.className = 'output-panel error';
+    }
+}
+
+// Helper function to show loading status in editor
+function updateLoadingStatus(message, details) {
+    if (editor) {
+        editor.setOutput(`${message}\n${details}`, 'normal');
+    }
+}
+
+// Initialize everything when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Initializing PhyNetPy Demo...');
+    
+    // Create the editor with your custom examples
+    editor = new PrismEditor({
+        containerId: 'python-editor',
+        language: 'python',
+        examples: demoExamples,
+        onRun: runPythonCode,  // Use our custom Pyodide runner
+        onChange: function(code) {
+            // Optional: Save to localStorage
+            localStorage.setItem('phynetpy_code', code);
+        }
+    });
+    
+    // Load saved code if exists
+    const savedCode = localStorage.getItem('phynetpy_code');
+    if (savedCode) {
+        editor.setCode(savedCode);
+    }
+    
+    // Initialize Pyodide
+    setTimeout(() => {
+        if (typeof window.loadPyodide !== 'undefined') {
+            initializePyodide();
+        } else {
+            console.warn('Pyodide not available');
+            editor.setOutput('Python runtime not available. You can still edit code.', 'error');
+        }
+    }, 500);
+});
+//--------------------------------------------------//
+
 // Initialize editor
 function initializeEditor() {
     const codeEditor = document.getElementById('code-editor');
@@ -311,60 +451,6 @@ function escapeHTML(str) {
     return div.innerHTML;
 }
 
-// Initialize Pyodide environment
-async function initializePyodide() {
-    const outputElement = document.getElementById('output-content');
-    
-    try {
-        updateLoadingStatus('Loading Python environment...', 'This may take 10-30 seconds on first load');
-        
-        // Check if loadPyodide is available
-        if (typeof window.loadPyodide !== 'function') {
-            throw new Error('Pyodide library not loaded');
-        }
-        
-        // Set a timeout for Pyodide loading
-        const timeoutPromise = new Promise((_, reject) => {
-            setTimeout(() => reject(new Error('Pyodide loading timeout')), 30000);
-        });
-        
-        // Race between loading and timeout
-        pyodide = await Promise.race([
-            window.loadPyodide(),
-            timeoutPromise
-        ]);
-        
-        updateLoadingStatus('Installing packages...', 'Loading NumPy, NetworkX, and Matplotlib');
-        
-        await pyodide.loadPackage(['numpy', 'networkx', 'matplotlib']);
-        
-        pyodideReady = true;
-        showSuccess('PhyNetPy environment ready!', 'All packages loaded successfully. Select an example and click "Run Code" to get started.');
-        
-    } catch (error) {
-        console.error('Failed to initialize Pyodide:', error);
-        pyodideReady = false;
-        showError('Python environment failed to load', 
-                 'The Python runtime could not be initialized. You can still view and edit code, but cannot run it.');
-    } finally {
-        // Always load the example, regardless of Pyodide status
-        setTimeout(() => {
-            loadExample('basic');
-        }, 100);
-    }
-}
-
-// Update loading status
-function updateLoadingStatus(message, details) {
-    const outputElement = document.getElementById('output-content');
-    outputElement.innerHTML = `
-        <div class="demo-placeholder">
-            <p>${message}</p>
-            <div class="loading-spinner"></div>
-            <p class="loading-details">${details}</p>
-        </div>
-    `;
-}
 
 // Show success message
 function showSuccess(title, message) {
@@ -383,99 +469,6 @@ function showError(title, message) {
     outputElement.innerHTML = `<div class="output-error">${title}\\n\\n${message}</div>`;
 }
 
-// Run Python code
-async function runPythonCode() {
-    if (!pyodideReady) {
-        alert('Python environment is still loading. Please wait...');
-        return;
-    }
-    
-    const outputElement = document.getElementById('output-content');
-    const runButton = document.getElementById('run-button');
-    const runText = document.getElementById('run-text');
-    const loadingText = document.getElementById('loading-text');
-    const executionTime = document.getElementById('execution-time');
-    
-    const code = getEditorContent().trim();
-    if (!code) {
-        showError('No code to run', 'Please enter some Python code to execute.');
-        return;
-    }
-    
-    // Show loading state
-    runButton.disabled = true;
-    runText.style.display = 'none';
-    loadingText.style.display = 'inline';
-    
-    const startTime = performance.now();
-    
-    try {
-        // Capture stdout and stderr
-        pyodide.runPython(`
-import sys
-from io import StringIO
-import traceback
-
-# Capture both stdout and stderr
-sys.stdout = StringIO()
-sys.stderr = StringIO()
-        `);
-        
-        // Run the user code
-        await pyodide.runPythonAsync(code);
-        
-        // Get the output
-        const stdout = pyodide.runPython("sys.stdout.getvalue()");
-        const stderr = pyodide.runPython("sys.stderr.getvalue()");
-        
-        // Reset stdout and stderr
-        pyodide.runPython(`
-sys.stdout = sys.__stdout__
-sys.stderr = sys.__stderr__
-        `);
-        
-        const endTime = performance.now();
-        const executionTimeMs = (endTime - startTime).toFixed(2);
-        
-        // Display output
-        let output = '';
-        if (stdout.trim()) {
-            output += stdout;
-        }
-        if (stderr.trim()) {
-            output += '\\n' + stderr;
-        }
-        
-        if (output.trim()) {
-            // IMPORTANT: Escape HTML in output to prevent injection
-            outputElement.innerHTML = `<pre class="output-success">${escapeHTML(output)}</pre>`;
-        } else {
-            outputElement.innerHTML = '<div class="output-info">✓ Code executed successfully (no output)</div>';
-        }
-        
-        // Update execution time
-        if (executionTime) {
-            executionTime.textContent = `Executed in ${executionTimeMs}ms`;
-        }
-        
-    } catch (error) {
-        const endTime = performance.now();
-        const executionTimeMs = (endTime - startTime).toFixed(2);
-        
-        console.error('Python execution error:', error);
-        showError('Execution Error', error.message);
-        
-        if (executionTime) {
-            executionTime.textContent = `Failed after ${executionTimeMs}ms`;
-        }
-        
-    } finally {
-        // Reset button state
-        runButton.disabled = false;
-        runText.style.display = 'inline';
-        loadingText.style.display = 'none';
-    }
-}
 
 // Clear output
 function clearOutput() {
@@ -574,55 +567,3 @@ function showToast(message, type = 'success') {
     }, 3000);
 }
 
-// Initialize demo when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Demo script starting...');
-    
-    const exampleSelect = document.getElementById('example-select');
-    const runButton = document.getElementById('run-button');
-    const clearButton = document.getElementById('clear-button');
-    const resetButton = document.getElementById('reset-button');
-    const copyCodeBtn = document.getElementById('copy-code');
-    const copyOutputBtn = document.getElementById('copy-output');
-    const downloadCodeBtn = document.getElementById('download-code');
-    
-    // Initialize editor
-    initializeEditor();
-    
-    // Example selection
-    if (exampleSelect) {
-        exampleSelect.addEventListener('change', (e) => {
-            loadExample(e.target.value);
-        });
-    }
-    
-    // Button event listeners
-    if (runButton) runButton.addEventListener('click', runPythonCode);
-    if (clearButton) clearButton.addEventListener('click', clearOutput);
-    if (resetButton) resetButton.addEventListener('click', resetCode);
-    if (copyCodeBtn) copyCodeBtn.addEventListener('click', copyCode);
-    if (copyOutputBtn) copyOutputBtn.addEventListener('click', copyOutput);
-    if (downloadCodeBtn) downloadCodeBtn.addEventListener('click', downloadCode);
-    
-    // Try to initialize Pyodide with delay
-    setTimeout(() => {
-        console.log('Checking for Pyodide:', typeof window.loadPyodide !== 'undefined');
-        if (typeof window.loadPyodide !== 'undefined') {
-            initializePyodide().catch(error => {
-                console.error('Pyodide failed to load:', error);
-                showError('Python environment unavailable', 
-                         'The Python runtime failed to load, but you can still view and edit code.');
-                setTimeout(() => {
-                    loadExample('basic');
-                }, 100);
-            });
-        } else {
-            console.warn('Pyodide library not found');
-            showError('Python environment not available', 
-                     'Pyodide library not found. Code editing is still available.');
-            setTimeout(() => {
-                loadExample('basic');
-            }, 100);
-        }
-    }, 500);
-});

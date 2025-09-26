@@ -1,0 +1,257 @@
+/* Prism Code Editor Styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.editor-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #252526;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.editor-header {
+    background: #2d2d30;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #3e3e42;
+}
+
+.editor-title {
+    font-size: 14px;
+    font-weight: 400;
+    color: #cccccc;
+}
+
+.editor-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.editor-controls button {
+    background: #0e639c;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.editor-controls button:hover {
+    background: #1177bb;
+}
+
+.example-select {
+    background: #3c3c3c;
+    color: #cccccc;
+    border: 1px solid #3e3e42;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+/* The main editor wrapper */
+.editor-wrapper {
+    display: flex;
+    height: 500px;
+    position: relative;
+    background: #1e1e1e;
+}
+
+/* Line numbers column */
+.line-numbers {
+    background: #1e1e1e;
+    color: #858585;
+    padding: 1rem 0;
+    text-align: right;
+    user-select: none;
+    min-width: 50px;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow: hidden;
+}
+
+.line-numbers div {
+    padding-right: 15px;
+    height: 21px;
+}
+
+/* Container for both textarea and pre */
+.editor-body {
+    flex: 1;
+    position: relative;
+    overflow: auto;
+}
+
+/* The actual textarea */
+.editor-textarea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    background: transparent;
+    color: transparent;
+    caret-color: #ffffff;
+    border: none;
+    outline: none;
+    resize: none;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    tab-size: 4;
+    white-space: pre;
+    overflow-wrap: normal;
+    z-index: 2;
+    
+    /* Make cursor thinner */
+    caret-shape: bar;
+    font-weight: normal;
+}
+
+/* Webkit-specific thin cursor */
+.editor-textarea::-webkit-input-placeholder {
+    color: transparent;
+}
+
+/* The syntax highlighted display */
+.editor-pre {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    margin: 0;
+    pointer-events: none;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    tab-size: 4;
+    white-space: pre;
+    overflow-wrap: normal;
+    z-index: 1;
+}
+
+.editor-pre code {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    background: none;
+    padding: 0;
+    color: #d4d4d4;
+}
+
+/* Custom syntax highlighting theme */
+.token.comment { color: #6a9955; }
+.token.string { color: #ce9178; }
+.token.keyword { color: #569cd6; }
+.token.function { color: #dcdcaa; }
+.token.number { color: #b5cea8; }
+.token.operator { color: #d4d4d4; }
+.token.punctuation { color: #d4d4d4; }
+.token.builtin { color: #4ec9b0; }
+.token.class-name { color: #4ec9b0; }
+.token.boolean { color: #569cd6; }
+.token.decorator { color: #ffd700; }
+.token.important { color: #569cd6; font-weight: normal; }
+
+/* Output panel */
+.output-panel {
+    background: #1e1e1e;
+    border-top: 1px solid #3e3e42;
+    padding: 15px;
+    min-height: 150px;
+    max-height: 300px;
+    overflow-y: auto;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 13px;
+    color: #cccccc;
+    white-space: pre-wrap;
+}
+
+.output-panel.error {
+    color: #f48771;
+}
+
+.output-panel.success {
+    color: #4fc1e9;
+}
+
+/* Scrollbar styling */
+.editor-body::-webkit-scrollbar,
+.output-panel::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.editor-body::-webkit-scrollbar-track,
+.output-panel::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+.editor-body::-webkit-scrollbar-thumb,
+.output-panel::-webkit-scrollbar-thumb {
+    background: #424242;
+    border-radius: 5px;
+}
+
+.editor-body::-webkit-scrollbar-thumb:hover,
+.output-panel::-webkit-scrollbar-thumb:hover {
+    background: #4e4e4e;
+}
+
+/* Firefox scrollbar */
+.editor-body,
+.output-panel {
+    scrollbar-width: thin;
+    scrollbar-color: #424242 #1e1e1e;
+}
+
+/* Loading states */
+.editor-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #858585;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #3e3e42;
+    border-top-color: #0e639c;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .editor-wrapper {
+        height: 400px;
+    }
+    
+    .line-numbers {
+        min-width: 40px;
+    }
+    
+    .line-numbers div {
+        padding-right: 10px;
+    }
+}
