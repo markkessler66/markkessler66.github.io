@@ -6,11 +6,16 @@
     <title>PhyNetPy Showcase - Mark Kessler</title>
     <link rel="icon" type="image/png" href="m.png">
     <link rel="apple-touch-icon" href="m.png">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="showcase-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="showcase-styles.css">
 </head>
 <body>
+    <!-- Animated Background -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
     <!-- Navigation -->
     <header>
         <nav>
@@ -28,132 +33,156 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="showcase-hero">
-        <div class="hero-content">
-            <h1>PhyNetPy: Advanced Phylogenetic Network Analysis</h1>
-            <p class="subtitle">A comprehensive Python library for phylogenetic network methods</p>
-            <p class="hero-description">
-                PhyNetPy provides powerful tools for network construction, manipulation, simulation, and inference 
-                in phylogenetic analysis. Built with performance and usability in mind, it brings advanced network 
-                algorithms to the Python ecosystem.
-            </p>
-            <div class="cta-buttons">
-                <a href="https://phylogenomics.rice.edu/html/phynetpy-docs/index.html" class="btn btn-primary" target="_blank">
-                    View Documentation →
-                </a>
-                <a href="https://github.com/markkessler66/phynetpy" class="btn btn-secondary" target="_blank">
-                    GitHub Repository
-                </a>
+    <section class="hero">
+        <div class="hero-badge">Open Source Library</div>
+        <h1>
+            <span class="hero-gradient">PhyNetPy</span>
+            <span class="hero-subtitle-text">Advanced Phylogenetic Network Analysis</span>
+        </h1>
+        <p class="hero-description">
+            A comprehensive Python library bringing powerful network construction, manipulation, 
+            simulation, and inference to phylogenetic analysis. Built with performance and 
+            usability at its core.
+        </p>
+        <div class="hero-actions">
+            <a href="https://phylogenomics.rice.edu/html/phynetpy-docs/index.html" class="btn btn-primary" target="_blank">
+                <span>Documentation</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M3 8H13M13 8L8 3M13 8L8 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+            <a href="https://github.com/markkessler66/phynetpy" class="btn btn-secondary" target="_blank">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                <span>View on GitHub</span>
+            </a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat">
+                <span class="stat-value">8+</span>
+                <span class="stat-label">Core Modules</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat">
+                <span class="stat-value">GTR</span>
+                <span class="stat-label">Model Family</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat">
+                <span class="stat-value">GPU</span>
+                <span class="stat-label">Accelerated</span>
             </div>
         </div>
     </section>
 
-    <!-- Methods Showcase Section -->
-    <section class="methods-showcase">
+    <!-- Core Modules Section -->
+    <section class="modules">
         <div class="container">
-            <h2 class="section-title">Core Methods & Capabilities</h2>
-            <p class="section-description">
-                PhyNetPy offers a comprehensive suite of modules for phylogenetic network analysis
-            </p>
-            <div class="methods-grid">
-                <div class="method-card">
-                    <div class="method-icon">
-                        <span class="icon-text">NET</span>
+            <div class="section-header">
+                <span class="section-tag">Architecture</span>
+                <h2>Core Modules</h2>
+                <p>A comprehensive suite of specialized modules for phylogenetic network analysis</p>
+            </div>
+            <div class="modules-grid">
+                <div class="module-card" style="--delay: 0">
+                    <div class="module-icon">
+                        <span>NET</span>
                     </div>
                     <h3>Network</h3>
-                    <p>Core phylogenetic network data structures including Node, Edge, Graph, and Network classes. Provides the foundation for all network operations.</p>
-                    <ul class="method-features">
+                    <p>Core phylogenetic network data structures including Node, Edge, Graph, and Network classes.</p>
+                    <ul class="module-features">
                         <li>Node and Edge management</li>
                         <li>Network topology operations</li>
                         <li>Leaf and root identification</li>
                     </ul>
                 </div>
 
-                <div class="method-card">
-                    <div class="method-icon">
-                        <span class="icon-text">PAR</span>
+                <div class="module-card" style="--delay: 1">
+                    <div class="module-icon">
+                        <span>PAR</span>
                     </div>
                     <h3>NetworkParser</h3>
-                    <p>Parse Nexus files and Newick strings to import existing phylogenetic networks. Supports standard file formats used in phylogenetic research.</p>
-                    <ul class="method-features">
+                    <p>Parse Nexus files and Newick strings to import existing phylogenetic networks.</p>
+                    <ul class="module-features">
                         <li>Nexus file parsing</li>
                         <li>Newick string handling</li>
                         <li>Format validation</li>
                     </ul>
                 </div>
 
-                <div class="method-card">
-                    <div class="method-icon">
-                        <span class="icon-text">SIM</span>
+                <div class="module-card" style="--delay: 2">
+                    <div class="module-icon">
+                        <span>SIM</span>
                     </div>
                     <h3>BirthDeath</h3>
-                    <p>Birth-death process network simulators including Yule and CBDP models. Generate synthetic networks for testing and research.</p>
-                    <ul class="method-features">
+                    <p>Birth-death process network simulators including Yule and CBDP models.</p>
+                    <ul class="module-features">
                         <li>Yule model simulation</li>
                         <li>CBDP model support</li>
                         <li>Configurable parameters</li>
                     </ul>
                 </div>
 
-                <div class="method-card">
-                    <div class="method-icon">
-                        <span class="icon-text">UTIL</span>
+                <div class="module-card" style="--delay: 3">
+                    <div class="module-icon">
+                        <span>UTL</span>
                     </div>
                     <h3>GraphUtils</h3>
-                    <p>Graph and network utility functions for topology analysis and manipulation. Essential tools for network comparison and analysis.</p>
-                    <ul class="method-features">
+                    <p>Graph and network utility functions for topology analysis and manipulation.</p>
+                    <ul class="module-features">
                         <li>Topology analysis</li>
                         <li>Network comparison</li>
                         <li>Graph manipulation</li>
                     </ul>
                 </div>
 
-                <div class="method-card">
-                    <div class="method-icon">
-                        <span class="icon-text">MOV</span>
+                <div class="module-card" style="--delay: 4">
+                    <div class="module-icon">
+                        <span>MOV</span>
                     </div>
                     <h3>NetworkMoves</h3>
-                    <p>Network topology modification operations including add/remove hybrid nodes and NNI (Nearest Neighbor Interchange) moves.</p>
-                    <ul class="method-features">
+                    <p>Network topology modification operations including NNI moves and hybrid nodes.</p>
+                    <ul class="module-features">
                         <li>Hybrid node operations</li>
                         <li>NNI moves</li>
                         <li>Topology modification</li>
                     </ul>
                 </div>
 
-                <div class="method-card">
-                    <div class="method-icon">
-                        <span class="icon-text">GTR</span>
+                <div class="module-card" style="--delay: 5">
+                    <div class="module-icon">
+                        <span>GTR</span>
                     </div>
-                    <h3>GTR</h3>
-                    <p>Time-reversible substitution models including GTR, K80, F81, JC, HKY, K81, SYM, and TN93 for sequence evolution modeling.</p>
-                    <ul class="method-features">
+                    <h3>GTR Models</h3>
+                    <p>Time-reversible substitution models: GTR, K80, F81, JC, HKY, K81, SYM, TN93.</p>
+                    <ul class="module-features">
                         <li>Multiple substitution models</li>
                         <li>Model selection</li>
                         <li>Parameter estimation</li>
                     </ul>
                 </div>
 
-                <div class="method-card">
-                    <div class="method-icon">
-                        <span class="icon-text">MSA</span>
+                <div class="module-card" style="--delay: 6">
+                    <div class="module-icon">
+                        <span>MSA</span>
                     </div>
                     <h3>MSA</h3>
-                    <p>Multiple Sequence Alignment parsing, storage, and analysis. Handle sequence data efficiently with optimized data structures.</p>
-                    <ul class="method-features">
+                    <p>Multiple Sequence Alignment parsing, storage, and analysis utilities.</p>
+                    <ul class="module-features">
                         <li>Alignment parsing</li>
                         <li>Data compression</li>
                         <li>Sequence analysis</li>
                     </ul>
                 </div>
 
-                <div class="method-card">
-                    <div class="method-icon">
-                        <span class="icon-text">GEN</span>
+                <div class="module-card" style="--delay: 7">
+                    <div class="module-icon">
+                        <span>GEN</span>
                     </div>
                     <h3>GeneTrees</h3>
-                    <p>Gene tree container and analysis utilities including consensus tree construction. Manage and analyze multiple gene trees.</p>
-                    <ul class="method-features">
+                    <p>Gene tree container and analysis utilities including consensus tree construction.</p>
+                    <ul class="module-features">
                         <li>Tree container management</li>
                         <li>Consensus construction</li>
                         <li>Tree analysis utilities</li>
@@ -163,108 +192,66 @@
         </div>
     </section>
 
-    <!-- Comparison Tables Section -->
-    <section class="comparisons">
+    <!-- Comparison Section -->
+    <section class="comparison">
         <div class="container">
-            <h2 class="section-title">Comparisons</h2>
-            
-            <!-- Table 1: PhyNetPy vs Competition -->
-            <div class="comparison-table-wrapper">
-                <h3>PhyNetPy vs Competition</h3>
+            <div class="section-header">
+                <span class="section-tag">Why PhyNetPy?</span>
+                <h2>Feature Comparison</h2>
+                <p>See how PhyNetPy stacks up against other tools in the ecosystem</p>
+            </div>
+            <div class="table-container">
                 <table class="comparison-table">
                     <thead>
                         <tr>
                             <th>Feature</th>
-                            <th>PhyNetPy</th>
+                            <th class="highlight-col">PhyNetPy</th>
                             <th>NetworkX</th>
                             <th>BioPython</th>
-                            <th>Advantage</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>Phylogenetic Networks</td>
-                            <td>✓ Native support</td>
-                            <td>✗ General graphs only</td>
-                            <td>✗ Trees only</td>
-                            <td>Specialized for phylogenetic networks</td>
+                            <td class="highlight-col"><span class="check">Native support</span></td>
+                            <td><span class="cross">General graphs only</span></td>
+                            <td><span class="cross">Trees only</span></td>
                         </tr>
                         <tr>
                             <td>Hybrid Nodes</td>
-                            <td>✓ Full support</td>
-                            <td>✗ Not supported</td>
-                            <td>✗ Not supported</td>
-                            <td>Handles reticulate evolution</td>
+                            <td class="highlight-col"><span class="check">Full support</span></td>
+                            <td><span class="cross">Not supported</span></td>
+                            <td><span class="cross">Not supported</span></td>
                         </tr>
                         <tr>
                             <td>Nexus File Parsing</td>
-                            <td>✓ Built-in</td>
-                            <td>✗ Not available</td>
-                            <td>Partial</td>
-                            <td>Complete Nexus support</td>
+                            <td class="highlight-col"><span class="check">Built-in</span></td>
+                            <td><span class="cross">Not available</span></td>
+                            <td><span class="partial">Partial</span></td>
                         </tr>
                         <tr>
                             <td>Birth-Death Simulation</td>
-                            <td>✓ Yule & CBDP</td>
-                            <td>✗ Not available</td>
-                            <td>✗ Not available</td>
-                            <td>Network simulation capabilities</td>
+                            <td class="highlight-col"><span class="check">Yule & CBDP</span></td>
+                            <td><span class="cross">Not available</span></td>
+                            <td><span class="cross">Not available</span></td>
                         </tr>
                         <tr>
                             <td>Substitution Models</td>
-                            <td>✓ GTR family</td>
-                            <td>✗ Not available</td>
-                            <td>Partial</td>
-                            <td>Comprehensive model support</td>
+                            <td class="highlight-col"><span class="check">GTR family</span></td>
+                            <td><span class="cross">Not available</span></td>
+                            <td><span class="partial">Partial</span></td>
                         </tr>
                         <tr>
                             <td>Network Topology Analysis</td>
-                            <td>✓ Specialized tools</td>
-                            <td>✓ General tools</td>
-                            <td>Limited</td>
-                            <td>Phylogenetic-specific algorithms</td>
+                            <td class="highlight-col"><span class="check">Specialized tools</span></td>
+                            <td><span class="check">General tools</span></td>
+                            <td><span class="partial">Limited</span></td>
                         </tr>
                         <tr>
                             <td>Performance</td>
-                            <td>✓ Optimized (Cython)</td>
-                            <td>✓ Good</td>
-                            <td>Good</td>
-                            <td>High-performance implementation</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Table 2: Version Improvements -->
-            <div class="comparison-table-wrapper">
-                <h3>Version Improvements</h3>
-                <table class="comparison-table">
-                    <thead>
-                        <tr>
-                            <th>Version</th>
-                            <th>Key Features</th>
-                            <th>Performance</th>
-                            <th>Improvements</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>0.2.0 (Current)</td>
-                            <td>Full API, all modules</td>
-                            <td>Optimized</td>
-                            <td>Complete documentation, stable API</td>
-                        </tr>
-                        <tr>
-                            <td>0.1.x</td>
-                            <td>Core modules</td>
-                            <td>Good</td>
-                            <td>Initial release, basic functionality</td>
-                        </tr>
-                        <tr>
-                            <td>Pre-release</td>
-                            <td>Prototype</td>
-                            <td>Basic</td>
-                            <td>Proof of concept</td>
+                            <td class="highlight-col"><span class="check">Cython optimized</span></td>
+                            <td><span class="check">Good</span></td>
+                            <td><span class="check">Good</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -272,186 +259,221 @@
         </div>
     </section>
 
-    <!-- Performance Figures Section -->
-    <section class="performance-figures">
+    <!-- Performance Benchmarks Section -->
+    <section class="benchmarks">
         <div class="container">
-            <h2 class="section-title">Performance Benchmarks</h2>
-            <p class="section-description">
-                PhyNetPy demonstrates superior performance for phylogenetic network operations
-            </p>
-            
-            <!-- InferMpAllop Comparison -->
-            <div class="benchmark-section">
-                <h3 class="benchmark-title">InferMpAllop Performance Comparison</h3>
-                <p class="benchmark-description">
-                    Comparing PhyNetPy's InferMpAllop-2.0 against PhyloNet's InferMpAllop across different network sizes
-                </p>
-                <div class="figure-container full-width">
-                    <div class="chart-wrapper">
+            <div class="section-header">
+                <span class="section-tag">Performance</span>
+                <h2>Benchmark Results</h2>
+                <p>PhyNetPy demonstrates superior performance for phylogenetic network operations</p>
+            </div>
+
+            <div class="benchmark-grid">
+                <!-- InferMpAllop Chart -->
+                <div class="benchmark-card">
+                    <div class="benchmark-header">
+                        <h3>InferMpAllop Performance</h3>
+                        <p>Comparing PhyNetPy's InferMpAllop-2.0 against PhyloNet across different network sizes</p>
+                    </div>
+                    <div class="chart-container">
                         <canvas id="inferMpAllopChart"></canvas>
                     </div>
-                    <p class="figure-caption">
-                        Compute times for InferMpAllop methods on networks with 5, 15, and 25 taxa. 
-                        PhyNetPy's optimized implementation shows improved performance across all network sizes.
-                    </p>
                 </div>
-            </div>
 
-            <!-- MCMC_BiMarkers Comparison -->
-            <div class="benchmark-section">
-                <h3 class="benchmark-title">MCMC_BiMarkers Performance Comparison</h3>
-                <p class="benchmark-description">
-                    Comparing PhyNetPy's MCMC_BiMarkers (CPU and GPU-accelerated) against PhyloNet's MCMC_BiMarkers
-                </p>
-                <div class="figure-container full-width">
-                    <div class="chart-wrapper">
+                <!-- MCMC Chart -->
+                <div class="benchmark-card">
+                    <div class="benchmark-header">
+                        <h3>MCMC_BiMarkers Performance</h3>
+                        <p>CPU and GPU-accelerated versions compared to PhyloNet's implementation</p>
+                    </div>
+                    <div class="chart-container">
                         <canvas id="mcmcBiMarkersChart"></canvas>
                     </div>
-                    <p class="figure-caption">
-                        Compute times for MCMC_BiMarkers methods on networks with 5, 15, and 25 taxa. 
-                        PhyNetPy's GPU-accelerated version provides significant speedup for larger networks.
-                    </p>
                 </div>
-            </div>
 
-            <!-- Correctness Comparison -->
-            <div class="benchmark-section">
-                <h3 class="benchmark-title">Method Correctness Analysis</h3>
-                <p class="benchmark-description">
-                    Average distance to ground truth network for each inference method
-                </p>
-                <div class="figure-container full-width">
-                    <div class="chart-wrapper">
+                <!-- Correctness Chart -->
+                <div class="benchmark-card full-width">
+                    <div class="benchmark-header">
+                        <h3>Method Correctness Analysis</h3>
+                        <p>Average distance to ground truth network — lower values indicate better accuracy (tested on 50 simulated networks)</p>
+                    </div>
+                    <div class="chart-container wide">
                         <canvas id="correctnessChart"></canvas>
                     </div>
-                    <p class="figure-caption">
-                        Boxplot showing the distribution of distances to ground truth networks across multiple runs. 
-                        Lower values indicate better accuracy. Each method was tested on 50 simulated networks.
-                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- NetworkX Comparison Table Section -->
-    <section class="networkx-comparison">
+    <!-- Memory & Performance Table -->
+    <section class="performance-table">
         <div class="container">
-            <h2 class="section-title">Memory Usage & Performance Comparison</h2>
-            <p class="section-description">
-                Comparing PhyNetPy with NetworkX for common network operations
-            </p>
-            
-            <div class="comparison-table-wrapper">
-                <h3>PhyNetPy vs NetworkX Performance</h3>
-                <table class="comparison-table">
+            <div class="section-header">
+                <span class="section-tag">Efficiency</span>
+                <h2>Memory & Operation Benchmarks</h2>
+                <p>Comparing PhyNetPy with NetworkX for common network operations</p>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
                     <thead>
                         <tr>
                             <th>Operation</th>
-                            <th>PhyNetPy</th>
+                            <th class="highlight-col">PhyNetPy</th>
                             <th>NetworkX</th>
                             <th>Notes</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Network Size (100 nodes, 150 edges)</td>
-                            <td>~2.4 KB</td>
-                            <td>~3.8 KB</td>
-                            <td>PhyNetPy uses compressed data structures</td>
+                            <td>Network (100 nodes, 150 edges)</td>
+                            <td class="highlight-col"><code>~2.4 KB</code></td>
+                            <td><code>~3.8 KB</code></td>
+                            <td>Compressed data structures</td>
                         </tr>
                         <tr>
-                            <td>Network Size (500 nodes, 750 edges)</td>
-                            <td>~12.1 KB</td>
-                            <td>~18.9 KB</td>
+                            <td>Network (500 nodes, 750 edges)</td>
+                            <td class="highlight-col"><code>~12.1 KB</code></td>
+                            <td><code>~18.9 KB</code></td>
                             <td>More efficient memory usage</td>
                         </tr>
                         <tr>
-                            <td>Network Size (1000 nodes, 1500 edges)</td>
-                            <td>~24.5 KB</td>
-                            <td>~38.2 KB</td>
-                            <td>Scales better with network size</td>
+                            <td>Network (1000 nodes, 1500 edges)</td>
+                            <td class="highlight-col"><code>~24.5 KB</code></td>
+                            <td><code>~38.2 KB</code></td>
+                            <td>Scales better with size</td>
                         </tr>
                         <tr>
                             <td>Add Edge (avg time)</td>
-                            <td>0.12 ms</td>
-                            <td>0.18 ms</td>
+                            <td class="highlight-col"><code>0.12 ms</code></td>
+                            <td><code>0.18 ms</code></td>
                             <td>Optimized edge insertion</td>
                         </tr>
                         <tr>
                             <td>Remove Edge (avg time)</td>
-                            <td>0.15 ms</td>
-                            <td>0.22 ms</td>
+                            <td class="highlight-col"><code>0.15 ms</code></td>
+                            <td><code>0.22 ms</code></td>
                             <td>Fast edge removal with validation</td>
                         </tr>
                         <tr>
                             <td>Add Node (avg time)</td>
-                            <td>0.08 ms</td>
-                            <td>0.14 ms</td>
+                            <td class="highlight-col"><code>0.08 ms</code></td>
+                            <td><code>0.14 ms</code></td>
                             <td>Efficient node creation</td>
                         </tr>
                         <tr>
                             <td>Remove Node (avg time)</td>
-                            <td>0.25 ms</td>
-                            <td>0.35 ms</td>
+                            <td class="highlight-col"><code>0.25 ms</code></td>
+                            <td><code>0.35 ms</code></td>
                             <td>Includes edge cleanup</td>
                         </tr>
                         <tr>
                             <td>Topology Query (100 nodes)</td>
-                            <td>0.45 ms</td>
-                            <td>0.68 ms</td>
+                            <td class="highlight-col"><code>0.45 ms</code></td>
+                            <td><code>0.68 ms</code></td>
                             <td>Specialized phylogenetic queries</td>
                         </tr>
                         <tr>
-                            <td>Network Traversal (BFS, 100 nodes)</td>
-                            <td>0.32 ms</td>
-                            <td>0.48 ms</td>
+                            <td>Network Traversal (BFS)</td>
+                            <td class="highlight-col"><code>0.32 ms</code></td>
+                            <td><code>0.48 ms</code></td>
                             <td>Optimized traversal algorithms</td>
                         </tr>
                     </tbody>
                 </table>
-                <p class="table-note">
-                    <em>Note: Performance metrics are averages from 1000 runs on networks of specified sizes. 
-                    Actual performance may vary based on network topology and system configuration.</em>
+                <p class="table-footnote">
+                    Performance metrics are averages from 1000 runs. Actual performance may vary based on network topology and system configuration.
                 </p>
             </div>
         </div>
     </section>
 
-    <!-- Achievements Section -->
+    <!-- Key Achievements -->
     <section class="achievements">
         <div class="container">
-            <h2 class="section-title">Key Achievements</h2>
+            <div class="section-header">
+                <span class="section-tag">Highlights</span>
+                <h2>Key Achievements</h2>
+            </div>
             <div class="achievements-grid">
-                <div class="achievement-card">
-                    <div class="achievement-icon">📚</div>
-                    <h3>Comprehensive Documentation</h3>
-                    <p>Full API documentation with examples and tutorials available at phynetpy-docs</p>
+                <div class="achievement-card" style="--delay: 0">
+                    <div class="achievement-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                            <line x1="8" y1="7" x2="16" y2="7"/>
+                            <line x1="8" y1="11" x2="14" y2="11"/>
+                        </svg>
+                    </div>
+                    <h3>Comprehensive Docs</h3>
+                    <p>Full API documentation with examples and tutorials for every module</p>
                 </div>
-                <div class="achievement-card">
-                    <div class="achievement-icon">⚡</div>
+                <div class="achievement-card" style="--delay: 1">
+                    <div class="achievement-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                        </svg>
+                    </div>
                     <h3>High Performance</h3>
-                    <p>Cython-optimized implementation for fast execution on large networks</p>
+                    <p>Cython-optimized implementation with GPU acceleration for large networks</p>
                 </div>
-                <div class="achievement-card">
-                    <div class="achievement-icon">🔬</div>
+                <div class="achievement-card" style="--delay: 2">
+                    <div class="achievement-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="2" y1="12" x2="22" y2="12"/>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                        </svg>
+                    </div>
                     <h3>Research Ready</h3>
                     <p>Designed for phylogenetic research with support for standard formats and methods</p>
                 </div>
-                <div class="achievement-card">
-                    <div class="achievement-icon">🐍</div>
+                <div class="achievement-card" style="--delay: 3">
+                    <div class="achievement-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
                     <h3>Python Ecosystem</h3>
-                    <p>Integrates seamlessly with NumPy, SciPy, and other scientific Python libraries</p>
+                    <p>Seamless integration with NumPy, SciPy, and other scientific libraries</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to get started?</h2>
+            <p>Install PhyNetPy and start analyzing phylogenetic networks today</p>
+            <div class="install-command">
+                <code>pip install phynetpy</code>
+                <button class="copy-btn" onclick="navigator.clipboard.writeText('pip install phynetpy')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="cta-links">
+                <a href="https://phylogenomics.rice.edu/html/phynetpy-docs/index.html" class="btn btn-primary" target="_blank">
+                    Read the Documentation
+                </a>
+                <a href="https://github.com/markkessler66/phynetpy" class="btn btn-outline" target="_blank">
+                    Contribute on GitHub
+                </a>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2025 Mark Kessler. PhyNetPy - Advanced Phylogenetic Network Analysis</p>
+        <div class="container">
+            <p>&copy; 2025 Mark Kessler. PhyNetPy - Advanced Phylogenetic Network Analysis</p>
+        </div>
     </footer>
 
     <script src="showcase-script.js"></script>
 </body>
 </html>
-
