@@ -3,24 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PhyNetPy Interactive Demo - Mark Kessler</title>
+    <title>PhyNetPy Showcase - Mark Kessler</title>
     <link rel="icon" type="image/png" href="m.png">
     <link rel="apple-touch-icon" href="m.png">
-    
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
-
-    <!-- In the <head> section, replace the old Prism theme with: -->
-    <link rel="stylesheet" href="prism-demo.css">
-
-    <!-- Keep your existing styles -->
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="demo-styles.css">
-
-    <!-- Before closing </body>, update script includes: -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-    <script src="prism_demo.js"></script>
-    <script src="demo-script.js"></script>
 </head>
 <body>
     <!-- Navigation -->
@@ -32,109 +18,33 @@
             <ul class="nav-links">
                 <li><a href="index.html#projects">Projects</a></li>
                 <li><a href="index.html#phynetpy">PhyNetPy</a></li>
-                <li><a href="demo.html" class="active">Demo</a></li>
+                <li><a href="phynetpy-showcase.html" class="active">Showcase</a></li>
                 <li><a href="index.html#about">About</a></li>
                 <li><a href="index.html#contact">Contact</a></li>
             </ul>
         </nav>
     </header>
 
-    <!-- Demo Hero Section -->
-    <section class="demo-hero">
-        <div class="hero-content">
-            <h1>PhyNetPy Interactive Demo</h1>
-            <p class="subtitle">Try network analysis algorithms directly in your browser</p>
-            <p class="hero-description">
-                Experiment with PhyNetPy's powerful network analysis capabilities using real Python code. 
-                No installation required - everything runs in your browser using WebAssembly.
-            </p>
-        </div>
-    </section>
-
-    <!-- Interactive Demo Section -->
-    <section class="demo-section">
-        <div class="demo-container">
-            <!-- Demo Controls -->
-            <div class="demo-controls">
-                <div class="example-selector">
-                    <label for="example-select">Choose Example:</label>
-                    <select id="example-select">
-                        <option value="basic">Basic Network Analysis</option>
-                        <option value="community">Community Detection</option>
-                        <option value="metrics">Network Metrics</option>
-                        <option value="phynetpy">PhyNetPy Example</option>
-                        <option value="custom">Custom Script</option>
-                    </select>
-                </div>
-                <div class="control-buttons">
-                    <button id="run-button" class="btn btn-primary">
-                        <span id="run-text"><span class="play-icon"></span>Run Code</span>
-                        <span id="loading-text" style="display: none;">Running...</span>
-                    </button>
-                    <button id="clear-button" class="btn btn-secondary">Clear Output</button>
-                    <button id="reset-button" class="btn btn-secondary">Reset Code</button>
-                </div>
-            </div>
-            
-            <div id="python-editor" class="editor-container"></div>
-
-            <!-- Demo Information -->
-            <div class="demo-info">
-                <div class="info-grid">
-                    <div class="info-card">
-                        <h4>Getting Started</h4>
-                        <ul>
-                            <li>Select an example from the dropdown</li>
-                            <li>Click "Run Code" to execute</li>
-                            <li>Modify the code and experiment freely</li>
-                            <li>Use "Reset Code" to restore original example</li>
-                        </ul>
-                    </div>
-                    <div class="info-card">
-                        <h4>Available Packages</h4>
-                        <ul>
-                            <li><strong>NumPy</strong> - Numerical computing</li>
-                            <li><strong>NetworkX</strong> - Network analysis</li>
-                            <li><strong>Matplotlib</strong> - Plotting and visualization</li>
-                            <li><strong>SciPy</strong> - Scientific computing</li>
-                            <li><strong>BioPython</strong> - Bioinformatics tools</li>
-                            <li><strong>PhyNetPy</strong> - Advanced network algorithms</li>
-                        </ul>
-                        <p style="margin-top: 10px; font-size: 0.9em; color: #888;">
-                            <em>Note: PhyNetPy installs on first load (30-60 seconds). Check the output panel for installation status.</em>
-                        </p>
-                    </div>
-                    <div class="info-card">
-                        <h4>Important Notes</h4>
-                        <ul>
-                            <li>Code runs entirely in your browser</li>
-                            <li>No data is sent to any server</li>
-                            <li>Refresh page if environment becomes unstable</li>
-                            <li>Larger computations may take longer</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+    <!-- Redirect Notice -->
+    <section class="hero" style="padding: 6rem 2rem; text-align: center;">
+        <h1>Page Moved</h1>
+        <p class="subtitle">The PhyNetPy showcase has been moved to a new location</p>
+        <p class="hero-description">
+            Please visit the new showcase page to see PhyNetPy methods, comparisons, and performance figures.
+        </p>
+        <div class="cta-buttons" style="margin-top: 2rem;">
+            <a href="phynetpy-showcase.html" class="btn btn-primary">
+                Go to Showcase →
+            </a>
+            <a href="index.html" class="btn btn-secondary">
+                Back to Home
+            </a>
         </div>
     </section>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2025 Mark Kessler. Interactive demo powered by Pyodide</p>
+        <p>&copy; 2025 Mark Kessler</p>
     </footer>
-
-    <!-- Scripts -->
-    <script>
-        // Ensure Pyodide is loaded before our module
-        window.addEventListener('load', () => {
-            // Small delay to ensure all scripts are loaded
-            setTimeout(() => {
-                if (typeof loadPyodide === 'undefined') {
-                    console.warn('Pyodide not available - demo will work but Python execution will be disabled');
-                }
-            }, 100);
-        });
-    </script>
-    <script type="module" src="demo-script.js"></script>
 </body>
 </html>

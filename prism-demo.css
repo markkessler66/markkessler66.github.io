@@ -80,6 +80,14 @@
     overflow-y: auto;
     overflow-x: hidden;
     height: 100%;
+    /* Hide scrollbar but allow scrolling */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.line-numbers::-webkit-scrollbar {
+    display: none;
 }
 
 .line-numbers div {

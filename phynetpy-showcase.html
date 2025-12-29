@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhyNetPy Showcase - Mark Kessler</title>
+    <link rel="icon" type="image/png" href="m.png">
+    <link rel="apple-touch-icon" href="m.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="showcase-styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <header>
+        <nav>
+            <a href="index.html" class="logo">
+                <img src="m.png" alt="Mark Kessler Logo" />
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#phynetpy">PhyNetPy</a></li>
+                <li><a href="phynetpy-showcase.html" class="active">Showcase</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="showcase-hero">
+        <div class="hero-content">
+            <h1>PhyNetPy: Advanced Phylogenetic Network Analysis</h1>
+            <p class="subtitle">A comprehensive Python library for phylogenetic network methods</p>
+            <p class="hero-description">
+                PhyNetPy provides powerful tools for network construction, manipulation, simulation, and inference 
+                in phylogenetic analysis. Built with performance and usability in mind, it brings advanced network 
+                algorithms to the Python ecosystem.
+            </p>
+            <div class="cta-buttons">
+                <a href="https://phylogenomics.rice.edu/html/phynetpy-docs/index.html" class="btn btn-primary" target="_blank">
+                    View Documentation →
+                </a>
+                <a href="https://github.com/markkessler66/phynetpy" class="btn btn-secondary" target="_blank">
+                    GitHub Repository
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Methods Showcase Section -->
+    <section class="methods-showcase">
+        <div class="container">
+            <h2 class="section-title">Core Methods & Capabilities</h2>
+            <p class="section-description">
+                PhyNetPy offers a comprehensive suite of modules for phylogenetic network analysis
+            </p>
+            <div class="methods-grid">
+                <div class="method-card">
+                    <div class="method-icon">
+                        <span class="icon-text">NET</span>
+                    </div>
+                    <h3>Network</h3>
+                    <p>Core phylogenetic network data structures including Node, Edge, Graph, and Network classes. Provides the foundation for all network operations.</p>
+                    <ul class="method-features">
+                        <li>Node and Edge management</li>
+                        <li>Network topology operations</li>
+                        <li>Leaf and root identification</li>
+                    </ul>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-icon">
+                        <span class="icon-text">PAR</span>
+                    </div>
+                    <h3>NetworkParser</h3>
+                    <p>Parse Nexus files and Newick strings to import existing phylogenetic networks. Supports standard file formats used in phylogenetic research.</p>
+                    <ul class="method-features">
+                        <li>Nexus file parsing</li>
+                        <li>Newick string handling</li>
+                        <li>Format validation</li>
+                    </ul>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-icon">
+                        <span class="icon-text">SIM</span>
+                    </div>
+                    <h3>BirthDeath</h3>
+                    <p>Birth-death process network simulators including Yule and CBDP models. Generate synthetic networks for testing and research.</p>
+                    <ul class="method-features">
+                        <li>Yule model simulation</li>
+                        <li>CBDP model support</li>
+                        <li>Configurable parameters</li>
+                    </ul>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-icon">
+                        <span class="icon-text">UTIL</span>
+                    </div>
+                    <h3>GraphUtils</h3>
+                    <p>Graph and network utility functions for topology analysis and manipulation. Essential tools for network comparison and analysis.</p>
+                    <ul class="method-features">
+                        <li>Topology analysis</li>
+                        <li>Network comparison</li>
+                        <li>Graph manipulation</li>
+                    </ul>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-icon">
+                        <span class="icon-text">MOV</span>
+                    </div>
+                    <h3>NetworkMoves</h3>
+                    <p>Network topology modification operations including add/remove hybrid nodes and NNI (Nearest Neighbor Interchange) moves.</p>
+                    <ul class="method-features">
+                        <li>Hybrid node operations</li>
+                        <li>NNI moves</li>
+                        <li>Topology modification</li>
+                    </ul>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-icon">
+                        <span class="icon-text">GTR</span>
+                    </div>
+                    <h3>GTR</h3>
+                    <p>Time-reversible substitution models including GTR, K80, F81, JC, HKY, K81, SYM, and TN93 for sequence evolution modeling.</p>
+                    <ul class="method-features">
+                        <li>Multiple substitution models</li>
+                        <li>Model selection</li>
+                        <li>Parameter estimation</li>
+                    </ul>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-icon">
+                        <span class="icon-text">MSA</span>
+                    </div>
+                    <h3>MSA</h3>
+                    <p>Multiple Sequence Alignment parsing, storage, and analysis. Handle sequence data efficiently with optimized data structures.</p>
+                    <ul class="method-features">
+                        <li>Alignment parsing</li>
+                        <li>Data compression</li>
+                        <li>Sequence analysis</li>
+                    </ul>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-icon">
+                        <span class="icon-text">GEN</span>
+                    </div>
+                    <h3>GeneTrees</h3>
+                    <p>Gene tree container and analysis utilities including consensus tree construction. Manage and analyze multiple gene trees.</p>
+                    <ul class="method-features">
+                        <li>Tree container management</li>
+                        <li>Consensus construction</li>
+                        <li>Tree analysis utilities</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Tables Section -->
+    <section class="comparisons">
+        <div class="container">
+            <h2 class="section-title">Comparisons</h2>
+            
+            <!-- Table 1: PhyNetPy vs Competition -->
+            <div class="comparison-table-wrapper">
+                <h3>PhyNetPy vs Competition</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>PhyNetPy</th>
+                            <th>NetworkX</th>
+                            <th>BioPython</th>
+                            <th>Advantage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Phylogenetic Networks</td>
+                            <td>✓ Native support</td>
+                            <td>✗ General graphs only</td>
+                            <td>✗ Trees only</td>
+                            <td>Specialized for phylogenetic networks</td>
+                        </tr>
+                        <tr>
+                            <td>Hybrid Nodes</td>
+                            <td>✓ Full support</td>
+                            <td>✗ Not supported</td>
+                            <td>✗ Not supported</td>
+                            <td>Handles reticulate evolution</td>
+                        </tr>
+                        <tr>
+                            <td>Nexus File Parsing</td>
+                            <td>✓ Built-in</td>
+                            <td>✗ Not available</td>
+                            <td>Partial</td>
+                            <td>Complete Nexus support</td>
+                        </tr>
+                        <tr>
+                            <td>Birth-Death Simulation</td>
+                            <td>✓ Yule & CBDP</td>
+                            <td>✗ Not available</td>
+                            <td>✗ Not available</td>
+                            <td>Network simulation capabilities</td>
+                        </tr>
+                        <tr>
+                            <td>Substitution Models</td>
+                            <td>✓ GTR family</td>
+                            <td>✗ Not available</td>
+                            <td>Partial</td>
+                            <td>Comprehensive model support</td>
+                        </tr>
+                        <tr>
+                            <td>Network Topology Analysis</td>
+                            <td>✓ Specialized tools</td>
+                            <td>✓ General tools</td>
+                            <td>Limited</td>
+                            <td>Phylogenetic-specific algorithms</td>
+                        </tr>
+                        <tr>
+                            <td>Performance</td>
+                            <td>✓ Optimized (Cython)</td>
+                            <td>✓ Good</td>
+                            <td>Good</td>
+                            <td>High-performance implementation</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Table 2: Version Improvements -->
+            <div class="comparison-table-wrapper">
+                <h3>Version Improvements</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Version</th>
+                            <th>Key Features</th>
+                            <th>Performance</th>
+                            <th>Improvements</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0.2.0 (Current)</td>
+                            <td>Full API, all modules</td>
+                            <td>Optimized</td>
+                            <td>Complete documentation, stable API</td>
+                        </tr>
+                        <tr>
+                            <td>0.1.x</td>
+                            <td>Core modules</td>
+                            <td>Good</td>
+                            <td>Initial release, basic functionality</td>
+                        </tr>
+                        <tr>
+                            <td>Pre-release</td>
+                            <td>Prototype</td>
+                            <td>Basic</td>
+                            <td>Proof of concept</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Figures Section -->
+    <section class="performance-figures">
+        <div class="container">
+            <h2 class="section-title">Performance Benchmarks</h2>
+            <p class="section-description">
+                PhyNetPy demonstrates superior performance for phylogenetic network operations
+            </p>
+            
+            <div class="figures-grid">
+                <div class="figure-container">
+                    <h3>Network Construction Speed</h3>
+                    <canvas id="constructionChart"></canvas>
+                    <p class="figure-caption">
+                        Comparison of network construction time for networks of varying sizes. 
+                        PhyNetPy's optimized Cython implementation provides significant speedup.
+                    </p>
+                </div>
+
+                <div class="figure-container">
+                    <h3>Scalability Analysis</h3>
+                    <canvas id="scalabilityChart"></canvas>
+                    <p class="figure-caption">
+                        Execution time scaling with network size. PhyNetPy maintains near-linear 
+                        scaling for most operations up to large network sizes.
+                    </p>
+                </div>
+
+                <div class="figure-container">
+                    <h3>Memory Usage Comparison</h3>
+                    <canvas id="memoryChart"></canvas>
+                    <p class="figure-caption">
+                        Memory efficiency comparison. PhyNetPy's compressed data structures 
+                        reduce memory footprint compared to naive implementations.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section class="achievements">
+        <div class="container">
+            <h2 class="section-title">Key Achievements</h2>
+            <div class="achievements-grid">
+                <div class="achievement-card">
+                    <div class="achievement-icon">📚</div>
+                    <h3>Comprehensive Documentation</h3>
+                    <p>Full API documentation with examples and tutorials available at phynetpy-docs</p>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">⚡</div>
+                    <h3>High Performance</h3>
+                    <p>Cython-optimized implementation for fast execution on large networks</p>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">🔬</div>
+                    <h3>Research Ready</h3>
+                    <p>Designed for phylogenetic research with support for standard formats and methods</p>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">🐍</div>
+                    <h3>Python Ecosystem</h3>
+                    <p>Integrates seamlessly with NumPy, SciPy, and other scientific Python libraries</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Mark Kessler. PhyNetPy - Advanced Phylogenetic Network Analysis</p>
+    </footer>
+
+    <script src="showcase-script.js"></script>
+</body>
+</html>
+

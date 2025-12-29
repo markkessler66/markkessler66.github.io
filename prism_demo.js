@@ -120,10 +120,20 @@ print(f"Sum of squares (0-99): {sum_of_squares}")`
             this.loadExample('hello');
         }
         
-        // Ensure initial scroll sync after a brief delay to allow rendering
+        // Ensure initial scroll sync after DOM updates
         setTimeout(() => {
+            this.syncScrollHeights();
             this.syncScrollFromTextarea();
         }, 100);
+        
+        // Use ResizeObserver to detect height changes
+        if (window.ResizeObserver && this.elements.codeInput) {
+            const resizeObserver = new ResizeObserver(() => {
+                this.syncScrollHeights();
+                this.syncScrollFromTextarea();
+            });
+            resizeObserver.observe(this.elements.codeInput);
+        }
     }
 
     createHTML() {
@@ -217,13 +227,21 @@ print(f"Sum of squares (0-99): {sum_of_squares}")`
         const textarea = this.elements.codeInput;
         const lineNumbers = this.elements.lineNumbers;
         
-        // Both should have the same number of lines, so their scroll heights
-        // should naturally match if padding and line-height are consistent
-        // This method ensures they stay in sync after DOM updates
+        // Set line numbers container height to match textarea scrollHeight
+        // This ensures they have the same scrollable content height
         requestAnimationFrame(() => {
-            // After DOM update, verify heights match
-            // If they don't match, it's likely a CSS issue, but we can't fix that here
-            // The important thing is that scrollTop values stay synced
+            if (textarea && lineNumbers) {
+                // Ensure line numbers container can accommodate all lines
+                const scrollHeight = textarea.scrollHeight;
+                lineNumbers.style.height = '100%';
+                // Force line numbers to have same scrollable height as textarea
+                const lineCount = (textarea.value || ' ').split('\n').length;
+                const lineHeight = parseFloat(getComputedStyle(textarea).lineHeight);
+                const minHeight = lineCount * lineHeight + parseFloat(getComputedStyle(textarea).paddingTop) + parseFloat(getComputedStyle(textarea).paddingBottom);
+                if (scrollHeight > minHeight) {
+                    lineNumbers.style.minHeight = `${scrollHeight}px`;
+                }
+            }
         });
     }
 
@@ -232,24 +250,29 @@ print(f"Sum of squares (0-99): {sum_of_squares}")`
         if (this._syncingScroll) return;
         this._syncingScroll = true;
         
-        const scrollTop = this.elements.codeInput.scrollTop;
-        const scrollLeft = this.elements.codeInput.scrollLeft;
-        
-        // Sync line numbers vertical scroll
-        if (this.elements.lineNumbers.scrollTop !== scrollTop) {
-            this.elements.lineNumbers.scrollTop = scrollTop;
-        }
-        
-        // Sync highlighted code display
-        const preElement = this.elements.codeDisplay.parentElement;
-        if (preElement.scrollTop !== scrollTop) {
-            preElement.scrollTop = scrollTop;
-        }
-        if (preElement.scrollLeft !== scrollLeft) {
-            preElement.scrollLeft = scrollLeft;
-        }
-        
-        this._syncingScroll = false;
+        requestAnimationFrame(() => {
+            const scrollTop = this.elements.codeInput.scrollTop;
+            const scrollLeft = this.elements.codeInput.scrollLeft;
+            
+            // Sync line numbers vertical scroll
+            // Scrollbar is hidden but scrolling is enabled
+            if (this.elements.lineNumbers && this.elements.lineNumbers.scrollTop !== scrollTop) {
+                this.elements.lineNumbers.scrollTop = scrollTop;
+            }
+            
+            // Sync highlighted code display
+            const preElement = this.elements.codeDisplay.parentElement;
+            if (preElement) {
+                if (preElement.scrollTop !== scrollTop) {
+                    preElement.scrollTop = scrollTop;
+                }
+                if (preElement.scrollLeft !== scrollLeft) {
+                    preElement.scrollLeft = scrollLeft;
+                }
+            }
+            
+            this._syncingScroll = false;
+        });
     }
 
     syncScrollFromLineNumbers() {
