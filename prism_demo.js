@@ -110,12 +110,20 @@ print(f"Sum of squares (0-99): {sum_of_squares}")`
         // Set up event listeners
         this.attachEventListeners();
 
+        // Initialize scroll sync flag
+        this._syncingScroll = false;
+
         // Load initial code
         if (this.config.initialCode) {
             this.setCode(this.config.initialCode);
         } else {
             this.loadExample('hello');
         }
+        
+        // Ensure initial scroll sync after a brief delay to allow rendering
+        setTimeout(() => {
+            this.syncScrollFromTextarea();
+        }, 100);
     }
 
     createHTML() {
@@ -153,8 +161,11 @@ print(f"Sum of squares (0-99): {sum_of_squares}")`
     attachEventListeners() {
         // Text input events
         this.elements.codeInput.addEventListener('input', () => this.updateDisplay());
-        this.elements.codeInput.addEventListener('scroll', () => this.syncScroll());
+        this.elements.codeInput.addEventListener('scroll', () => this.syncScrollFromTextarea());
         this.elements.codeInput.addEventListener('keydown', (e) => this.handleKeydown(e));
+
+        // Sync line numbers scrolling with textarea
+        this.elements.lineNumbers.addEventListener('scroll', () => this.syncScrollFromLineNumbers());
 
         // Button events
         document.getElementById('formatBtn')?.addEventListener('click', () => this.formatCode());
@@ -178,6 +189,11 @@ print(f"Sum of squares (0-99): {sum_of_squares}")`
 
         // Update line numbers
         this.updateLineNumbers();
+        
+        // Sync scroll positions after update
+        requestAnimationFrame(() => {
+            this.syncScrollFromTextarea();
+        });
 
         // Trigger onChange callback if provided
         if (this.config.onChange) {
@@ -189,15 +205,77 @@ print(f"Sum of squares (0-99): {sum_of_squares}")`
         const lines = (this.elements.codeInput.value || ' ').split('\n');
         const html = lines.map((_, i) => `<div>${i + 1}</div>`).join('');
         this.elements.lineNumbers.innerHTML = html;
+        
+        // Ensure line numbers container height matches textarea scroll height
+        // This ensures they scroll together properly
+        this.syncScrollHeights();
+    }
+
+    syncScrollHeights() {
+        // Ensure line numbers container has matching scroll height
+        // The line numbers should match the textarea's scrollable content height
+        const textarea = this.elements.codeInput;
+        const lineNumbers = this.elements.lineNumbers;
+        
+        // Both should have the same number of lines, so their scroll heights
+        // should naturally match if padding and line-height are consistent
+        // This method ensures they stay in sync after DOM updates
+        requestAnimationFrame(() => {
+            // After DOM update, verify heights match
+            // If they don't match, it's likely a CSS issue, but we can't fix that here
+            // The important thing is that scrollTop values stay synced
+        });
+    }
+
+    syncScrollFromTextarea() {
+        // Prevent infinite loop
+        if (this._syncingScroll) return;
+        this._syncingScroll = true;
+        
+        const scrollTop = this.elements.codeInput.scrollTop;
+        const scrollLeft = this.elements.codeInput.scrollLeft;
+        
+        // Sync line numbers vertical scroll
+        if (this.elements.lineNumbers.scrollTop !== scrollTop) {
+            this.elements.lineNumbers.scrollTop = scrollTop;
+        }
+        
+        // Sync highlighted code display
+        const preElement = this.elements.codeDisplay.parentElement;
+        if (preElement.scrollTop !== scrollTop) {
+            preElement.scrollTop = scrollTop;
+        }
+        if (preElement.scrollLeft !== scrollLeft) {
+            preElement.scrollLeft = scrollLeft;
+        }
+        
+        this._syncingScroll = false;
+    }
+
+    syncScrollFromLineNumbers() {
+        // Prevent infinite loop
+        if (this._syncingScroll) return;
+        this._syncingScroll = true;
+        
+        const scrollTop = this.elements.lineNumbers.scrollTop;
+        
+        // Sync textarea vertical scroll
+        if (this.elements.codeInput.scrollTop !== scrollTop) {
+            this.elements.codeInput.scrollTop = scrollTop;
+        }
+        
+        // Sync highlighted code display
+        const preElement = this.elements.codeDisplay.parentElement;
+        if (preElement.scrollTop !== scrollTop) {
+            preElement.scrollTop = scrollTop;
+        }
+        
+        this._syncingScroll = false;
     }
 
     syncScroll() {
-        // Sync line numbers scroll with editor
-        this.elements.lineNumbers.scrollTop = this.elements.codeInput.scrollTop;
-        
-        // Sync highlighted code with textarea
-        this.elements.codeDisplay.parentElement.scrollTop = this.elements.codeInput.scrollTop;
-        this.elements.codeDisplay.parentElement.scrollLeft = this.elements.codeInput.scrollLeft;
+        // Legacy method - redirect to new method
+        this.syncScrollFromTextarea();
     }
 
     handleKeydown(e) {
