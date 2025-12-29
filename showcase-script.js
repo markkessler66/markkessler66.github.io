@@ -1,24 +1,24 @@
 // PhyNetPy Showcase - Chart Configuration
-// Dark theme with cyan/blue/purple accents
+// Light theme matching main site
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Chart.js global defaults for dark theme
-    Chart.defaults.color = '#94a3b8';
-    Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.08)';
-    Chart.defaults.font.family = "'Outfit', -apple-system, sans-serif";
+    // Chart.js global defaults for light theme
+    Chart.defaults.color = '#64748b';
+    Chart.defaults.borderColor = '#e2e8f0';
+    Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
 
-    // Color palette
+    // Color palette for light theme
     const colors = {
-        cyan: 'rgba(0, 212, 170, 0.85)',
-        cyanBorder: 'rgba(0, 212, 170, 1)',
-        blue: 'rgba(59, 130, 246, 0.85)',
-        blueBorder: 'rgba(59, 130, 246, 1)',
-        purple: 'rgba(139, 92, 246, 0.85)',
-        purpleBorder: 'rgba(139, 92, 246, 1)',
-        gray: 'rgba(100, 116, 139, 0.7)',
-        grayBorder: 'rgba(100, 116, 139, 1)',
+        primary: 'rgba(37, 99, 235, 0.85)',
+        primaryBorder: 'rgba(37, 99, 235, 1)',
+        teal: 'rgba(6, 182, 212, 0.85)',
+        tealBorder: 'rgba(6, 182, 212, 1)',
         green: 'rgba(16, 185, 129, 0.85)',
-        greenBorder: 'rgba(16, 185, 129, 1)'
+        greenBorder: 'rgba(16, 185, 129, 1)',
+        gray: 'rgba(100, 116, 139, 0.6)',
+        grayBorder: 'rgba(100, 116, 139, 1)',
+        orange: 'rgba(245, 158, 11, 0.85)',
+        orangeBorder: 'rgba(245, 158, 11, 1)'
     };
 
     // InferMpAllop Performance Comparison Chart
@@ -31,8 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 datasets: [{
                     label: 'PhyNetPy InferMpAllop-2.0',
                     data: [2.3, 8.7, 18.5],
-                    backgroundColor: colors.cyan,
-                    borderColor: colors.cyanBorder,
+                    backgroundColor: colors.primary,
+                    borderColor: colors.primaryBorder,
                     borderWidth: 2,
                     borderRadius: 6,
                     borderSkipped: false
@@ -61,13 +61,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     },
                     tooltip: {
-                        backgroundColor: '#1a2435',
-                        titleColor: '#f1f5f9',
-                        bodyColor: '#94a3b8',
-                        borderColor: 'rgba(0, 212, 170, 0.3)',
+                        backgroundColor: '#ffffff',
+                        titleColor: '#1e293b',
+                        bodyColor: '#64748b',
+                        borderColor: '#e2e8f0',
                         borderWidth: 1,
                         padding: 12,
                         cornerRadius: 8,
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                         displayColors: true,
                         callbacks: {
                             label: function(context) {
@@ -80,17 +81,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     y: {
                         beginAtZero: true,
                         grid: {
-                            color: 'rgba(255, 255, 255, 0.05)',
+                            color: '#e2e8f0',
                             drawBorder: false
                         },
                         ticks: {
                             padding: 10,
-                            font: { size: 11 }
+                            font: { size: 11 },
+                            color: '#64748b'
                         },
                         title: {
                             display: true,
                             text: 'Compute Time (seconds)',
                             font: { size: 12, weight: '500' },
+                            color: '#1e293b',
                             padding: { bottom: 10 }
                         }
                     },
@@ -100,12 +103,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         },
                         ticks: {
                             padding: 10,
-                            font: { size: 11 }
+                            font: { size: 11 },
+                            color: '#64748b'
                         },
                         title: {
                             display: true,
                             text: 'Network Size',
                             font: { size: 12, weight: '500' },
+                            color: '#1e293b',
                             padding: { top: 10 }
                         }
                     }
@@ -132,8 +137,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, {
                     label: 'PhyNetPy CPU',
                     data: [4.1, 12.3, 24.7],
-                    backgroundColor: colors.blue,
-                    borderColor: colors.blueBorder,
+                    backgroundColor: colors.teal,
+                    borderColor: colors.tealBorder,
                     borderWidth: 2,
                     borderRadius: 6,
                     borderSkipped: false
@@ -162,10 +167,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     },
                     tooltip: {
-                        backgroundColor: '#1a2435',
-                        titleColor: '#f1f5f9',
-                        bodyColor: '#94a3b8',
-                        borderColor: 'rgba(0, 212, 170, 0.3)',
+                        backgroundColor: '#ffffff',
+                        titleColor: '#1e293b',
+                        bodyColor: '#64748b',
+                        borderColor: '#e2e8f0',
                         borderWidth: 1,
                         padding: 12,
                         cornerRadius: 8,
@@ -181,17 +186,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     y: {
                         beginAtZero: true,
                         grid: {
-                            color: 'rgba(255, 255, 255, 0.05)',
+                            color: '#e2e8f0',
                             drawBorder: false
                         },
                         ticks: {
                             padding: 10,
-                            font: { size: 11 }
+                            font: { size: 11 },
+                            color: '#64748b'
                         },
                         title: {
                             display: true,
                             text: 'Compute Time (seconds)',
                             font: { size: 12, weight: '500' },
+                            color: '#1e293b',
                             padding: { bottom: 10 }
                         }
                     },
@@ -201,12 +208,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         },
                         ticks: {
                             padding: 10,
-                            font: { size: 11 }
+                            font: { size: 11 },
+                            color: '#64748b'
                         },
                         title: {
                             display: true,
                             text: 'Network Size',
                             font: { size: 12, weight: '500' },
+                            color: '#1e293b',
                             padding: { top: 10 }
                         }
                     }
@@ -227,17 +236,17 @@ document.addEventListener('DOMContentLoaded', function() {
         ];
 
         const chartColors = [
-            colors.cyan,
+            colors.primary,
             colors.gray,
-            colors.blue,
+            colors.teal,
             colors.green,
             colors.gray
         ];
 
         const borderColors = [
-            colors.cyanBorder,
+            colors.primaryBorder,
             colors.grayBorder,
-            colors.blueBorder,
+            colors.tealBorder,
             colors.greenBorder,
             colors.grayBorder
         ];
@@ -270,10 +279,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         display: false
                     },
                     tooltip: {
-                        backgroundColor: '#1a2435',
-                        titleColor: '#f1f5f9',
-                        bodyColor: '#94a3b8',
-                        borderColor: 'rgba(0, 212, 170, 0.3)',
+                        backgroundColor: '#ffffff',
+                        titleColor: '#1e293b',
+                        bodyColor: '#64748b',
+                        borderColor: '#e2e8f0',
                         borderWidth: 1,
                         padding: 14,
                         cornerRadius: 8,
@@ -298,12 +307,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         beginAtZero: true,
                         max: 0.3,
                         grid: {
-                            color: 'rgba(255, 255, 255, 0.05)',
+                            color: '#e2e8f0',
                             drawBorder: false
                         },
                         ticks: {
                             padding: 10,
                             font: { size: 11 },
+                            color: '#64748b',
                             callback: function(value) {
                                 return value.toFixed(2);
                             }
@@ -312,6 +322,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             display: true,
                             text: 'Distance to Ground Truth (lower = better)',
                             font: { size: 12, weight: '500' },
+                            color: '#1e293b',
                             padding: { bottom: 10 }
                         }
                     },
@@ -322,6 +333,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         ticks: {
                             padding: 10,
                             font: { size: 10 },
+                            color: '#64748b',
                             maxRotation: 0,
                             autoSkip: false
                         }
@@ -330,41 +342,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
-    // Add smooth scroll behavior for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-
-    // Intersection Observer for scroll animations
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.animationPlayState = 'running';
-            }
-        });
-    }, observerOptions);
-
-    // Observe all animated cards
-    document.querySelectorAll('.module-card, .achievement-card').forEach(card => {
-        card.style.animationPlayState = 'paused';
-        observer.observe(card);
-    });
 
     // Copy button feedback
     const copyBtn = document.querySelector('.copy-btn');
@@ -376,7 +353,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <polyline points="20 6 9 17 4 12"/>
                 </svg>
             `;
-            this.style.color = '#00d4aa';
+            this.style.color = '#10b981';
             
             setTimeout(() => {
                 this.innerHTML = originalHTML;

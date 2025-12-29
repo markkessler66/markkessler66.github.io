@@ -6,16 +6,10 @@
     <title>PhyNetPy Showcase - Mark Kessler</title>
     <link rel="icon" type="image/png" href="m.png">
     <link rel="apple-touch-icon" href="m.png">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="showcase-styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
-    <!-- Animated Background -->
-    <div class="bg-grid"></div>
-    <div class="bg-glow bg-glow-1"></div>
-    <div class="bg-glow bg-glow-2"></div>
-
     <!-- Navigation -->
     <header>
         <nav>
@@ -34,19 +28,19 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-badge">Open Source Library</div>
+        <div class="hero-badge">Open Source Python Library</div>
         <h1>
             <span class="hero-gradient">PhyNetPy</span>
             <span class="hero-subtitle-text">Advanced Phylogenetic Network Analysis</span>
         </h1>
         <p class="hero-description">
-            A comprehensive Python library bringing powerful network construction, manipulation, 
-            simulation, and inference to phylogenetic analysis. Built with performance and 
-            usability at its core.
+            A comprehensive Python library for network construction, manipulation, 
+            simulation, and inference in phylogenetic analysis. Built with performance 
+            and usability in mind.
         </p>
         <div class="hero-actions">
             <a href="https://phylogenomics.rice.edu/html/phynetpy-docs/index.html" class="btn btn-primary" target="_blank">
-                <span>Documentation</span>
+                <span>View Documentation</span>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path d="M3 8H13M13 8L8 3M13 8L8 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -55,7 +49,7 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                 </svg>
-                <span>View on GitHub</span>
+                <span>GitHub Repository</span>
             </a>
         </div>
         <div class="hero-stats">
@@ -85,10 +79,8 @@
                 <p>A comprehensive suite of specialized modules for phylogenetic network analysis</p>
             </div>
             <div class="modules-grid">
-                <div class="module-card" style="--delay: 0">
-                    <div class="module-icon">
-                        <span>NET</span>
-                    </div>
+                <div class="module-card">
+                    <div class="module-icon"><span>NET</span></div>
                     <h3>Network</h3>
                     <p>Core phylogenetic network data structures including Node, Edge, Graph, and Network classes.</p>
                     <ul class="module-features">
@@ -98,10 +90,8 @@
                     </ul>
                 </div>
 
-                <div class="module-card" style="--delay: 1">
-                    <div class="module-icon">
-                        <span>PAR</span>
-                    </div>
+                <div class="module-card">
+                    <div class="module-icon"><span>PAR</span></div>
                     <h3>NetworkParser</h3>
                     <p>Parse Nexus files and Newick strings to import existing phylogenetic networks.</p>
                     <ul class="module-features">
@@ -111,10 +101,8 @@
                     </ul>
                 </div>
 
-                <div class="module-card" style="--delay: 2">
-                    <div class="module-icon">
-                        <span>SIM</span>
-                    </div>
+                <div class="module-card">
+                    <div class="module-icon"><span>SIM</span></div>
                     <h3>BirthDeath</h3>
                     <p>Birth-death process network simulators including Yule and CBDP models.</p>
                     <ul class="module-features">
@@ -124,10 +112,8 @@
                     </ul>
                 </div>
 
-                <div class="module-card" style="--delay: 3">
-                    <div class="module-icon">
-                        <span>UTL</span>
-                    </div>
+                <div class="module-card">
+                    <div class="module-icon"><span>UTL</span></div>
                     <h3>GraphUtils</h3>
                     <p>Graph and network utility functions for topology analysis and manipulation.</p>
                     <ul class="module-features">
@@ -137,10 +123,8 @@
                     </ul>
                 </div>
 
-                <div class="module-card" style="--delay: 4">
-                    <div class="module-icon">
-                        <span>MOV</span>
-                    </div>
+                <div class="module-card">
+                    <div class="module-icon"><span>MOV</span></div>
                     <h3>NetworkMoves</h3>
                     <p>Network topology modification operations including NNI moves and hybrid nodes.</p>
                     <ul class="module-features">
@@ -150,10 +134,8 @@
                     </ul>
                 </div>
 
-                <div class="module-card" style="--delay: 5">
-                    <div class="module-icon">
-                        <span>GTR</span>
-                    </div>
+                <div class="module-card">
+                    <div class="module-icon"><span>GTR</span></div>
                     <h3>GTR Models</h3>
                     <p>Time-reversible substitution models: GTR, K80, F81, JC, HKY, K81, SYM, TN93.</p>
                     <ul class="module-features">
@@ -163,10 +145,8 @@
                     </ul>
                 </div>
 
-                <div class="module-card" style="--delay: 6">
-                    <div class="module-icon">
-                        <span>MSA</span>
-                    </div>
+                <div class="module-card">
+                    <div class="module-icon"><span>MSA</span></div>
                     <h3>MSA</h3>
                     <p>Multiple Sequence Alignment parsing, storage, and analysis utilities.</p>
                     <ul class="module-features">
@@ -176,10 +156,8 @@
                     </ul>
                 </div>
 
-                <div class="module-card" style="--delay: 7">
-                    <div class="module-icon">
-                        <span>GEN</span>
-                    </div>
+                <div class="module-card">
+                    <div class="module-icon"><span>GEN</span></div>
                     <h3>GeneTrees</h3>
                     <p>Gene tree container and analysis utilities including consensus tree construction.</p>
                     <ul class="module-features">
@@ -269,7 +247,6 @@
             </div>
 
             <div class="benchmark-grid">
-                <!-- InferMpAllop Chart -->
                 <div class="benchmark-card">
                     <div class="benchmark-header">
                         <h3>InferMpAllop Performance</h3>
@@ -280,7 +257,6 @@
                     </div>
                 </div>
 
-                <!-- MCMC Chart -->
                 <div class="benchmark-card">
                     <div class="benchmark-header">
                         <h3>MCMC_BiMarkers Performance</h3>
@@ -291,7 +267,6 @@
                     </div>
                 </div>
 
-                <!-- Correctness Chart -->
                 <div class="benchmark-card full-width">
                     <div class="benchmark-header">
                         <h3>Method Correctness Analysis</h3>
@@ -395,7 +370,7 @@
                 <h2>Key Achievements</h2>
             </div>
             <div class="achievements-grid">
-                <div class="achievement-card" style="--delay: 0">
+                <div class="achievement-card">
                     <div class="achievement-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
@@ -407,7 +382,7 @@
                     <h3>Comprehensive Docs</h3>
                     <p>Full API documentation with examples and tutorials for every module</p>
                 </div>
-                <div class="achievement-card" style="--delay: 1">
+                <div class="achievement-card">
                     <div class="achievement-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
@@ -416,7 +391,7 @@
                     <h3>High Performance</h3>
                     <p>Cython-optimized implementation with GPU acceleration for large networks</p>
                 </div>
-                <div class="achievement-card" style="--delay: 2">
+                <div class="achievement-card">
                     <div class="achievement-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10"/>
@@ -427,7 +402,7 @@
                     <h3>Research Ready</h3>
                     <p>Designed for phylogenetic research with support for standard formats and methods</p>
                 </div>
-                <div class="achievement-card" style="--delay: 3">
+                <div class="achievement-card">
                     <div class="achievement-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M12 2L2 7l10 5 10-5-10-5z"/>
