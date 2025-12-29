@@ -21,6 +21,7 @@
 .showcase-hero .subtitle {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
+    color: white;
     opacity: 0.95;
 }
 
@@ -173,6 +174,24 @@
     background-color: var(--bg-white);
 }
 
+.benchmark-section {
+    margin-bottom: 4rem;
+}
+
+.benchmark-title {
+    font-size: 1.75rem;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.benchmark-description {
+    text-align: center;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+    font-size: 1rem;
+}
+
 .figures-grid {
     max-width: var(--max-width);
     margin: 3rem auto 0;
@@ -188,6 +207,10 @@
     border: 1px solid var(--border-color);
 }
 
+.figure-container.full-width {
+    max-width: 100%;
+}
+
 .figure-container h3 {
     margin-bottom: 1.5rem;
     color: var(--text-dark);
@@ -196,7 +219,7 @@
 
 .figure-container canvas {
     max-width: 100%;
-    height: 300px;
+    height: 400px;
     margin-bottom: 1rem;
 }
 
@@ -206,6 +229,19 @@
     line-height: 1.6;
     font-style: italic;
     margin-top: 1rem;
+}
+
+/* NetworkX Comparison Section */
+.networkx-comparison {
+    padding: 5rem 2rem;
+    background-color: var(--bg-light);
+}
+
+.table-note {
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--text-light);
+    text-align: center;
 }
 
 /* Achievements */
