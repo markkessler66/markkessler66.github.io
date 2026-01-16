@@ -226,6 +226,22 @@ nav {
     margin-bottom: 1.5rem;
 }
 
+.project-card ul {
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    padding-left: 1.25rem;
+}
+
+.project-card ul li {
+    margin-bottom: 0.35rem;
+    font-size: 0.95rem;
+}
+
+.project-card ul li::marker {
+    color: var(--primary-color);
+}
+
 .tech-stack {
     display: flex;
     flex-wrap: wrap;
