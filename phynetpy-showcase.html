@@ -54,18 +54,18 @@
         </div>
         <div class="hero-stats">
             <div class="stat">
-                <span class="stat-value">8+</span>
+                <span class="stat-value">12+</span>
                 <span class="stat-label">Core Modules</span>
             </div>
             <div class="stat-divider"></div>
             <div class="stat">
-                <span class="stat-value">GTR</span>
-                <span class="stat-label">Model Family</span>
+                <span class="stat-value">Stateless</span>
+                <span class="stat-label">Method/Model Building</span>
             </div>
             <div class="stat-divider"></div>
             <div class="stat">
                 <span class="stat-value">GPU</span>
-                <span class="stat-label">Accelerated</span>
+                <span class="stat-label">Acceleratd</span>
             </div>
         </div>
     </section>
@@ -166,6 +166,52 @@
                         <li>Tree analysis utilities</li>
                     </ul>
                 </div>
+
+                <div class="module-card">
+                    <div class="module-icon"><span>BLD</span></div>
+                    <h3>Model</h3>
+                    <p>Plug and play modular model building </p>
+                    <ul class="module-features">
+                        <li>Factory pattern for easy builds</li>
+                        <li>Stateless design for flexibile method development</li>
+                        <li>Integration with MSAs and GTR models and quick network hooks</li>
+                        <li>Accepts visitors for the Strategy/Visitor/Executor Pattern</li>
+                    </ul>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon"><span>VIS</span></div>
+                    <h3>Visitor</h3>
+                    <p>Top level interface for defining Traversal and Algorithmic Structures on a model</p>
+                    <ul class="module-features">
+                        <li>Can be used to define Traversal and Algorithmic Structures on a model</li>
+                        <li>Stateless design for flexibile method development</li>
+                        <li>The Visitor portion of the Strategy/Visitor/Executor Pattern</li>
+                    </ul>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon"><span>STR</span></div>
+                    <h3>Strategy</h3>
+                    <p>Top level interface for defining and executing inference strategies</p>
+                    <ul class="module-features">
+                        <li>Comprehensive while flexible to interact with models and data</li>
+                        <li>Stateless design for flexibile method development</li>
+                        <li>Is the Strategy portion of the Strategy/Visitor/Executor Pattern</li>
+                    </ul>
+                </div>
+
+
+                <div class="module-card">
+                    <div class="module-icon"><span>EXE</span></div>
+                    <h3>Executor</h3>
+                    <p>Top level interface for providing opimized execution of inference strategies </p>
+                    <ul class="module-features">
+                        <li>Provides formula for optimization</li>
+                        <li>Pre-installed optimizers, such as GPUExecutor, ParallelExecutor, and more</li>
+                        <li>Consequence-free design for ease of layering on top of likelihood calculations</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
@@ -208,8 +254,8 @@
                             <td><span class="partial">Partial</span></td>
                         </tr>
                         <tr>
-                            <td>Birth-Death Simulation</td>
-                            <td class="highlight-col"><span class="check">Yule & CBDP</span></td>
+                            <td>Network and Data Simulations</td>
+                            <td class="highlight-col"><span class="check">Yule/CBDP/Seqs</span></td>
                             <td><span class="cross">Not available</span></td>
                             <td><span class="cross">Not available</span></td>
                         </tr>
@@ -227,7 +273,7 @@
                         </tr>
                         <tr>
                             <td>Performance</td>
-                            <td class="highlight-col"><span class="check">Cython optimized</span></td>
+                            <td class="highlight-col"><span class="check">Cython/GPU/Parallel/Memory optimized</span></td>
                             <td><span class="check">Good</span></td>
                             <td><span class="check">Good</span></td>
                         </tr>
@@ -389,7 +435,7 @@
                         </svg>
                     </div>
                     <h3>High Performance</h3>
-                    <p>Cython-optimized implementation with GPU acceleration for large networks</p>
+                    <p>Cython-optimized implementation with GPU acceleration for large vectorized operations</p>
                 </div>
                 <div class="achievement-card">
                     <div class="achievement-icon">
