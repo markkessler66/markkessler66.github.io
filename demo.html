@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PhyNetPy Showcase - Mark Kessler</title>
+    <title>SwitchParentage Demo — Mark Kessler</title>
+    <meta name="description" content="Interactive walkthrough of SwitchParentage (SRPP), the ploidy-preserving network move behind MP-Allop-2 in PhyNetPy, on a Scenario D toy example.">
     <link rel="icon" type="image/png" href="m.png">
     <link rel="apple-touch-icon" href="m.png">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="mp-allop-demo.css">
 </head>
 <body>
-    <!-- Navigation -->
     <header>
         <nav>
             <a href="index.html" class="logo">
@@ -18,33 +18,218 @@
             <ul class="nav-links">
                 <li><a href="index.html#projects">Projects</a></li>
                 <li><a href="index.html#phynetpy">PhyNetPy</a></li>
-                <li><a href="phynetpy-showcase.html" class="active">Showcase</a></li>
+                <li><a href="phynetpy-showcase.html">Showcase</a></li>
+                <li><a href="demo.html" class="active">Demo</a></li>
+                <li><a href="resume.html">Resume</a></li>
                 <li><a href="index.html#about">About</a></li>
                 <li><a href="index.html#contact">Contact</a></li>
             </ul>
         </nav>
     </header>
 
-    <!-- Redirect Notice -->
-    <section class="hero" style="padding: 6rem 2rem; text-align: center;">
-        <h1>Page Moved</h1>
-        <p class="subtitle">The PhyNetPy showcase has been moved to a new location</p>
+    <section class="hero">
+        <div class="hero-badge">PhyNetPy · MP-Allop-2 · Scenario D</div>
+        <h1>
+            <span class="hero-gradient">SwitchParentage</span>
+            <span class="hero-subtitle-text">A ploidy-preserving search move, step by step</span>
+        </h1>
         <p class="hero-description">
-            Please visit the new showcase page to see PhyNetPy methods, comparisons, and performance figures.
+            Inferring allopolyploid histories is hard because most network rearrangements
+            break the ploidy of the tips. <strong>SwitchParentage</strong> is the PhyNetPy
+            implementation of SRPP from the MP-Allop-2 paper: detach a subnetwork, then
+            reattach it so every leaf keeps the same subgenome count. This page runs one
+            move on a toy Scenario D example and scores it the way the search does.
         </p>
-        <div class="cta-buttons" style="margin-top: 2rem;">
-            <a href="phynetpy-showcase.html" class="btn btn-primary">
-                Go to Showcase →
-            </a>
-            <a href="index.html" class="btn btn-secondary">
-                Back to Home
-            </a>
+    </section>
+
+    <section class="demo-wrap">
+        <div class="demo-layout">
+            <div class="stage">
+                <div class="window-chrome">
+                    <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                    <span class="window-title" id="window-title">Species network · start</span>
+                    <span class="window-mode" id="window-mode">p(·) hidden</span>
+                </div>
+                <div class="viewport">
+                    <svg id="net-svg" viewBox="0 0 640 530" role="img" aria-label="Animated phylogenetic network"></svg>
+                    <div class="legend" id="legend"></div>
+                </div>
+                <div class="scrubber">
+                    <div class="scrubber-track" id="scrubber-track">
+                        <div class="scrubber-fill" id="scrubber-fill"></div>
+                    </div>
+                    <ol class="step-dots" id="step-dots"></ol>
+                </div>
+            </div>
+
+            <aside class="sidebar">
+                <p class="step-kicker" id="step-kicker">Step 1</p>
+                <h2 id="step-title">Loading…</h2>
+                <p class="step-body" id="step-body"></p>
+                <pre class="algo" id="algo"></pre>
+                <div class="scoreboard" id="scoreboard" hidden>
+                    <div class="score-col">
+                        <span class="score-label">Current XL</span>
+                        <span class="score-value" id="score-current">—</span>
+                    </div>
+                    <div class="score-col">
+                        <span class="score-label">Proposed XL</span>
+                        <span class="score-value" id="score-proposed">—</span>
+                    </div>
+                    <div class="score-col score-decision" id="score-decision">
+                        <span class="score-label">Hill climb</span>
+                        <span class="score-value" id="score-verdict">—</span>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button type="button" class="btn btn-primary" id="btn-play" aria-pressed="false">Play</button>
+                    <button type="button" class="btn btn-secondary" id="btn-prev">Back</button>
+                    <button type="button" class="btn btn-secondary" id="btn-next">Next</button>
+                    <button type="button" class="btn btn-ghost" id="btn-reset">Restart</button>
+                </div>
+            </aside>
         </div>
     </section>
 
-    <!-- Footer -->
+    <section class="panel-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Toy data</span>
+                <h2>Scenario D, scaled down</h2>
+                <p>
+                    Same topology as Jones / Yan et al.: one allopolyploid clade, two diploid
+                    parents, one outgroup. Gene trees are invented so the extra-lineage
+                    arithmetic is visible — they are not a DEFJ replicate.
+                </p>
+            </div>
+
+            <div class="data-grid">
+                <article class="data-card">
+                    <h3>Taxon map</h3>
+                    <p class="card-lead">
+                        <code>p(v)</code> is the algorithm's subgenome count. Diploids carry one
+                        ancestral genome (<span class="swatch diploid"></span> 2n);
+                        {x, y, z} carry two (<span class="swatch tetra"></span> 4n).
+                    </p>
+                    <table class="taxon-table">
+                        <thead>
+                            <tr><th>Species</th><th>Role</th><th>p(·)</th><th>Copies in a gene tree</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>a</td><td>Diploid parent</td><td>1</td><td>a</td></tr>
+                            <tr><td>b</td><td>Diploid parent</td><td>1</td><td>b</td></tr>
+                            <tr><td>o</td><td>Outgroup</td><td>1</td><td>o</td></tr>
+                            <tr><td>x, y, z</td><td>Allopolyploid clade</td><td>2</td><td>xA/xB, yA/yB, zA/zB</td></tr>
+                        </tbody>
+                    </table>
+                </article>
+
+                <article class="data-card">
+                    <h3>Gene trees</h3>
+                    <p class="card-lead">
+                        Three loci. GT1 matches the true MUL exactly. GT2 and GT3 add a little
+                        incomplete lineage sorting on the B subgenome.
+                    </p>
+                    <ul class="gt-list">
+                        <li>
+                            <span class="gt-id">GT1</span>
+                            <code>(((b,(xB,(yB,zB))),(a,(xA,(yA,zA)))),o)</code>
+                            <span class="gt-note">Concordant with truth</span>
+                        </li>
+                        <li>
+                            <span class="gt-id">GT2</span>
+                            <code>(((b,(yB,(xB,zB))),(a,(xA,(yA,zA)))),o)</code>
+                            <span class="gt-note">ILS: xB sister to zB</span>
+                        </li>
+                        <li>
+                            <span class="gt-id">GT3</span>
+                            <code>((((b,xB),(yB,zB)),(a,(xA,(yA,zA)))),o)</code>
+                            <span class="gt-note">Deep coalescence of xB</span>
+                        </li>
+                    </ul>
+                </article>
+
+                <article class="data-card">
+                    <h3>What the scorer does</h3>
+                    <p>
+                        A network is first unrolled into a <strong>MUL tree</strong>: the hybrid
+                        clade is copied once per parent, giving subgenomes A (from a) and B
+                        (from the other parent). Each gene tree is mapped into that MUL, and
+                        the parsimony score is the number of extra lineages — coalescences that
+                        had to happen deeper than the species tree allows.
+                    </p>
+                    <p>
+                        On an edge, <code>XL = lineages at the child − 1 − coalescences on the edge</code>.
+                        The search minimizes the sum over gene trees. Hill climbing accepts a
+                        SwitchParentage proposal when that sum drops.
+                    </p>
+                    <p class="card-lead" style="margin-bottom:0">
+                        This toy: the starting parentage scores <strong>9</strong>. After the
+                        move, <strong>2</strong>.
+                    </p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel-section theory">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">From the paper</span>
+                <h2>Why this move is the theoretical piece</h2>
+                <p>
+                    MP-Allop-2 replaces PhyloNet's six-move kernel with one operation. The
+                    PhyNetPy class is <code>SwitchParentage</code>; the paper calls it SRPP
+                    (Sub-Network Redirect and Preserve Ploidy).
+                </p>
+            </div>
+            <div class="theory-grid">
+                <article class="theory-card">
+                    <h3>Ploidy is an invariant</h3>
+                    <p>
+                        After disconnect, every leaf in the detached subnetwork drops by at
+                        least 1. Reattach only uses edges whose <code>p(e)</code> can restore
+                        the recorded target, so the proposal is valid by construction — no
+                        reject-and-retry on illegal tips.
+                    </p>
+                </article>
+                <article class="theory-card">
+                    <h3>The space is reachable</h3>
+                    <p>
+                        Any two valid networks with the same leaf ploidy assignment can be
+                        transformed into each other by a finite sequence of SRPP moves. The
+                        paper also shows invertibility, so the move is usable in MCMC as well
+                        as hill climbing.
+                    </p>
+                </article>
+                <article class="theory-card">
+                    <h3>Cost is linear</h3>
+                    <p>
+                        CalculatePloidy is a top-down pass, <code>O(|V| + |E|)</code>. That is
+                        the same order as the cycle-avoidance work the old kernel already did,
+                        except here the work produces a legal network instead of a discarded one.
+                    </p>
+                </article>
+            </div>
+            <p class="cite">
+                Kessler et al., <em>MP-Allop-2 and SRPP</em> (PhyNetPy paper). Scenario D
+                follows Yan, Cao, Liu, Ogilvie, and Nakhleh,
+                <em>Maximum Parsimony Inference of Phylogenetic Networks in the Presence of
+                Polyploid Complexes</em>, Syst. Biol. 2022, which itself uses the Jones (2017)
+                allopolyploid simulations.
+            </p>
+        </div>
+    </section>
+
     <footer>
-        <p>&copy; 2026 Mark Kessler</p>
+        <p>
+            &copy; 2026 Mark Kessler &middot;
+            <a href="index.html">Portfolio</a> &middot;
+            <a href="phynetpy-showcase.html">Showcase</a> &middot;
+            <a href="https://github.com/NakhlehLab/PhyNetPy">PhyNetPy</a>
+        </p>
     </footer>
+
+    <script src="mp-allop-demo.js"></script>
 </body>
 </html>

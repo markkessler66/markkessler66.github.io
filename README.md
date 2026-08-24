@@ -9,9 +9,11 @@ My personal site and portfolio — the cool things I've coded. :D
 | `index.html` | Landing page: intro, featured projects, PhyNetPy 0.6.0 highlights, contact |
 | `resume.html` | Résumé, styled for both screen and print, with a PDF download button |
 | `phynetpy-showcase.html` | Deep technical showcase for PhyNetPy: architecture, measured benchmarks, methodology |
+| `demo.html` | Interactive SwitchParentage / SRPP walkthrough on a Scenario D toy network |
 
 Stylesheets and scripts are paired by name (`styles.css` / `script.js`,
-`resume-styles.css`, `showcase-styles.css` / `showcase-script.js`).
+`resume-styles.css`, `showcase-styles.css` / `showcase-script.js`,
+`mp-allop-demo.css` / `mp-allop-demo.js`).
 
 ## Résumé PDF
 
