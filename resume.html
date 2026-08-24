@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark Kessler - Resume</title>
+    <meta name="description" content="Resume of Mark Kessler, senior software engineer and technical lead specializing in high-performance Python, Cython, and GPU-accelerated scientific computing.">
+    <link rel="icon" type="image/png" href="m.png">
+    <link rel="apple-touch-icon" href="m.png">
+    <link rel="stylesheet" href="resume-styles.css">
+</head>
+<body>
+    <!-- Navigation (screen only) -->
+    <header>
+        <nav>
+            <a href="index.html" class="logo">
+                <img src="m.png" alt="Mark Kessler Logo" />
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#phynetpy">PhyNetPy</a></li>
+                <li><a href="phynetpy-showcase.html">Showcase</a></li>
+                <li><a href="resume.html" class="active">Resume</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Action bar (screen only) -->
+    <div class="resume-actions">
+        <a href="Mark_Kessler_Resume.pdf" class="btn btn-primary" download>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            <span>Download PDF</span>
+        </a>
+        <button class="btn btn-secondary" onclick="window.print()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 6 2 18 2 18 9"/>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                <rect x="6" y="14" width="12" height="8"/>
+            </svg>
+            <span>Print</span>
+        </button>
+        <span class="actions-note">Updated August 2026</span>
+    </div>
+
+    <!-- Resume -->
+    <main class="resume">
+        <div class="resume-header">
+            <h1>MARK KESSLER</h1>
+            <div class="resume-title">Senior Software Engineer &middot; High-Performance Python &amp; Scientific Computing</div>
+            <div class="resume-contact">
+                Frisco, TX
+                <span class="sep">|</span>(563) 424-0605
+                <span class="sep">|</span><a href="mailto:markkessler66@gmail.com">markkessler66@gmail.com</a>
+                <br>
+                <a href="https://linkedin.com/in/mark-kessler-431088173/">LinkedIn</a>
+                <span class="sep">|</span><a href="https://markkessler66.github.io/">Portfolio</a>
+                <span class="sep">|</span><a href="https://github.com/markkessler66">GitHub</a>
+                <span class="sep">|</span><a href="https://pypi.org/project/phynetpy/">PyPI: phynetpy</a>
+            </div>
+        </div>
+
+        <h2>Summary</h2>
+        <p class="summary">
+            Software engineer with 6 years building high-performance Python systems. I'm the technical lead and
+            principal architect of PhyNetPy, an open-source library on PyPI, where I handle architecture,
+            optimization, releases, and documentation. Most of my work is on graph and statistical inference
+            problems where the straightforward implementation is far too slow, so I spend a lot of time profiling
+            and then fixing what the profiler actually points at. I also set technical direction, run breaking API
+            migrations, and write the conventions other contributors build against.
+        </p>
+
+        <h2>Technical Skills</h2>
+        <dl class="skills-grid">
+            <dt>Languages</dt>
+            <dd>Python, Cython, JavaScript, TypeScript, C, Java, C#/.NET, SQL</dd>
+            <dt>Performance</dt>
+            <dd>Profiling (cProfile, tracemalloc), Cython extension modules, caching, vectorization, multiprocessing, CUDA/CuPy GPU offload</dd>
+            <dt>Data &amp; ML</dt>
+            <dd>NumPy, SciPy, PyTorch, TensorFlow, scikit-learn, pandas, NetworkX</dd>
+            <dt>Web &amp; Backend</dt>
+            <dd>ES modules, Canvas/SVG rendering, React, Flask, FastAPI, REST API design, SQLite, PostgreSQL, MongoDB</dd>
+            <dt>Infrastructure</dt>
+            <dd>GitHub Actions CI/CD, PyPI packaging and release automation, Docker, pytest, Git</dd>
+            <dt>AI-Assisted Dev</dt>
+            <dd>Repo-level assistant rules, coding standards that constrain model output, review process for generated code</dd>
+        </dl>
+
+        <h2>Experience</h2>
+
+        <div class="role">
+            <div class="role-head">
+                <span class="role-title">Senior Software Engineer &mdash; Technical Lead, PhyNetPy</span>
+                <span class="role-dates">June 2022 &ndash; Present</span>
+            </div>
+            <div class="role-org">Rice University, Computational Systems Lab &mdash; Houston, TX (Remote)</div>
+
+            <div class="bullet-label">Technical Leadership &amp; Ownership</div>
+            <ul>
+                <li>
+                    Technical lead and principal architect of PhyNetPy, an open-source phylogenetic network library
+                    on PyPI. Wrote 217 of its 249 commits, covering architecture, implementation, packaging, docs,
+                    and user support.
+                </li>
+                <li>
+                    Led the 0.6.0 API redesign, replacing a sprawling command surface with a typed three-axis API
+                    (data &times; model &times; criterion) behind three verbs. Wrote the migration guide and
+                    compatibility matrix so users could move across a breaking release without redoing work.
+                </li>
+                <li>
+                    Wrote the coding standards and the repo-level rules that steer AI coding assistants &mdash; import
+                    structure, naming conventions, type hints, docstrings, validation patterns &mdash; so generated
+                    code fits the codebase instead of just looking plausible. Generated changes get reviewed against
+                    the same bar as human ones.
+                </li>
+                <li>
+                    Own CI/CD: a GitHub Actions matrix across Python 3.9&ndash;3.14, cross-platform smoke tests, and
+                    wheel install validation gating every release.
+                </li>
+                <li>
+                    Grew the test suite to <strong>1,130 tests</strong> at a <strong>100% pass rate</strong>, including
+                    memory regression, stress, and numerical cross-checks against the incumbent Java implementation.
+                </li>
+                <li>
+                    Built the release and docs tooling: a one-command deploy pipeline (version bump &rarr; test
+                    &rarr; build &rarr; PyPI) and a 1,100-line AST-based API reference generator.
+                </li>
+                <li>
+                    Onboarded and reviewed collaborators' contributions, wrote the NSF Year-1 technical report, and
+                    worked with the principal investigator on the technical roadmap.
+                </li>
+            </ul>
+
+            <div class="bullet-label">Performance Engineering</div>
+            <ul>
+                <li>
+                    Shipped four Cython extension modules (graph core, pseudo-likelihood DP, coalescent DP, sequence
+                    kernels). The pseudo-likelihood kernel runs <strong>up to 9.2&times;</strong> faster than the
+                    pure-Python version and returns identical results.
+                </li>
+                <li>
+                    Replaced generic matrix exponentiation with closed-form and cached-eigendecomposition transition
+                    matrices across eight substitution models: <strong>8.6&ndash;19.5&times;</strong> faster than
+                    <code>scipy.linalg.expm</code>, matching it to ~1e-16.
+                </li>
+                <li>
+                    Rebuilt network adjacency on Cython O(1) index maps, giving <strong>~11&times;</strong> faster
+                    in-edge lookup and ~3.8&times; faster leaf enumeration than NetworkX on the same topologies.
+                </li>
+                <li>
+                    Raised search throughput <strong>2.8&times;</strong> (2,742 &rarr; 972 ms/iteration) after
+                    profiling turned up 3.7M redundant graph traversals, which I replaced with memoized lookups.
+                </li>
+                <li>
+                    Cut topological error <strong>2.9&times;</strong> against the incumbent PhyloNet implementation at
+                    comparable runtime, and ran <strong>7.4&times;</strong> faster (110 s vs. 818 s) on the hardest
+                    benchmark case.
+                </li>
+                <li>
+                    Added GPU likelihood scoring with CuPy sparse contractions and VRAM-aware batching, so
+                    out-of-memory conditions surface as recoverable errors instead of killing the run. Also added
+                    multiprocess scoring pools and parallel MCMC chains.
+                </li>
+            </ul>
+        </div>
+
+        <div class="role">
+            <div class="role-head">
+                <span class="role-title">Software Engineering Intern / ML Research Assistant</span>
+                <span class="role-dates">Aug 2020 &ndash; May 2022</span>
+            </div>
+            <div class="role-org">Rice University, Computational Systems Lab &mdash; Houston, TX</div>
+            <ul>
+                <li>Built Python machine-learning pipelines for large-scale data processing and model experimentation.</li>
+                <li>Implemented tensor operations and data-encoding pipelines for high-volume numerical workloads.</li>
+                <li>Profiled and optimized existing codebases for runtime and memory footprint.</li>
+            </ul>
+        </div>
+
+        <h2>Projects</h2>
+
+        <div class="project">
+            <div class="project-name">
+                PhyNetPy <span class="project-meta">&mdash; v0.6.0 &middot; Python 3.9&ndash;3.14 &middot; ~41k lines across 49 modules + 4 Cython extensions</span>
+            </div>
+            <ul>
+                <li>
+                    Framework for phylogenetic network inference, simulation, and comparison, with a typed public API,
+                    registry-based method dispatch, and explicit branch-length units that rule out a class of silent
+                    scientific errors. Sole owner across six public releases.
+                </li>
+            </ul>
+        </div>
+
+        <div class="project">
+            <div class="project-name">
+                BioStore <span class="project-meta">&mdash; JavaScript &middot; Flask &middot; SQLite &middot; Docker</span>
+            </div>
+            <ul>
+                <li>
+                    Full-stack platform for submitting, monitoring, and visualizing long-running PhyNetPy jobs.
+                </li>
+                <li>
+                    Wrote the frontend by hand: ~2,500 lines of framework-free ES modules covering interactive network
+                    rendering, alignment views, a file browser, an in-browser editor, and the API client layer.
+                </li>
+                <li>
+                    Backend handles token auth, job execution, and lease-based file locking on SQLite (WAL) so
+                    multiple users can edit the same dataset without clobbering each other.
+                </li>
+            </ul>
+        </div>
+
+        <div class="project">
+            <div class="project-name">
+                BioForge <span class="project-meta">&mdash; GPU-accelerated synthetic data generation</span>
+            </div>
+            <ul>
+                <li>
+                    Python library generating synthetic DNA/RNA/protein sequences with known ground truth, for training
+                    and benchmarking ML models. Covers evolutionary models, population-genetics simulation, sequencing
+                    error models, and PyTorch-ready outputs, with runs reproducible from tracked config.
+                </li>
+            </ul>
+        </div>
+
+        <h2>Education</h2>
+        <div class="edu-line">
+            <span><strong>Rice University</strong> &mdash; Bachelor of Arts, Computer Science</span>
+            <span>GPA 3.4</span>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Mark Kessler</p>
+    </footer>
+</body>
+</html>

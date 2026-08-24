@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mark Kessler - Portfolio</title>
+    <title>Mark Kessler - Senior Software Engineer</title>
+    <meta name="description" content="Mark Kessler - senior software engineer and technical lead specializing in high-performance Python, Cython, and GPU-accelerated scientific computing. Creator and technical lead of PhyNetPy.">
     <link rel="icon" type="image/png" href="m.png">
     <link rel="apple-touch-icon" href="m.png">
     <link rel="stylesheet" href="styles.css">
@@ -19,6 +20,7 @@
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#phynetpy">PhyNetPy</a></li>
                 <li><a href="phynetpy-showcase.html">Showcase</a></li>
+                <li><a href="resume.html">Resume</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
@@ -28,25 +30,60 @@
     <!-- Hero Section -->
     <section class="hero">
         <h1>Hi, I'm Mark</h1>
-        <p class="subtitle">API Designer & Network Analysis Expert</p>
+        <p class="subtitle">Senior Software Engineer &amp; Technical Lead</p>
         <p class="hero-description">
-            I specialize in statistical network analysis and develop tools that make complex network science accessible to researchers and practitioners. Creator of PhyNetPy, bringing advanced network algorithms to the Python ecosystem.
+            I build high-performance Python systems and lead them end to end. As technical lead and principal
+            architect of <strong>PhyNetPy</strong>, I own everything from compiled Cython kernels and GPU pipelines
+            to API design, CI/CD, and releases. My specialty is making NP-hard graph and statistical workloads
+            tractable — profile first, then remove the real bottleneck.
         </p>
         <div class="cta-buttons">
-            <a href="#projects" class="btn btn-primary">
-                View My Work →
+            <a href="resume.html" class="btn btn-primary">
+                View Résumé →
+            </a>
+            <a href="Mark_Kessler_Resume.pdf" class="btn btn-secondary" download>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Download PDF
             </a>
             <a href="https://github.com/markkessler66" class="btn btn-secondary">
                 GitHub
             </a>
         </div>
+
+        <!-- Verified metrics -->
+        <div class="metrics-strip">
+            <div class="metric">
+                <span class="metric-value">9.2&times;</span>
+                <span class="metric-label">Cython DP kernel speedup, bit-identical results</span>
+            </div>
+            <div class="metric">
+                <span class="metric-value">19&times;</span>
+                <span class="metric-label">Faster transition matrices vs. <code>scipy.expm</code></span>
+            </div>
+            <div class="metric">
+                <span class="metric-value">1,130</span>
+                <span class="metric-label">Tests in CI across Python 3.9&ndash;3.14</span>
+            </div>
+            <div class="metric">
+                <span class="metric-value">v0.6.0</span>
+                <span class="metric-label">PhyNetPy shipped on PyPI</span>
+            </div>
+        </div>
+        <p class="metrics-note">
+            Every figure above is measured by a reproducible harness, not estimated.
+            <a href="phynetpy-showcase.html#benchmarks">See the methodology &rarr;</a>
+        </p>
     </section>
 
     <!-- Projects Section -->
     <section id="projects" class="projects">
         <h2 class="section-title">Featured Projects</h2>
         <p class="section-description">
-            Showcasing my work in network analysis, data science, and open-source development
+            Selected work in high-performance scientific computing, network analysis, and open-source infrastructure
         </p>
         <div class="projects-grid">
             <!-- PhyNetPy Project Card -->
@@ -54,17 +91,25 @@
                 <div class="project-icon">
                     <span class="icon-text">PhyNetPy</span>
                 </div>
-                <h3>PhyNetPy</h3>
+                <h3>PhyNetPy <span class="version-badge">v0.6.0</span></h3>
                 <p>
-                    A comprehensive Python library for math and statistics-inspired network analysis. Features advanced algorithms for Network topology comparison and simulations, Bayesian inference, and machine learning approaches to network science.
+                    A production Python library for statistical network inference, simulation, and comparison,
+                    published on PyPI. I am the technical lead and principal architect — 217 of 249 commits —
+                    owning architecture, compiled kernels, GPU paths, CI/CD, packaging, and docs.
                 </p>
+                <ul>
+                    <li>Typed three-axis API (data &times; model &times; criterion) behind <code>infer</code>, <code>score</code>, <code>simulate</code></li>
+                    <li>Four Cython extension modules; up to 9.2&times; on the pseudo-likelihood DP kernel</li>
+                    <li>GPU likelihood scoring via CuPy with VRAM-aware batching</li>
+                    <li>1,130-test suite, CI across Python 3.9&ndash;3.14</li>
+                </ul>
                 <div class="tech-stack">
                     <span class="tech-tag">Python</span>
+                    <span class="tech-tag">Cython</span>
                     <span class="tech-tag">NumPy</span>
-                    <span class="tech-tag">BioPython</span>
                     <span class="tech-tag">SciPy</span>
-                    <span class="tech-tag">TensorFlow</span>
-                    <span class="tech-tag">PyTorch</span>
+                    <span class="tech-tag">CuPy/CUDA</span>
+                    <span class="tech-tag">GitHub Actions</span>
                 </div>
                 <a href="phynetpy-showcase.html" class="project-link">View Showcase →</a>
             </div>
@@ -74,26 +119,27 @@
                 <div class="project-icon">
                     <span class="icon-text">Web</span>
                 </div>
-                <h3>Network Visualization Dashboard</h3>
+                <h3>BioStore</h3>
                 <p>
-                    Interactive web application for visualizing and analyzing large-scale networks in real-time. 
-                    Key features include:
+                    Full-stack platform for submitting, monitoring, and visualizing long-running PhyNetPy jobs.
+                    I wrote the frontend by hand — about 2,500 lines of framework-free ES modules, no build step.
                 </p>
                 <ul>
-                    <li> PhyNetPy Method Job Submission and Monitoring </li>
-                    <li> Network Visualization and Analysis </li>
-                    <li>User Management and Authentication </li>
-                    <li> Job Queue and Processing </li>
-                    <li> Data Storage and Management </li>
+                    <li>Interactive network rendering and alignment views</li>
+                    <li>File browser and in-browser editor</li>
+                    <li>Job submission, execution, and monitoring</li>
+                    <li>Token auth and session management</li>
+                    <li>Lease-based file locking so concurrent edits don't collide</li>
                 </ul>
                 <div class="tech-stack">
-                    <span class="tech-tag">MongoDB</span>
-                    <span class="tech-tag">React</span>
+                    <span class="tech-tag">JavaScript</span>
+                    <span class="tech-tag">Canvas/SVG</span>
+                    <span class="tech-tag">Flask</span>
+                    <span class="tech-tag">SQLite</span>
                     <span class="tech-tag">Python/PhyNetPy</span>
-                    <span class="tech-tag">FastAPI</span>
                     <span class="tech-tag">Docker</span>
                 </div>
-                <a href="#" class="project-link">View project →</a>
+                <a href="https://github.com/markkessler66/BioStore" class="project-link">View on GitHub →</a>
             </div>
 
             <!-- Additional Project Card 2 -->
@@ -120,45 +166,51 @@
                     <span class="tech-tag">CUDA/cupy/Numba</span>
                     
                 </div>
-                <a href="#" class="project-link">View project →</a>
+                <a href="https://github.com/markkessler66/BioForge" class="project-link">View on GitHub →</a>
             </div>
         </div>
     </section>
 
     <!-- PhyNetPy Feature Section -->
     <section id="phynetpy" class="phynetpy-section">
-        <h2 class="section-title">PhyNetPy Features</h2>
+        <h2 class="section-title">What Shipped in PhyNetPy 0.6.0</h2>
         <p class="section-description">
-            Bringing advanced optimization and engineering tactics to network analysis methods
+            The 0.6.0 release was a ground-up API redesign paired with measured performance work
         </p>
         <div class="feature-grid">
             <div class="feature-card">
                 <div class="feature-icon">
+                    <span class="icon-text">API</span>
+                </div>
+                <h3>Typed Three-Axis API</h3>
+                <p>
+                    Collapsed a sprawling command surface into one composable API: pick your data, biological model,
+                    and statistical criterion, then call <code>infer</code>, <code>score</code>, or
+                    <code>simulate</code>. Invalid combinations are rejected up front by a published validity matrix
+                    instead of failing deep in a run.
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
                     <span class="icon-text">FAST</span>
                 </div>
-                <h3>Lightning Fast Algorithms</h3>
+                <h3>Compiled Hot Paths</h3>
                 <p>
-                    Ultra-Optimized implementations of network algorithms with parallel processing support and gpu vectorization capabilities for large-scale networks.
-                    
+                    Four Cython extension modules back the graph core and the scoring kernels. The
+                    pseudo-likelihood DP runs up to <strong>9.2&times;</strong> faster than the pure-Python
+                    reference while producing bit-identical scores, and closed-form transition matrices beat
+                    <code>scipy.linalg.expm</code> by <strong>8.6&ndash;19.5&times;</strong>.
                 </p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">
-                    <span class="icon-text">Search</span>
+                    <span class="icon-text">SAFE</span>
                 </div>
-                <h3>Network Space Search</h3>
+                <h3>Correctness by Construction</h3>
                 <p>
-                    PhyNetPy comes prepackaged with a variety of network space search algorithms
-                    as well as a variety of network alteration moves.
-                </p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <span class="icon-text">AI/ML</span>
-                </div>
-                <h3>Machine Learning Ready</h3>
-                <p>
-                    Future updates to PhyNetPy will include support for running machine learning models on quartet networks and sequence data.
+                    Branch lengths now carry explicit units, so the library refuses to guess between coalescent and
+                    substitution scales — eliminating a class of silent scientific errors. Backed by 1,130 tests
+                    including numerical cross-checks against the reference Java implementation.
                 </p>
             </div>
         </div>
@@ -169,10 +221,22 @@
         <h2 class="section-title">About Me</h2>
         <div class="about-content">
             <p>
-                I'm passionate about applying mathematically backed methods to solve complex network problems-- many of these are NP-hard problems that require careful optimization. With a background in software design and algorithm creation, I focus on developing accessible tools that bridge the gap between theoretical network science and practical applications.
+                I like problems where the naive solution doesn't finish. Most of my work sits on NP-hard graph and
+                statistical inference problems, which means the interesting engineering is in the profiling: figuring
+                out which 5% of the code is 90% of the runtime, then deciding whether the fix is a compiled kernel,
+                a cache, a parallel pool, or a fundamentally better algorithm. I care a lot about proving the fix
+                worked — every optimization I ship has a benchmark and a correctness assertion behind it.
             </p>
             <p>
-                When I'm not coding, you can find me gardening, cooking, playing tennis/guitar/golf, or going on a walk with my lovely fiancée. I believe in open-source collaboration and am always excited to connect with fellow researchers and developers working on network science challenges.
+                Increasingly the part I enjoy most is the leadership side: setting technical direction, designing APIs
+                that other people can build on, making releases boring and repeatable, and bringing collaborators
+                up to speed on a dense codebase. I'm looking for a senior role where I can keep doing that at
+                a larger scale.
+            </p>
+            <p>
+                When I'm not coding, you can find me gardening, cooking, playing tennis/guitar/golf, or going on a
+                walk with my lovely fiancée. I believe in open-source collaboration and am always excited to connect
+                with fellow engineers and researchers.
             </p>
         </div>
     </section>
@@ -182,8 +246,21 @@
         <h2 class="section-title">Let's Connect</h2>
         <div class="contact-content">
             <p class="section-description">
-                I'm always interested in collaborations, research opportunities, and exciting network science challenges. Feel free to reach out!
+                I'm currently open to senior and lead engineering roles, particularly in high-performance Python,
+                scientific computing, or developer-facing platform work. If that sounds like your team, I'd love
+                to talk.
             </p>
+            <div class="cta-buttons" style="margin-bottom: 2rem;">
+                <a href="mailto:markkessler66@gmail.com" class="btn btn-primary">Get in Touch</a>
+                <a href="Mark_Kessler_Resume.pdf" class="btn btn-secondary" download>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download Résumé
+                </a>
+            </div>
             <div class="social-links">
                 <a href="https://github.com/markkessler66" class="social-link" aria-label="GitHub">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -205,7 +282,7 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2025 Mark Kessler. Built with ❤️ for GitHub Pages</p>
+        <p>&copy; 2026 Mark Kessler &middot; <a href="resume.html">Résumé</a> &middot; <a href="https://github.com/markkessler66">GitHub</a> &middot; <a href="https://pypi.org/project/phynetpy/">PyPI</a></p>
     </footer>
 
     <!-- External JavaScript -->

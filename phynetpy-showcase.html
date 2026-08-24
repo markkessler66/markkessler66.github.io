@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PhyNetPy Showcase - Mark Kessler</title>
+    <meta name="description" content="Technical showcase for PhyNetPy 0.6.0: architecture, measured Cython and GPU benchmark results, and engineering methodology.">
     <link rel="icon" type="image/png" href="m.png">
     <link rel="apple-touch-icon" href="m.png">
     <link rel="stylesheet" href="showcase-styles.css">
@@ -20,6 +21,7 @@
                 <li><a href="index.html#projects">Projects</a></li>
                 <li><a href="index.html#phynetpy">PhyNetPy</a></li>
                 <li><a href="phynetpy-showcase.html" class="active">Showcase</a></li>
+                <li><a href="resume.html">Resume</a></li>
                 <li><a href="index.html#about">About</a></li>
                 <li><a href="index.html#contact">Contact</a></li>
             </ul>
@@ -28,24 +30,24 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-badge">Open Source Python Library</div>
+        <div class="hero-badge">Open Source Python Library &middot; v0.6.0</div>
         <h1>
             <span class="hero-gradient">PhyNetPy</span>
             <span class="hero-subtitle-text">Advanced Phylogenetic Network Analysis</span>
         </h1>
         <p class="hero-description">
-            A comprehensive Python library for network construction, manipulation, 
-            simulation, and inference in phylogenetic analysis. Built with performance 
-            and usability in mind.
+            A production Python library for constructing, simulating, comparing, and inferring phylogenetic
+            networks. I am its technical lead and principal architect, owning architecture, compiled kernels,
+            GPU paths, CI/CD, and releases. This page documents how it is built and how fast it actually is.
         </p>
         <div class="hero-actions">
-            <a href="https://phylogenomics.rice.edu/html/phynetpy-docs/index.html" class="btn btn-primary" target="_blank">
+            <a href="https://phylogenomics.rice.edu/html/phynetpy-docs/index.html" class="btn btn-primary" target="_blank" rel="noopener">
                 <span>View Documentation</span>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path d="M3 8H13M13 8L8 3M13 8L8 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </a>
-            <a href="https://github.com/markkessler66/phynetpy" class="btn btn-secondary" target="_blank">
+            <a href="https://github.com/NakhlehLab/PhyNetPy" class="btn btn-secondary" target="_blank" rel="noopener">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                 </svg>
@@ -54,18 +56,23 @@
         </div>
         <div class="hero-stats">
             <div class="stat">
-                <span class="stat-value">12+</span>
-                <span class="stat-label">Core Modules</span>
+                <span class="stat-value">~41k</span>
+                <span class="stat-label">Lines across 49 modules</span>
             </div>
             <div class="stat-divider"></div>
             <div class="stat">
-                <span class="stat-value">Stateless</span>
-                <span class="stat-label">Method/Model Building</span>
+                <span class="stat-value">4</span>
+                <span class="stat-label">Cython extension modules</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat">
+                <span class="stat-value">1,130</span>
+                <span class="stat-label">Tests, Python 3.9&ndash;3.14</span>
             </div>
             <div class="stat-divider"></div>
             <div class="stat">
                 <span class="stat-value">GPU</span>
-                <span class="stat-label">Acceleratd</span>
+                <span class="stat-label">CuPy-accelerated scoring</span>
             </div>
         </div>
     </section>
@@ -76,140 +83,141 @@
             <div class="section-header">
                 <span class="section-tag">Architecture</span>
                 <h2>Core Modules</h2>
-                <p>A comprehensive suite of specialized modules for phylogenetic network analysis</p>
+                <p>
+                    The 0.6.0 public API, organized around three composable axes &mdash; your data, a biological
+                    model, and a statistical criterion &mdash; driven by three verbs.
+                </p>
             </div>
             <div class="modules-grid">
                 <div class="module-card">
+                    <div class="module-icon"><span>API</span></div>
+                    <h3>infer</h3>
+                    <p>The public facade. Three verbs cover the whole surface: <code>infer</code>, <code>score</code>, and <code>simulate</code>.</p>
+                    <ul class="module-features">
+                        <li>Registry-based engine dispatch</li>
+                        <li>Published validity matrix rejects invalid data/model/criterion combinations up front</li>
+                        <li>Typed <code>InferenceResult</code> with score, trace, and posterior</li>
+                    </ul>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon"><span>DAT</span></div>
+                    <h3>data</h3>
+                    <p>The data axis: what you actually observed.</p>
+                    <ul class="module-features">
+                        <li><code>GeneTrees</code>, <code>Alignment</code>, <code>BiallelicMarkers</code></li>
+                        <li>Single <code>from_file</code> entry point per type</li>
+                        <li>Validation and aggregate reporting on load</li>
+                    </ul>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon"><span>MOD</span></div>
+                    <h3>models</h3>
+                    <p>The biological model axis, with units made explicit.</p>
+                    <ul class="module-features">
+                        <li><code>MSC</code> (multispecies network coalescent), <code>Allopolyploid</code></li>
+                        <li><code>BranchLengthUnit</code> — coalescent vs. substitutions per site, never guessed</li>
+                        <li>Population-specific theta values</li>
+                    </ul>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon"><span>CRI</span></div>
+                    <h3>criteria</h3>
+                    <p>The statistical criterion axis: how a candidate network is judged.</p>
+                    <ul class="module-features">
+                        <li><code>Likelihood</code>, <code>PseudoLikelihood</code>, <code>MDC</code>, <code>Bayesian</code></li>
+                        <li>Criterion-specific search settings carried on the object</li>
+                        <li>Bayesian criterion wraps any objective</li>
+                    </ul>
+                </div>
+
+                <div class="module-card">
                     <div class="module-icon"><span>NET</span></div>
                     <h3>Network</h3>
-                    <p>Core phylogenetic network data structures including Node, Edge, Graph, and Network classes.</p>
+                    <p>Core network data structures, backed by a compiled adjacency layer.</p>
                     <ul class="module-features">
-                        <li>Node and Edge management</li>
-                        <li>Network topology operations</li>
-                        <li>Leaf and root identification</li>
+                        <li><code>Network</code>, <code>MUL</code>, <code>Node</code>, <code>Edge</code></li>
+                        <li>Cython <code>NodeSet</code>/<code>EdgeSet</code> give O(1) in/out-edge lookup</li>
+                        <li>Traversal, topological order, isomorphism, subnetwork extraction</li>
                     </ul>
                 </div>
 
                 <div class="module-card">
-                    <div class="module-icon"><span>PAR</span></div>
-                    <h3>NetworkParser</h3>
-                    <p>Parse Nexus files and Newick strings to import existing phylogenetic networks.</p>
+                    <div class="module-icon"><span>CY</span></div>
+                    <h3>cython</h3>
+                    <p>Four compiled extension modules carrying the hot paths.</p>
                     <ul class="module-features">
-                        <li>Nexus file parsing</li>
-                        <li>Newick string handling</li>
-                        <li>Format validation</li>
+                        <li><code>graph_core_cy</code> — adjacency maps</li>
+                        <li><code>mpl_engine_cy</code> — pseudo-likelihood triplet DP</li>
+                        <li><code>gt_msc_cy</code>, <code>seq_engine_cy</code> — coalescent and sequence kernels</li>
                     </ul>
                 </div>
 
                 <div class="module-card">
-                    <div class="module-icon"><span>SIM</span></div>
-                    <h3>BirthDeath</h3>
-                    <p>Birth-death process network simulators including Yule and CBDP models.</p>
+                    <div class="module-icon"><span>I/O</span></div>
+                    <h3>IO</h3>
+                    <p>Readers and writers for every standard format in the domain.</p>
                     <ul class="module-features">
-                        <li>Yule model simulation</li>
-                        <li>CBDP model support</li>
-                        <li>Configurable parameters</li>
+                        <li>NEXUS, Newick, FASTA, VCF — read and write</li>
+                        <li>Newick dialect auto-detection and conversion</li>
+                        <li>Structured validation summaries instead of silent failures</li>
+                    </ul>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon"><span>GTR</span></div>
+                    <h3>GTR</h3>
+                    <p>Time-reversible substitution models with corrected parameterizations.</p>
+                    <ul class="module-features">
+                        <li>JC, K80, F81, K81, HKY, TN93, SYM, GTR</li>
+                        <li>Closed-form transition matrices where they exist</li>
+                        <li>Cached eigendecomposition everywhere else</li>
                     </ul>
                 </div>
 
                 <div class="module-card">
                     <div class="module-icon"><span>UTL</span></div>
                     <h3>GraphUtils</h3>
-                    <p>Graph and network utility functions for topology analysis and manipulation.</p>
+                    <p>Topology analysis and a full suite of network distance metrics.</p>
                     <ul class="module-features">
-                        <li>Topology analysis</li>
-                        <li>Network comparison</li>
-                        <li>Graph manipulation</li>
+                        <li>&mu;-distance, hardwired/softwired cluster, tripartition, Robinson-Foulds</li>
+                        <li>Reticulation-aware comparison with precision/recall</li>
+                        <li>Blobs, tree-of-blobs, displayed trees, level computation</li>
                     </ul>
                 </div>
 
                 <div class="module-card">
-                    <div class="module-icon"><span>MOV</span></div>
-                    <h3>NetworkMoves</h3>
-                    <p>Network topology modification operations including NNI moves and hybrid nodes.</p>
+                    <div class="module-icon"><span>SRC</span></div>
+                    <h3>Search</h3>
+                    <p>Network-space search framework with pluggable move kernels.</p>
                     <ul class="module-features">
-                        <li>Hybrid node operations</li>
-                        <li>NNI moves</li>
-                        <li>Topology modification</li>
+                        <li>Hill climbing and simulated annealing drivers</li>
+                        <li>Reticulation add/remove/relocate, SPR, node height, inheritance probability</li>
+                        <li>Parallel MCMC chains with Gelman-Rubin monitoring</li>
                     </ul>
                 </div>
 
                 <div class="module-card">
-                    <div class="module-icon"><span>GTR</span></div>
-                    <h3>GTR Models</h3>
-                    <p>Time-reversible substitution models: GTR, K80, F81, JC, HKY, K81, SYM, TN93.</p>
+                    <div class="module-icon"><span>SIM</span></div>
+                    <h3>Simulation</h3>
+                    <p>Ground-truth generators for benchmarking and validation.</p>
                     <ul class="module-features">
-                        <li>Multiple substitution models</li>
-                        <li>Model selection</li>
-                        <li>Parameter estimation</li>
+                        <li>Yule and constant birth-death (CBDP) network models</li>
+                        <li>Gene trees, sequence alignments, and biallelic markers under the MSNC</li>
+                        <li>Seeded and reproducible; true network attached to output</li>
                     </ul>
                 </div>
 
                 <div class="module-card">
-                    <div class="module-icon"><span>MSA</span></div>
-                    <h3>MSA</h3>
-                    <p>Multiple Sequence Alignment parsing, storage, and analysis utilities.</p>
+                    <div class="module-icon"><span>POP</span></div>
+                    <h3>Population Genetics</h3>
+                    <p>Analysis helpers for population-scale data.</p>
                     <ul class="module-features">
-                        <li>Alignment parsing</li>
-                        <li>Data compression</li>
-                        <li>Sequence analysis</li>
-                    </ul>
-                </div>
-
-                <div class="module-card">
-                    <div class="module-icon"><span>GEN</span></div>
-                    <h3>GeneTrees</h3>
-                    <p>Gene tree container and analysis utilities including consensus tree construction.</p>
-                    <ul class="module-features">
-                        <li>Tree container management</li>
-                        <li>Consensus construction</li>
-                        <li>Tree analysis utilities</li>
-                    </ul>
-                </div>
-
-                <div class="module-card">
-                    <div class="module-icon"><span>BLD</span></div>
-                    <h3>Model</h3>
-                    <p>Plug and play modular model building </p>
-                    <ul class="module-features">
-                        <li>Factory pattern for easy builds</li>
-                        <li>Stateless design for flexibile method development</li>
-                        <li>Integration with MSAs and GTR models and quick network hooks</li>
-                        <li>Accepts visitors for the Strategy/Visitor/Executor Pattern</li>
-                    </ul>
-                </div>
-
-                <div class="module-card">
-                    <div class="module-icon"><span>VIS</span></div>
-                    <h3>Visitor</h3>
-                    <p>Top level interface for defining Traversal and Algorithmic Structures on a model</p>
-                    <ul class="module-features">
-                        <li>Can be used to define Traversal and Algorithmic Structures on a model</li>
-                        <li>Stateless design for flexibile method development</li>
-                        <li>The Visitor portion of the Strategy/Visitor/Executor Pattern</li>
-                    </ul>
-                </div>
-
-                <div class="module-card">
-                    <div class="module-icon"><span>STR</span></div>
-                    <h3>Strategy</h3>
-                    <p>Top level interface for defining and executing inference strategies</p>
-                    <ul class="module-features">
-                        <li>Comprehensive while flexible to interact with models and data</li>
-                        <li>Stateless design for flexibile method development</li>
-                        <li>Is the Strategy portion of the Strategy/Visitor/Executor Pattern</li>
-                    </ul>
-                </div>
-
-
-                <div class="module-card">
-                    <div class="module-icon"><span>EXE</span></div>
-                    <h3>Executor</h3>
-                    <p>Top level interface for providing opimized execution of inference strategies </p>
-                    <ul class="module-features">
-                        <li>Provides formula for optimization</li>
-                        <li>Pre-installed optimizers, such as GPUExecutor, ParallelExecutor, and more</li>
-                        <li>Consequence-free design for ease of layering on top of likelihood calculations</li>
+                        <li><code>PopulationData</code> — never treats missing genotypes as reference alleles</li>
+                        <li><code>AdmixtureGraph</code> — validates pulse admixture semantics</li>
+                        <li>GPU-accelerated marker likelihood via CuPy</li>
                     </ul>
                 </div>
             </div>
@@ -272,10 +280,16 @@
                             <td><span class="partial">Limited</span></td>
                         </tr>
                         <tr>
-                            <td>Performance</td>
-                            <td class="highlight-col"><span class="check">Cython/GPU/Parallel/Memory optimized</span></td>
-                            <td><span class="check">Good</span></td>
-                            <td><span class="check">Good</span></td>
+                            <td>Inference hot paths</td>
+                            <td class="highlight-col"><span class="check">Cython, GPU, multiprocess</span></td>
+                            <td><span class="cross">Not applicable</span></td>
+                            <td><span class="cross">Not applicable</span></td>
+                        </tr>
+                        <tr>
+                            <td>Generic graph algorithms</td>
+                            <td class="highlight-col"><span class="partial">Domain subset only</span></td>
+                            <td><span class="check">Comprehensive</span></td>
+                            <td><span class="partial">Limited</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -284,42 +298,88 @@
     </section>
 
     <!-- Performance Benchmarks Section -->
-    <section class="benchmarks">
+    <section class="benchmarks" id="benchmarks">
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">Performance</span>
-                <h2>Benchmark Results</h2>
-                <p>PhyNetPy demonstrates superior performance for phylogenetic network operations</p>
+                <h2>Measured Benchmark Results</h2>
+                <p>
+                    Every number on this page is produced by a reproducible harness with correctness assertions.
+                    Where PhyNetPy loses, that is reported too.
+                </p>
+            </div>
+
+            <div class="methodology">
+                <h3>Methodology</h3>
+                <p>
+                    Timings come from <code>scripts/portfolio_benchmarks.py</code>,
+                    <code>portfolio_benchmarks_cython.py</code>, and <code>portfolio_benchmarks_kernel.py</code>
+                    in the PhyNetPy repository. Each measurement runs a warm-up call, then reports the
+                    <strong>median of 3&ndash;5 repeats</strong> of a tight loop using
+                    <code>time.perf_counter</code>. Memory figures use <code>tracemalloc</code> and measure memory
+                    <em>retained</em> after construction, with builder temporaries collected, so the harness does not
+                    flatter itself by counting scratch allocations.
+                </p>
+                <p>
+                    Critically, <strong>every optimized path is asserted against its reference implementation</strong>
+                    in the same process: the Cython pseudo-likelihood kernel is compared to the pure-Python DP
+                    (agreement: exactly 0.0), and closed-form transition matrices are compared to
+                    <code>scipy.linalg.expm</code> (agreement: ~1e-16). A speedup that changes the answer is a bug,
+                    not a speedup.
+                </p>
+                <dl class="methodology-env">
+                    <dt>Library</dt><dd>PhyNetPy 0.6.0</dd>
+                    <dt>Runtime</dt><dd>CPython 3.14.2, NumPy 2.3.5</dd>
+                    <dt>Hardware</dt><dd>AMD Ryzen (Zen 4), Windows 11</dd>
+                    <dt>Baselines</dt><dd>NetworkX, SciPy, and PhyNetPy's own pure-Python reference paths</dd>
+                    <dt>Raw data</dt><dd><a href="https://github.com/markkessler66/markkessler66.github.io/tree/main/benchmarks" target="_blank" rel="noopener">The harness and its JSON output are published here</a> so these figures can be audited or re-run.</dd>
+                </dl>
             </div>
 
             <div class="benchmark-grid">
-                <div class="benchmark-card">
+                <div class="benchmark-card full-width">
                     <div class="benchmark-header">
-                        <h3>InferMpAllop Performance</h3>
-                        <p>Comparing PhyNetPy's InferMpAllop-2.0 against PhyloNet across different network sizes</p>
+                        <h3>Cython pseudo-likelihood kernel vs. pure-Python reference</h3>
+                        <p>
+                            Time to score one species network against its gene trees, as taxon count grows. Both
+                            paths live in the shipping library and produce <strong>bit-identical</strong> scores, so
+                            this is a clean measure of what compiling the hot loop bought. The gap widens with
+                            problem size, from 4.2&times; at 6 taxa to <strong>9.2&times; at 24 taxa</strong>.
+                        </p>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="inferMpAllopChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="benchmark-card">
-                    <div class="benchmark-header">
-                        <h3>MCMC_BiMarkers Performance</h3>
-                        <p>CPU and GPU-accelerated versions compared to PhyloNet's implementation</p>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="mcmcBiMarkersChart"></canvas>
+                    <div class="chart-container wide">
+                        <canvas id="cythonKernelChart"></canvas>
                     </div>
                 </div>
 
                 <div class="benchmark-card full-width">
                     <div class="benchmark-header">
-                        <h3>Method Correctness Analysis</h3>
-                        <p>Average distance to ground truth network — lower values indicate better accuracy (tested on 50 simulated networks)</p>
+                        <h3>Transition matrices: closed forms vs. generic matrix exponentiation</h3>
+                        <p>
+                            0.6.0 replaced generic <code>expm</code> calls with closed-form solutions where the model
+                            admits one, and a cached eigendecomposition everywhere else. Result:
+                            <strong>8.6&times;&ndash;19.5&times; faster</strong> across all eight substitution models,
+                            agreeing with SciPy to ~1e-16.
+                        </p>
                     </div>
                     <div class="chart-container wide">
-                        <canvas id="correctnessChart"></canvas>
+                        <canvas id="substModelChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="benchmark-card full-width">
+                    <div class="benchmark-header">
+                        <h3>Topological accuracy vs. the incumbent implementation</h3>
+                        <p>
+                            &mu;-distance from the inferred network to the known true network across four simulated
+                            benchmark conditions (1,160 PhyNetPy runs vs. 669 PhyloNet runs). PhyNetPy is
+                            <strong>1.8&times; to 4.2&times; more accurate</strong> depending on condition &mdash;
+                            and it solves Scenario J, which PhyloNet does not complete at all. Note that PhyNetPy's
+                            margin <em>grows</em> as the conditions get harder, which is the direction you want.
+                        </p>
+                    </div>
+                    <div class="chart-container wide">
+                        <canvas id="accuracyChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -331,8 +391,12 @@
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">Efficiency</span>
-                <h2>Memory & Operation Benchmarks</h2>
-                <p>Comparing PhyNetPy with NetworkX for common network operations</p>
+                <h2>Graph Core vs. NetworkX</h2>
+                <p>
+                    Identical 1,999-node / 1,998-edge topologies built in both libraries. PhyNetPy's Cython
+                    adjacency layer wins decisively on the lookups that dominate inference &mdash; and loses on
+                    generic traversal and memory. Both results are shown.
+                </p>
             </div>
             <div class="table-container">
                 <table class="data-table">
@@ -341,68 +405,105 @@
                             <th>Operation</th>
                             <th class="highlight-col">PhyNetPy</th>
                             <th>NetworkX</th>
-                            <th>Notes</th>
+                            <th>Result</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Network (100 nodes, 150 edges)</td>
-                            <td class="highlight-col"><code>~2.4 KB</code></td>
-                            <td><code>~3.8 KB</code></td>
-                            <td>Compressed data structures</td>
+                            <td>In-edge lookup <span class="row-note">the inference hot path</span></td>
+                            <td class="highlight-col"><code>0.15 µs</code></td>
+                            <td><code>1.65 µs</code></td>
+                            <td><span class="win">10.9× faster</span></td>
                         </tr>
                         <tr>
-                            <td>Network (500 nodes, 750 edges)</td>
-                            <td class="highlight-col"><code>~12.1 KB</code></td>
-                            <td><code>~18.9 KB</code></td>
-                            <td>More efficient memory usage</td>
+                            <td>Leaf enumeration <code>get_leaves()</code></td>
+                            <td class="highlight-col"><code>91.2 µs</code></td>
+                            <td><code>349.0 µs</code></td>
+                            <td><span class="win">3.8× faster</span></td>
                         </tr>
                         <tr>
-                            <td>Network (1000 nodes, 1500 edges)</td>
-                            <td class="highlight-col"><code>~24.5 KB</code></td>
-                            <td><code>~38.2 KB</code></td>
-                            <td>Scales better with size</td>
+                            <td>Out-degree query</td>
+                            <td class="highlight-col"><code>0.15 µs</code></td>
+                            <td><code>0.19 µs</code></td>
+                            <td><span class="win">1.3× faster</span></td>
                         </tr>
                         <tr>
-                            <td>Add Edge (avg time)</td>
-                            <td class="highlight-col"><code>0.12 ms</code></td>
-                            <td><code>0.18 ms</code></td>
-                            <td>Optimized edge insertion</td>
+                            <td>Topological sort</td>
+                            <td class="highlight-col"><code>1,253 µs</code></td>
+                            <td><code>858 µs</code></td>
+                            <td><span class="loss">1.5× slower</span></td>
                         </tr>
                         <tr>
-                            <td>Remove Edge (avg time)</td>
-                            <td class="highlight-col"><code>0.15 ms</code></td>
-                            <td><code>0.22 ms</code></td>
-                            <td>Fast edge removal with validation</td>
+                            <td>Retained memory</td>
+                            <td class="highlight-col"><code>2,056 KiB</code></td>
+                            <td><code>1,103 KiB</code></td>
+                            <td><span class="loss">1.9× heavier</span></td>
                         </tr>
                         <tr>
-                            <td>Add Node (avg time)</td>
-                            <td class="highlight-col"><code>0.08 ms</code></td>
-                            <td><code>0.14 ms</code></td>
-                            <td>Efficient node creation</td>
-                        </tr>
-                        <tr>
-                            <td>Remove Node (avg time)</td>
-                            <td class="highlight-col"><code>0.25 ms</code></td>
-                            <td><code>0.35 ms</code></td>
-                            <td>Includes edge cleanup</td>
-                        </tr>
-                        <tr>
-                            <td>Topology Query (100 nodes)</td>
-                            <td class="highlight-col"><code>0.45 ms</code></td>
-                            <td><code>0.68 ms</code></td>
-                            <td>Specialized phylogenetic queries</td>
-                        </tr>
-                        <tr>
-                            <td>Network Traversal (BFS)</td>
-                            <td class="highlight-col"><code>0.32 ms</code></td>
-                            <td><code>0.48 ms</code></td>
-                            <td>Optimized traversal algorithms</td>
+                            <td>Leaf-descendant sets (all nodes)</td>
+                            <td class="highlight-col"><code>1,132 µs</code></td>
+                            <td><code>—</code></td>
+                            <td><span class="neutral">no equivalent</span></td>
                         </tr>
                     </tbody>
                 </table>
                 <p class="table-footnote">
-                    Performance metrics are averages from 1000 runs. Actual performance may vary based on network topology and system configuration.
+                    <strong>On the two losses.</strong> Both are deliberate trade-offs, not oversights. A PhyNetPy
+                    <code>Node</code> carries domain state a string-keyed NetworkX <code>DiGraph</code> node does not
+                    &mdash; branch lengths, inheritance probabilities, divergence times, sequence data, and
+                    reticulation flags &mdash; which costs roughly 1 KB per node and buys O(1) answers to the
+                    phylogenetic queries that run millions of times inside a search. Topological sort is slower
+                    because PhyNetPy validates acyclicity and returns rich <code>Node</code> objects rather than bare
+                    labels; it is also not on any hot path, so it has never been worth optimizing. Spending memory
+                    and generic-traversal speed to make the inner loop fast is the right call for this workload
+                    &mdash; but it is a trade, and worth stating plainly.
+                </p>
+            </div>
+
+            <div class="section-header" style="margin-top: 4rem;">
+                <h2>Distance Metric Throughput</h2>
+                <p>Network comparison metrics on level-1 random networks — all well under a millisecond at 50 taxa</p>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>10 taxa</th>
+                            <th>25 taxa</th>
+                            <th class="highlight-col">50 taxa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Hardwired cluster distance</td>
+                            <td><code>0.038 ms</code></td>
+                            <td><code>0.093 ms</code></td>
+                            <td class="highlight-col"><code>0.192 ms</code></td>
+                        </tr>
+                        <tr>
+                            <td>Robinson-Foulds distance</td>
+                            <td><code>0.042 ms</code></td>
+                            <td><code>0.102 ms</code></td>
+                            <td class="highlight-col"><code>0.207 ms</code></td>
+                        </tr>
+                        <tr>
+                            <td>&mu;-distance</td>
+                            <td><code>0.110 ms</code></td>
+                            <td><code>0.365 ms</code></td>
+                            <td class="highlight-col"><code>1.101 ms</code></td>
+                        </tr>
+                        <tr>
+                            <td>Tripartition distance</td>
+                            <td><code>0.151 ms</code></td>
+                            <td><code>0.452 ms</code></td>
+                            <td class="highlight-col"><code>1.161 ms</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="table-footnote">
+                    Cluster-based metrics scale near-linearly; &mu;-distance and tripartition distance grow with the
+                    number of node pairs, as expected from their definitions.
                 </p>
             </div>
         </div>
@@ -419,14 +520,15 @@
                 <div class="achievement-card">
                     <div class="achievement-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-                            <line x1="8" y1="7" x2="16" y2="7"/>
-                            <line x1="8" y1="11" x2="14" y2="11"/>
+                            <polyline points="20 6 9 17 4 12"/>
                         </svg>
                     </div>
-                    <h3>Comprehensive Docs</h3>
-                    <p>Full API documentation with examples and tutorials for every module</p>
+                    <h3>1,130 Tests in CI</h3>
+                    <p>
+                        1,125 passing in 34 seconds, plus memory-regression, stress, and numerical cross-check
+                        suites validated against the reference Java implementation. CI matrix spans Python
+                        3.9&ndash;3.14 with wheel and clean-install validation gating every release.
+                    </p>
                 </div>
                 <div class="achievement-card">
                     <div class="achievement-icon">
@@ -434,30 +536,40 @@
                             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                         </svg>
                     </div>
-                    <h3>High Performance</h3>
-                    <p>Cython-optimized implementation with GPU acceleration for large vectorized operations</p>
+                    <h3>Profile-Driven Optimization</h3>
+                    <p>
+                        Every speedup started with a profiler. Eliminating 3.7M redundant traversals raised search
+                        throughput 2.8× (2,742 → 972 ms/iteration); compiling the triplet DP added up to 9.2×
+                        on top of that.
+                    </p>
                 </div>
                 <div class="achievement-card">
                     <div class="achievement-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <line x1="2" y1="12" x2="22" y2="12"/>
-                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                         </svg>
                     </div>
-                    <h3>Research Ready</h3>
-                    <p>Designed for phylogenetic research with support for standard formats and methods</p>
+                    <h3>Correctness Enforced by Types</h3>
+                    <p>
+                        Branch lengths carry explicit units, so the library refuses to guess between coalescent and
+                        substitution scales. Invalid data/model/criterion combinations are rejected up front by a
+                        published validity matrix rather than failing hours into a run.
+                    </p>
                 </div>
                 <div class="achievement-card">
                     <div class="achievement-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                            <path d="M2 17l10 5 10-5"/>
-                            <path d="M2 12l10 5 10-5"/>
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12"/>
                         </svg>
                     </div>
-                    <h3>Python Ecosystem</h3>
-                    <p>Seamless integration with NumPy, SciPy, and other scientific libraries</p>
+                    <h3>Repeatable Releases</h3>
+                    <p>
+                        A one-command deploy pipeline handles version bump, test run, manifest check, build, and
+                        PyPI upload. API documentation is generated from source by a custom AST-based tool, so the
+                        docs cannot silently drift from the code.
+                    </p>
                 </div>
             </div>
         </div>
@@ -478,10 +590,10 @@
                 </button>
             </div>
             <div class="cta-links">
-                <a href="https://phylogenomics.rice.edu/html/phynetpy-docs/index.html" class="btn btn-primary" target="_blank">
+                <a href="https://phylogenomics.rice.edu/html/phynetpy-docs/index.html" class="btn btn-primary" target="_blank" rel="noopener">
                     Read the Documentation
                 </a>
-                <a href="https://github.com/markkessler66/phynetpy" class="btn btn-outline" target="_blank">
+                <a href="https://github.com/NakhlehLab/PhyNetPy" class="btn btn-outline" target="_blank" rel="noopener">
                     Contribute on GitHub
                 </a>
             </div>
@@ -491,7 +603,7 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <p>&copy; 2025 Mark Kessler. PhyNetPy - Advanced Phylogenetic Network Analysis</p>
+            <p>&copy; 2026 Mark Kessler &middot; PhyNetPy v0.6.0 &middot; <a href="resume.html">Résumé</a> &middot; <a href="index.html">Portfolio</a></p>
         </div>
     </footer>
 

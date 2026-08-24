@@ -1,0 +1,475 @@
+/* ==========================================================================
+   Resume — screen + print stylesheet
+   Single-column, text-first DOM order so ATS parsers read it correctly.
+   ========================================================================== */
+
+:root {
+    --primary-color: #2563eb;
+    --accent-color: #06b6d4;
+    --text-dark: #1e293b;
+    --text-body: #334155;
+    --text-light: #64748b;
+    --bg-light: #f8fafc;
+    --bg-white: #ffffff;
+    --border-color: #e2e8f0;
+    --rule-color: #cbd5e1;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+                 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-dark);
+    background-color: var(--bg-light);
+}
+
+/* ---------- Screen chrome (hidden when printing) ---------- */
+header {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.logo img {
+    height: 72px;
+    width: auto;
+    border-radius: 14px;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover img {
+    transform: scale(1.05);
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-light);
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--primary-color);
+}
+
+/* ---------- Action bar ---------- */
+.resume-actions {
+    max-width: 8.5in;
+    margin: 2rem auto 1rem;
+    padding: 0 0.25in;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+}
+
+.btn-secondary {
+    background-color: var(--bg-white);
+    color: var(--text-dark);
+    border: 2px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.actions-note {
+    margin-left: auto;
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+/* ---------- The resume sheet ---------- */
+.resume {
+    max-width: 8.5in;
+    margin: 0 auto 4rem;
+    padding: 0.55in 0.65in;
+    background: var(--bg-white);
+    box-shadow: 0 4px 24px rgba(15, 23, 42, 0.08);
+    border-radius: 4px;
+    font-size: 10pt;
+    line-height: 1.45;
+    color: var(--text-body);
+}
+
+/* Name block */
+.resume-header {
+    border-bottom: 2.5px solid var(--primary-color);
+    padding-bottom: 0.45rem;
+    margin-bottom: 0.6rem;
+}
+
+.resume-header h1 {
+    font-size: 22pt;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-dark);
+    line-height: 1.1;
+}
+
+.resume-title {
+    font-size: 10.5pt;
+    font-weight: 600;
+    color: var(--primary-color);
+    letter-spacing: 0.02em;
+    margin-top: 0.1rem;
+}
+
+.resume-contact {
+    margin-top: 0.3rem;
+    font-size: 9pt;
+    color: var(--text-light);
+    line-height: 1.45;
+}
+
+.resume-contact a {
+    color: var(--text-light);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule-color);
+}
+
+.resume-contact a:hover {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.resume-contact .sep {
+    color: var(--rule-color);
+    margin: 0 0.4rem;
+}
+
+/* Sections */
+.resume h2 {
+    font-size: 10pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--primary-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.15rem;
+    margin: 0.7rem 0 0.4rem;
+}
+
+.summary {
+    font-size: 9.5pt;
+    line-height: 1.45;
+}
+
+/* Skills */
+.skills-grid {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.18rem 0.7rem;
+    font-size: 9pt;
+    line-height: 1.4;
+}
+
+.skills-grid dt {
+    font-weight: 700;
+    color: var(--text-dark);
+    white-space: nowrap;
+}
+
+.skills-grid dd {
+    color: var(--text-body);
+}
+
+/* Experience entries */
+.role {
+    margin-bottom: 0.6rem;
+}
+
+.role:last-child {
+    margin-bottom: 0;
+}
+
+.role-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+}
+
+.role-title {
+    font-size: 10.5pt;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.role-dates {
+    font-size: 8.75pt;
+    color: var(--text-light);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.role-org {
+    font-size: 9.25pt;
+    color: var(--text-light);
+    font-style: italic;
+    margin-bottom: 0.2rem;
+}
+
+.bullet-label {
+    font-size: 8.25pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-dark);
+    margin: 0.35rem 0 0.15rem;
+}
+
+.role ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.role ul li {
+    position: relative;
+    padding-left: 0.85rem;
+    margin-bottom: 0.18rem;
+    font-size: 9.25pt;
+    line-height: 1.42;
+}
+
+.role ul li::before {
+    content: "";
+    position: absolute;
+    left: 0.1rem;
+    top: 0.52em;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--primary-color);
+}
+
+.role ul li strong {
+    color: var(--text-dark);
+    font-weight: 650;
+}
+
+/* Projects */
+.project {
+    margin-bottom: 0.4rem;
+}
+
+.project:last-child {
+    margin-bottom: 0;
+}
+
+.project-name {
+    font-size: 9.75pt;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.project-name .project-meta {
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text-light);
+    font-size: 8.75pt;
+}
+
+.project ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.project ul li {
+    position: relative;
+    padding-left: 0.85rem;
+    margin-bottom: 0.15rem;
+    font-size: 9.25pt;
+    line-height: 1.42;
+}
+
+.project ul li::before {
+    content: "";
+    position: absolute;
+    left: 0.1rem;
+    top: 0.52em;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--primary-color);
+}
+
+.project ul li strong {
+    color: var(--text-dark);
+    font-weight: 650;
+}
+
+/* Education */
+.edu-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    font-size: 9.25pt;
+}
+
+.edu-line strong {
+    color: var(--text-dark);
+}
+
+/* ---------- Print ---------- */
+@page {
+    size: letter;
+    margin: 0.45in 0.55in;
+}
+
+@media print {
+    header,
+    .resume-actions,
+    footer.site-footer {
+        display: none !important;
+    }
+
+    body {
+        background: #fff;
+        font-size: 10pt;
+    }
+
+    .resume {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    .resume-contact a {
+        border-bottom: none;
+        color: var(--text-light);
+    }
+
+    /* Keep small blocks intact, but let long roles flow across pages --
+       pinning a multi-page role would waste most of a sheet. */
+    .project,
+    .resume-header,
+    .edu-line,
+    .role li,
+    .project li {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .resume h2,
+    .bullet-label,
+    .role-head,
+    .role-org {
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+
+    .resume h2 {
+        break-before: auto;
+    }
+}
+
+/* ---------- Site footer (screen) ---------- */
+footer.site-footer {
+    background-color: var(--text-dark);
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.9rem;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+    .resume {
+        padding: 1.5rem 1.25rem;
+        font-size: 10pt;
+    }
+
+    .resume-header h1 {
+        font-size: 20pt;
+    }
+
+    .skills-grid {
+        grid-template-columns: 1fr;
+        gap: 0.1rem;
+    }
+
+    .skills-grid dt {
+        margin-top: 0.4rem;
+    }
+
+    .role-head,
+    .edu-line {
+        flex-direction: column;
+        gap: 0.1rem;
+    }
+
+    .nav-links {
+        gap: 1rem;
+        font-size: 0.9rem;
+    }
+
+    .logo img {
+        height: 56px;
+    }
+
+    .actions-note {
+        margin-left: 0;
+    }
+}

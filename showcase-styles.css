@@ -505,10 +505,143 @@ nav {
 
 .table-footnote {
     margin-top: 1.5rem;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    text-align: left;
+    line-height: 1.7;
+    max-width: 60rem;
+}
+
+.table-footnote strong {
+    color: var(--text-dark);
+}
+
+.table-footnote code {
+    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+    font-size: 0.85em;
+    color: var(--primary-color);
+    background: rgba(37, 99, 235, 0.08);
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+}
+
+/* Win / loss / neutral result badges */
+.win,
+.loss,
+.neutral {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.win {
+    color: #047857;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.loss {
+    color: #b45309;
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.neutral {
     color: var(--text-muted);
-    text-align: center;
+    background: rgba(100, 116, 139, 0.1);
+    border: 1px solid rgba(100, 116, 139, 0.25);
+}
+
+.row-note {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--text-muted);
     font-style: italic;
+    margin-top: 0.15rem;
+}
+
+/* Methodology block */
+.methodology {
+    max-width: 60rem;
+    margin: 0 auto 3rem;
+    padding: 1.75rem 2rem;
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--primary-color);
+    border-radius: 10px;
+}
+
+.methodology h3 {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--primary-color);
+    margin-bottom: 0.85rem;
+}
+
+.methodology p {
+    font-size: 0.92rem;
+    color: var(--text-light);
+    line-height: 1.75;
+    margin-bottom: 0.85rem;
+}
+
+.methodology p:last-of-type {
+    margin-bottom: 0;
+}
+
+.methodology strong {
+    color: var(--text-dark);
+}
+
+.methodology code {
+    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+    font-size: 0.85em;
+    color: var(--primary-color);
+    background: rgba(37, 99, 235, 0.08);
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+}
+
+.methodology-env {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.35rem 1.25rem;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.86rem;
+}
+
+.methodology-env dt {
+    font-weight: 700;
+    color: var(--text-dark);
+    white-space: nowrap;
+}
+
+.methodology-env dd {
+    color: var(--text-light);
+}
+
+/* Module cards: inline code */
+.module-features code,
+.module-card p code {
+    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+    font-size: 0.85em;
+    color: var(--primary-color);
+    background: rgba(37, 99, 235, 0.08);
+    padding: 0.08rem 0.3rem;
+    border-radius: 4px;
+}
+
+/* Benchmark header prose */
+.benchmark-header p strong {
+    color: var(--text-dark);
 }
 
 /* Achievements Section */
@@ -632,6 +765,17 @@ footer p {
     font-size: 0.9rem;
 }
 
+footer a {
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
     .benchmark-grid {
@@ -696,6 +840,19 @@ footer p {
     .data-table td {
         padding: 0.75rem 1rem;
         font-size: 0.85rem;
+    }
+
+    .methodology {
+        padding: 1.25rem 1.25rem;
+    }
+
+    .methodology-env {
+        grid-template-columns: 1fr;
+        gap: 0.1rem;
+    }
+
+    .methodology-env dt {
+        margin-top: 0.5rem;
     }
 
     .chart-container {
