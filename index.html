@@ -32,10 +32,10 @@
         <h1>Hi, I'm Mark</h1>
         <p class="subtitle">Senior Software Engineer &amp; Technical Lead</p>
         <p class="hero-description">
-            I build high-performance Python systems and lead them end to end. As technical lead and principal
-            architect of <strong>PhyNetPy</strong>, I own everything from compiled Cython kernels and GPU pipelines
-            to API design, CI/CD, and releases. My specialty is making NP-hard graph and statistical workloads
-            tractable — profile first, then remove the real bottleneck.
+            I build high-performance Python systems and lead them end to end. I'm the technical lead and principal
+            architect of <strong>PhyNetPy</strong>, which means I own the API design, the compiled Cython kernels,
+            the GPU paths, and the release pipeline. The problems I work on are mostly NP-hard, so most of my time
+            goes to finding the real bottleneck before I touch anything.
         </p>
         <div class="cta-buttons">
             <a href="resume.html" class="btn btn-primary">
@@ -74,7 +74,7 @@
             </div>
         </div>
         <p class="metrics-note">
-            Every figure above is measured by a reproducible harness, not estimated.
+            These come from a benchmark harness you can download and re-run.
             <a href="phynetpy-showcase.html#benchmarks">See the methodology &rarr;</a>
         </p>
     </section>
@@ -83,7 +83,7 @@
     <section id="projects" class="projects">
         <h2 class="section-title">Featured Projects</h2>
         <p class="section-description">
-            Selected work in high-performance scientific computing, network analysis, and open-source infrastructure
+            A few things I've built, mostly in scientific computing and network analysis
         </p>
         <div class="projects-grid">
             <!-- PhyNetPy Project Card -->
@@ -93,9 +93,9 @@
                 </div>
                 <h3>PhyNetPy <span class="version-badge">v0.6.0</span></h3>
                 <p>
-                    A production Python library for statistical network inference, simulation, and comparison,
-                    published on PyPI. I am the technical lead and principal architect — 217 of 249 commits —
-                    owning architecture, compiled kernels, GPU paths, CI/CD, packaging, and docs.
+                    A Python library on PyPI for inferring, simulating, and comparing phylogenetic networks.
+                    I'm the technical lead and principal architect, with 217 of its 249 commits, and I own the
+                    architecture, the compiled kernels, the GPU paths, and the release pipeline.
                 </p>
                 <ul>
                     <li>Typed three-axis API (data &times; model &times; criterion) behind <code>infer</code>, <code>score</code>, <code>simulate</code></li>
@@ -122,7 +122,7 @@
                 <h3>BioStore</h3>
                 <p>
                     Full-stack platform for submitting, monitoring, and visualizing long-running PhyNetPy jobs.
-                    I wrote the frontend by hand — about 2,500 lines of framework-free ES modules, no build step.
+                    The frontend is about 2,500 lines of hand-written ES modules with no framework and no build step.
                 </p>
                 <ul>
                     <li>Interactive network rendering and alignment views</li>
@@ -149,12 +149,11 @@
                 </div>
                 <h3>GPU-Accelerated Synthetic Sequence Generation</h3>
                 <p>
-                    BioForge is a GPU-accelerated Python library for generating synthetic 
-                    DNA, RNA, and protein sequences with known ground truth. Designed for training and 
-                    benchmarking ML models in computational biology. It includes evolutionary models 
-                    (substitution, indels, recombination), population genetics simulations, 
-                    sequencing error models, and ML-ready outputs (one-hot encoding, PyTorch datasets) 
-                    with full reproducibility through configuration tracking.
+                    A GPU-accelerated Python library that generates synthetic DNA, RNA, and protein sequences
+                    with known ground truth, so you can train and benchmark ML models against data where you
+                    already know the right answer. It covers substitution, indel, and recombination models,
+                    population genetics simulation, and sequencing error, and it writes out one-hot arrays and
+                    PyTorch datasets directly. Every run records its config so the data can be regenerated.
                 </p>
                 <div class="tech-stack">
                     <span class="tech-tag">Python</span>
@@ -175,7 +174,7 @@
     <section id="phynetpy" class="phynetpy-section">
         <h2 class="section-title">What Shipped in PhyNetPy 0.6.0</h2>
         <p class="section-description">
-            The 0.6.0 release was a ground-up API redesign paired with measured performance work
+            0.6.0 was a full API redesign plus a round of performance work I could actually measure
         </p>
         <div class="feature-grid">
             <div class="feature-card">
@@ -184,10 +183,11 @@
                 </div>
                 <h3>Typed Three-Axis API</h3>
                 <p>
-                    Collapsed a sprawling command surface into one composable API: pick your data, biological model,
-                    and statistical criterion, then call <code>infer</code>, <code>score</code>, or
-                    <code>simulate</code>. Invalid combinations are rejected up front by a published validity matrix
-                    instead of failing deep in a run.
+                    The old command surface had grown in every direction, so I replaced it with one composable API.
+                    You pick your data, a biological model, and a statistical criterion, then call
+                    <code>infer</code>, <code>score</code>, or <code>simulate</code>. Combinations that don't make
+                    sense get rejected at the call site rather than two hours into a run, and the validity matrix
+                    is published so you know which ones those are.
                 </p>
             </div>
             <div class="feature-card">
@@ -196,21 +196,22 @@
                 </div>
                 <h3>Compiled Hot Paths</h3>
                 <p>
-                    Four Cython extension modules back the graph core and the scoring kernels. The
-                    pseudo-likelihood DP runs up to <strong>9.2&times;</strong> faster than the pure-Python
-                    reference while producing bit-identical scores, and closed-form transition matrices beat
-                    <code>scipy.linalg.expm</code> by <strong>8.6&ndash;19.5&times;</strong>.
+                    Four Cython extension modules sit under the graph core and the scoring kernels. The
+                    pseudo-likelihood DP runs up to 9.2&times; faster than the pure-Python version and returns
+                    bit-identical scores. Closed-form transition matrices beat <code>scipy.linalg.expm</code> by
+                    8.6 to 19.5&times;.
                 </p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">
                     <span class="icon-text">SAFE</span>
                 </div>
-                <h3>Correctness by Construction</h3>
+                <h3>Hard to Misuse</h3>
                 <p>
-                    Branch lengths now carry explicit units, so the library refuses to guess between coalescent and
-                    substitution scales — eliminating a class of silent scientific errors. Backed by 1,130 tests
-                    including numerical cross-checks against the reference Java implementation.
+                    Branch lengths now carry their units in the type, so the library won't quietly guess between
+                    coalescent and substitution scales. That mistake used to produce wrong results without raising
+                    anything. There are 1,130 tests behind it, including numerical cross-checks against the
+                    reference Java implementation.
                 </p>
             </div>
         </div>
@@ -219,25 +220,36 @@
     <!-- About Section -->
     <section id="about" class="about">
         <h2 class="section-title">About Me</h2>
-        <div class="about-content">
-            <p>
-                I like problems where the naive solution doesn't finish. Most of my work sits on NP-hard graph and
-                statistical inference problems, which means the interesting engineering is in the profiling: figuring
-                out which 5% of the code is 90% of the runtime, then deciding whether the fix is a compiled kernel,
-                a cache, a parallel pool, or a fundamentally better algorithm. I care a lot about proving the fix
-                worked — every optimization I ship has a benchmark and a correctness assertion behind it.
-            </p>
-            <p>
-                Increasingly the part I enjoy most is the leadership side: setting technical direction, designing APIs
-                that other people can build on, making releases boring and repeatable, and bringing collaborators
-                up to speed on a dense codebase. I'm looking for a senior role where I can keep doing that at
-                a larger scale.
-            </p>
-            <p>
-                When I'm not coding, you can find me gardening, cooking, playing tennis/guitar/golf, or going on a
-                walk with my lovely fiancée. I believe in open-source collaboration and am always excited to connect
-                with fellow engineers and researchers.
-            </p>
+        <div class="about-layout">
+            <div class="about-text">
+                <p>
+                    I like problems where the obvious solution doesn't finish running. Most of my work is on NP-hard
+                    graph and inference problems, so the interesting part is usually the profiling: finding the 5%
+                    of the code that accounts for 90% of the runtime, then working out whether the fix is a compiled
+                    kernel, a cache, or a better algorithm. I try not to claim a speedup I haven't measured, which
+                    is why the numbers on this site ship with the scripts that produced them.
+                </p>
+                <p>
+                    These days the work I enjoy most is the part that isn't writing code: picking a direction,
+                    designing an API other people have to live with, making releases boring, getting a new
+                    contributor productive in a dense codebase. I'm looking for a senior or lead role where I can
+                    do more of that.
+                </p>
+                <p>
+                    Outside of work I garden, cook, and play tennis, guitar, and golf, usually with my wife Rachel
+                    somewhere nearby.
+                </p>
+            </div>
+            <figure class="about-photo">
+                <img src="mark-and-rachel-1600w.jpg"
+                     srcset="mark-and-rachel-800w.jpg 800w, mark-and-rachel-1600w.jpg 1600w"
+                     sizes="(max-width: 900px) 92vw, 480px"
+                     width="1600" height="1067" loading="lazy" decoding="async"
+                     alt="Mark Kessler and his wife Rachel on a seaside golf green">
+                <figcaption>
+                    That's me with the putter, the one part of my game I've never managed to optimize.
+                </figcaption>
+            </figure>
         </div>
     </section>
 
@@ -246,9 +258,9 @@
         <h2 class="section-title">Let's Connect</h2>
         <div class="contact-content">
             <p class="section-description">
-                I'm currently open to senior and lead engineering roles, particularly in high-performance Python,
-                scientific computing, or developer-facing platform work. If that sounds like your team, I'd love
-                to talk.
+                I'm looking for senior or lead engineering roles, ideally in high-performance Python, scientific
+                computing, or developer-facing platform work. If your team is working on something like that,
+                send me a note.
             </p>
             <div class="cta-buttons" style="margin-bottom: 2rem;">
                 <a href="mailto:markkessler66@gmail.com" class="btn btn-primary">Get in Touch</a>

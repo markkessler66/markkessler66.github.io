@@ -419,17 +419,43 @@ nav {
     padding: 5rem 2rem;
 }
 
-.about-content {
-    max-width: 800px;
+.about-layout {
+    max-width: var(--max-width);
     margin: 0 auto;
-    text-align: center;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: 3.5rem;
+    align-items: center;
 }
 
-.about-content p {
-    font-size: 1.125rem;
+.about-text p {
+    font-size: 1.0625rem;
     color: var(--text-light);
     line-height: 1.8;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.about-text p:last-child {
+    margin-bottom: 0;
+}
+
+.about-photo {
+    margin: 0;
+}
+
+.about-photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 14px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+}
+
+.about-photo figcaption {
+    margin-top: 0.85rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-light);
 }
 
 /* Contact Section */
@@ -497,6 +523,14 @@ footer a:hover {
 }
 
 /* Responsive Design */
+@media (max-width: 900px) {
+    .about-layout {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        max-width: 640px;
+    }
+}
+
 @media (max-width: 768px) {
     .hero h1 {
         font-size: 2.5rem;

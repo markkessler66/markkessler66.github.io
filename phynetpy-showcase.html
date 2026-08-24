@@ -36,9 +36,9 @@
             <span class="hero-subtitle-text">Advanced Phylogenetic Network Analysis</span>
         </h1>
         <p class="hero-description">
-            A production Python library for constructing, simulating, comparing, and inferring phylogenetic
-            networks. I am its technical lead and principal architect, owning architecture, compiled kernels,
-            GPU paths, CI/CD, and releases. This page documents how it is built and how fast it actually is.
+            A Python library for constructing, simulating, comparing, and inferring phylogenetic networks.
+            I'm its technical lead and principal architect. This page covers how it's built and how fast it
+            actually is, with the benchmark scripts to back the numbers up.
         </p>
         <div class="hero-actions">
             <a href="https://phylogenomics.rice.edu/html/phynetpy-docs/index.html" class="btn btn-primary" target="_blank" rel="noopener">
@@ -84,8 +84,8 @@
                 <span class="section-tag">Architecture</span>
                 <h2>Core Modules</h2>
                 <p>
-                    The 0.6.0 public API, organized around three composable axes &mdash; your data, a biological
-                    model, and a statistical criterion &mdash; driven by three verbs.
+                    The 0.6.0 public API. Three composable axes (your data, a biological model, a statistical
+                    criterion) driven by three verbs.
                 </p>
             </div>
             <div class="modules-grid">
@@ -230,7 +230,7 @@
             <div class="section-header">
                 <span class="section-tag">Why PhyNetPy?</span>
                 <h2>Feature Comparison</h2>
-                <p>See how PhyNetPy stacks up against other tools in the ecosystem</p>
+                <p>Where PhyNetPy sits next to the general-purpose libraries people usually reach for first</p>
             </div>
             <div class="table-container">
                 <table class="comparison-table">
@@ -304,35 +304,34 @@
                 <span class="section-tag">Performance</span>
                 <h2>Measured Benchmark Results</h2>
                 <p>
-                    Every number on this page is produced by a reproducible harness with correctness assertions.
-                    Where PhyNetPy loses, that is reported too.
+                    Every number here comes from a harness you can re-run, and every optimized path is checked
+                    against its reference implementation. The cases where PhyNetPy loses are on this page too.
                 </p>
             </div>
 
             <div class="methodology">
                 <h3>Methodology</h3>
                 <p>
-                    Timings come from <code>scripts/portfolio_benchmarks.py</code>,
+                    Timings come from <code>portfolio_benchmarks.py</code>,
                     <code>portfolio_benchmarks_cython.py</code>, and <code>portfolio_benchmarks_kernel.py</code>
-                    in the PhyNetPy repository. Each measurement runs a warm-up call, then reports the
-                    <strong>median of 3&ndash;5 repeats</strong> of a tight loop using
-                    <code>time.perf_counter</code>. Memory figures use <code>tracemalloc</code> and measure memory
-                    <em>retained</em> after construction, with builder temporaries collected, so the harness does not
-                    flatter itself by counting scratch allocations.
+                    in the <code>benchmarks/</code> directory of this site's repository. Each measurement does a
+                    warm-up call first, then reports the median of 3&ndash;5 repeats of a tight loop timed with
+                    <code>time.perf_counter</code>. Memory figures use <code>tracemalloc</code> and measure what is
+                    still <em>retained</em> after construction, with builder temporaries collected, so scratch
+                    allocations don't inflate the numbers.
                 </p>
                 <p>
-                    Critically, <strong>every optimized path is asserted against its reference implementation</strong>
-                    in the same process: the Cython pseudo-likelihood kernel is compared to the pure-Python DP
-                    (agreement: exactly 0.0), and closed-form transition matrices are compared to
-                    <code>scipy.linalg.expm</code> (agreement: ~1e-16). A speedup that changes the answer is a bug,
-                    not a speedup.
+                    Every optimized path is also asserted against its reference implementation in the same process.
+                    The Cython pseudo-likelihood kernel is compared to the pure-Python DP and agrees exactly.
+                    Closed-form transition matrices are compared to <code>scipy.linalg.expm</code> and agree to
+                    about 1e-16. A faster kernel that returns a different number is just a bug.
                 </p>
                 <dl class="methodology-env">
                     <dt>Library</dt><dd>PhyNetPy 0.6.0</dd>
                     <dt>Runtime</dt><dd>CPython 3.14.2, NumPy 2.3.5</dd>
                     <dt>Hardware</dt><dd>AMD Ryzen (Zen 4), Windows 11</dd>
                     <dt>Baselines</dt><dd>NetworkX, SciPy, and PhyNetPy's own pure-Python reference paths</dd>
-                    <dt>Raw data</dt><dd><a href="https://github.com/markkessler66/markkessler66.github.io/tree/main/benchmarks" target="_blank" rel="noopener">The harness and its JSON output are published here</a> so these figures can be audited or re-run.</dd>
+                    <dt>Raw data</dt><dd><a href="https://github.com/markkessler66/markkessler66.github.io/tree/main/benchmarks" target="_blank" rel="noopener">The scripts and their JSON output are here</a> if you want to check the figures or run them yourself.</dd>
                 </dl>
             </div>
 
@@ -341,10 +340,10 @@
                     <div class="benchmark-header">
                         <h3>Cython pseudo-likelihood kernel vs. pure-Python reference</h3>
                         <p>
-                            Time to score one species network against its gene trees, as taxon count grows. Both
-                            paths live in the shipping library and produce <strong>bit-identical</strong> scores, so
-                            this is a clean measure of what compiling the hot loop bought. The gap widens with
-                            problem size, from 4.2&times; at 6 taxa to <strong>9.2&times; at 24 taxa</strong>.
+                            Time to score one species network against its gene trees as taxon count grows. Both
+                            paths ship in the library and return bit-identical scores, so this measures exactly
+                            what compiling the hot loop bought. The gap widens with problem size, from 4.2&times;
+                            at 6 taxa to 9.2&times; at 24 taxa.
                         </p>
                     </div>
                     <div class="chart-container wide">
@@ -356,10 +355,10 @@
                     <div class="benchmark-header">
                         <h3>Transition matrices: closed forms vs. generic matrix exponentiation</h3>
                         <p>
-                            0.6.0 replaced generic <code>expm</code> calls with closed-form solutions where the model
-                            admits one, and a cached eigendecomposition everywhere else. Result:
-                            <strong>8.6&times;&ndash;19.5&times; faster</strong> across all eight substitution models,
-                            agreeing with SciPy to ~1e-16.
+                            0.6.0 replaced generic <code>expm</code> calls with closed-form solutions where the
+                            model has one, and a cached eigendecomposition everywhere else. That works out to
+                            8.6 to 19.5&times; faster across all eight substitution models, agreeing with SciPy
+                            to about 1e-16.
                         </p>
                     </div>
                     <div class="chart-container wide">
@@ -372,10 +371,10 @@
                         <h3>Topological accuracy vs. the incumbent implementation</h3>
                         <p>
                             &mu;-distance from the inferred network to the known true network across four simulated
-                            benchmark conditions (1,160 PhyNetPy runs vs. 669 PhyloNet runs). PhyNetPy is
-                            <strong>1.8&times; to 4.2&times; more accurate</strong> depending on condition &mdash;
-                            and it solves Scenario J, which PhyloNet does not complete at all. Note that PhyNetPy's
-                            margin <em>grows</em> as the conditions get harder, which is the direction you want.
+                            benchmark conditions (1,160 PhyNetPy runs against 669 PhyloNet runs). PhyNetPy comes out
+                            1.8 to 4.2&times; more accurate depending on the condition, and it finishes Scenario J,
+                            which PhyloNet doesn't complete at all. The margin gets wider as the conditions get
+                            harder.
                         </p>
                     </div>
                     <div class="chart-container wide">
@@ -393,9 +392,9 @@
                 <span class="section-tag">Efficiency</span>
                 <h2>Graph Core vs. NetworkX</h2>
                 <p>
-                    Identical 1,999-node / 1,998-edge topologies built in both libraries. PhyNetPy's Cython
-                    adjacency layer wins decisively on the lookups that dominate inference &mdash; and loses on
-                    generic traversal and memory. Both results are shown.
+                    The same 1,999-node, 1,998-edge topology built in both libraries. PhyNetPy's Cython adjacency
+                    layer is much faster on the lookups that dominate inference. It's slower on generic traversal
+                    and uses more memory. Both are in the table.
                 </p>
             </div>
             <div class="table-container">
@@ -448,21 +447,20 @@
                     </tbody>
                 </table>
                 <p class="table-footnote">
-                    <strong>On the two losses.</strong> Both are deliberate trade-offs, not oversights. A PhyNetPy
-                    <code>Node</code> carries domain state a string-keyed NetworkX <code>DiGraph</code> node does not
-                    &mdash; branch lengths, inheritance probabilities, divergence times, sequence data, and
-                    reticulation flags &mdash; which costs roughly 1 KB per node and buys O(1) answers to the
-                    phylogenetic queries that run millions of times inside a search. Topological sort is slower
-                    because PhyNetPy validates acyclicity and returns rich <code>Node</code> objects rather than bare
-                    labels; it is also not on any hot path, so it has never been worth optimizing. Spending memory
-                    and generic-traversal speed to make the inner loop fast is the right call for this workload
-                    &mdash; but it is a trade, and worth stating plainly.
+                    <strong>On the two losses.</strong> A PhyNetPy <code>Node</code> carries state that a
+                    string-keyed NetworkX <code>DiGraph</code> node doesn't: branch lengths, inheritance
+                    probabilities, divergence times, sequence data, reticulation flags. That costs roughly 1 KB per
+                    node and buys O(1) answers to the phylogenetic queries a search runs millions of times.
+                    Topological sort is slower because PhyNetPy validates acyclicity and hands back
+                    <code>Node</code> objects instead of bare labels, and because it isn't on a hot path, so I've
+                    never had a reason to optimize it. For this workload I'd make the same trade again, but it is
+                    a trade.
                 </p>
             </div>
 
             <div class="section-header" style="margin-top: 4rem;">
                 <h2>Distance Metric Throughput</h2>
-                <p>Network comparison metrics on level-1 random networks — all well under a millisecond at 50 taxa</p>
+                <p>Network comparison metrics on level-1 random networks, all comfortably under a millisecond at 50 taxa</p>
             </div>
             <div class="table-container">
                 <table class="data-table">
@@ -525,9 +523,10 @@
                     </div>
                     <h3>1,130 Tests in CI</h3>
                     <p>
-                        1,125 passing in 34 seconds, plus memory-regression, stress, and numerical cross-check
-                        suites validated against the reference Java implementation. CI matrix spans Python
-                        3.9&ndash;3.14 with wheel and clean-install validation gating every release.
+                        A 100% pass rate in 34 seconds, plus separate memory-regression, stress, and numerical
+                        cross-check suites validated against the reference Java implementation. CI runs on Python
+                        3.9 through 3.14, and every release has to clear wheel builds and a clean-install check
+                        before it ships.
                     </p>
                 </div>
                 <div class="achievement-card">
@@ -538,8 +537,8 @@
                     </div>
                     <h3>Profile-Driven Optimization</h3>
                     <p>
-                        Every speedup started with a profiler. Eliminating 3.7M redundant traversals raised search
-                        throughput 2.8× (2,742 → 972 ms/iteration); compiling the triplet DP added up to 9.2×
+                        Every speedup here started in a profiler. Cutting 3.7M redundant traversals took search from
+                        2,742 to 972 ms per iteration, a 2.8× gain, and compiling the triplet DP added up to 9.2×
                         on top of that.
                     </p>
                 </div>
@@ -551,9 +550,9 @@
                     </div>
                     <h3>Correctness Enforced by Types</h3>
                     <p>
-                        Branch lengths carry explicit units, so the library refuses to guess between coalescent and
-                        substitution scales. Invalid data/model/criterion combinations are rejected up front by a
-                        published validity matrix rather than failing hours into a run.
+                        Branch lengths carry their units in the type, so the library won't guess between coalescent
+                        and substitution scales. Invalid data, model, and criterion combinations are caught at the
+                        call site rather than hours into a run, and the validity matrix is part of the public docs.
                     </p>
                 </div>
                 <div class="achievement-card">
@@ -566,9 +565,9 @@
                     </div>
                     <h3>Repeatable Releases</h3>
                     <p>
-                        A one-command deploy pipeline handles version bump, test run, manifest check, build, and
-                        PyPI upload. API documentation is generated from source by a custom AST-based tool, so the
-                        docs cannot silently drift from the code.
+                        One command handles the version bump, test run, manifest check, build, and PyPI upload.
+                        API docs are generated from source by an AST-based tool I wrote, so they can't drift away
+                        from the code without someone noticing.
                     </p>
                 </div>
             </div>
@@ -578,8 +577,8 @@
     <!-- CTA Section -->
     <section class="cta">
         <div class="container">
-            <h2>Ready to get started?</h2>
-            <p>Install PhyNetPy and start analyzing phylogenetic networks today</p>
+            <h2>Try it out</h2>
+            <p>One <code>pip install</code> and you're running</p>
             <div class="install-command">
                 <code>pip install phynetpy</code>
                 <button class="copy-btn" onclick="navigator.clipboard.writeText('pip install phynetpy')">
