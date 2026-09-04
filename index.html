@@ -84,7 +84,7 @@
     <section id="skills" class="skills">
         <h2 class="section-title">What I Bring</h2>
         <p class="section-description">
-            Four things I get hired for, and the work that backs each one up
+            Five things I hang my hat on, and the work that backs each one up
         </p>
         <div class="strengths-grid">
             <div class="strength-card">
@@ -102,21 +102,18 @@
                 <h3>API &amp; Systems Design</h3>
                 <p>
                     I design interfaces other people have to live with. My last major redesign replaced an
-                    overgrown command surface with one typed, composable API behind three verbs, and moved a whole
-                    class of user error from two hours into a run to the call site. Branch lengths now carry their
-                    units in the type, which closes a bug that used to produce quietly wrong scientific results.
-                    It shipped with a migration guide and compatibility matrix so a breaking release didn't cost
-                    anyone their work.
+                    overgrown command surface with one typed, composable API behind three verbs,
+                    
                 </p>
             </div>
             <div class="strength-card">
                 <h3>Technical Leadership</h3>
                 <p>
-                    Setting direction, not just closing tickets. I own the technical roadmap alongside a principal
-                    investigator, onboard and review contributors in a dense 41k-line codebase, and wrote the
+                    Setting direction, not just closing tickets. I drive the technical roadmap alongside a principal
+                    investigator, review contributions, and wrote the
                     coding standards that both humans and AI assistants build against. I also make releases
-                    boring: one command from version bump to PyPI, and an AST-based generator that keeps the API
-                    reference honest.
+                    boring: one command from version bump to PyPI, backed by a test suite that requires an 100% pass rate
+                    in order for deployment to complete.
                 </p>
             </div>
             <div class="strength-card">
@@ -135,7 +132,7 @@
         <div class="skills-tech-grid">
             <div class="skill-group">
                 <h4>Languages</h4>
-                <p>Python, Cython, JavaScript, TypeScript, C, Java, C#/.NET, SQL</p>
+                <p>Python, C, Java, C#/.NET, SQL</p>
             </div>
             <div class="skill-group">
                 <h4>Performance</h4>
@@ -147,7 +144,11 @@
             </div>
             <div class="skill-group">
                 <h4>Web &amp; Backend</h4>
-                <p>ES modules, Canvas/SVG rendering, React, Flask, FastAPI, REST API design, SQLite, PostgreSQL, MongoDB</p>
+                <p>ES modules, Canvas/SVG rendering, Flask, FastAPI, REST API design, SQLite, PostgreSQL, MongoDB</p>
+            </div>
+            <div class="skill-group">
+                <h4>Frontend</h4>
+                <p> UI/UX design, HTML5/CSS, JavaScript, TypeScript, React</p>
             </div>
             <div class="skill-group">
                 <h4>Infrastructure</h4>
@@ -234,7 +235,7 @@
                 </div>
                 <h3>PhyNetPy <span class="version-badge">v0.6.0</span></h3>
                 <p>
-                    A Python library on PyPI for inferring, simulating, and comparing phylogenetic networks.
+                    A Python library deployed on PyPI for inferring, simulating, and comparing phylogenetic networks.
                     I'm the technical lead and principal architect, with 217 of its 249 commits, and I own the
                     architecture, the compiled kernels, the GPU paths, and the release pipeline.
                 </p>
@@ -261,11 +262,12 @@
             <!-- Additional Project Card 1 -->
             <div class="project-card">
                 <div class="project-icon">
-                    <span class="icon-text">Web</span>
+                    <span class="icon-text">BioStore</span>
                 </div>
                 <h3>BioStore</h3>
                 <p>
-                    Full-stack platform for submitting, monitoring, and visualizing long-running scientific compute
+                    Full-stack platform for submitting large data sets, 
+                    monitoring, and visualizing long-running scientific compute
                     jobs. I built both halves: the Flask/SQLite backend and about 2,500 lines of hand-written ES
                     modules on top of it, with no framework and no build step.
                 </p>
@@ -324,22 +326,14 @@
         <h2 class="section-title">About Me</h2>
         <div class="about-layout">
             <div class="about-text">
+                
                 <p>
-                    I like problems where the obvious solution doesn't finish running. Most of my work is on NP-hard
-                    graph and inference problems, so the interesting part is usually the profiling: finding the 5%
-                    of the code that accounts for 90% of the runtime, then working out whether the fix is a compiled
-                    kernel, a cache, or a better algorithm. I try not to claim a speedup I haven't measured, which
-                    is why the numbers on this site ship with the scripts that produced them.
-                </p>
-                <p>
-                    These days the work I enjoy most is the part that isn't writing code: picking a direction,
-                    designing an API other people have to live with, making releases boring, getting a new
-                    contributor productive in a dense codebase. I'm looking for a senior or lead role where I can
-                    do more of that.
-                </p>
-                <p>
-                    Outside of work I garden, cook, and play tennis, guitar, and golf, usually with my wife Rachel
-                    somewhere nearby.
+                    Outside of work I am a man of many interests! Here are some things I love: 
+                    Growing fruit in my backyard (mostly citrus, berries, and figs)!
+                    Cooking and baking! 
+                    Tennis with my dad!
+                    Electric and acoustic guitar! 
+                    Golf, usually with my wife Rachel!
                 </p>
             </div>
             <figure class="about-photo">
