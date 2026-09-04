@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mark Kessler - Senior Software Engineer</title>
-    <meta name="description" content="Mark Kessler - senior software engineer and technical lead specializing in high-performance Python, Cython, and GPU-accelerated scientific computing. Creator and technical lead of PhyNetPy.">
+    <title>Mark Kessler - Senior Software Engineer &amp; Technical Lead</title>
+    <meta name="description" content="Mark Kessler - senior software engineer and technical lead. Six years of production Python, performance engineering in Cython and CUDA, API design for libraries other people depend on, and full-stack delivery.">
     <link rel="icon" type="image/png" href="m.png">
     <link rel="apple-touch-icon" href="m.png">
     <link rel="stylesheet" href="styles.css">
@@ -17,10 +17,10 @@
                 <img src="m.png" alt="Mark Kessler Logo" />
             </a>
             <ul class="nav-links">
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#experience">Experience</a></li>
                 <li><a href="#projects">Projects</a></li>
-                <li><a href="#phynetpy">PhyNetPy</a></li>
-                <li><a href="phynetpy-showcase.html">Showcase</a></li>
-                <li><a href="demo.html">Demo</a></li>
+                <li><a href="phynetpy-showcase.html">PhyNetPy</a></li>
                 <li><a href="resume.html">Resume</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
@@ -33,10 +33,10 @@
         <h1>Hi, I'm Mark</h1>
         <p class="subtitle">Senior Software Engineer &amp; Technical Lead</p>
         <p class="hero-description">
-            I build high-performance Python systems and lead them end to end. I'm the technical lead and principal
-            architect of <strong>PhyNetPy</strong>, which means I own the API design, the compiled Cython kernels,
-            the GPU paths, and the release pipeline. The problems I work on are mostly NP-hard, so most of my time
-            goes to finding the real bottleneck before I touch anything.
+            Six years building production Python systems, the last four leading one end to end &mdash; architecture,
+            compiled Cython and CUDA hot paths, CI/CD, releases, docs, and the contributors working in it. I'm
+            strongest where correctness and speed both matter: profiling a slow system down to the 5% of the code
+            that actually costs something, then designing an interface that's hard to misuse once it's fast.
         </p>
         <div class="cta-buttons">
             <a href="resume.html" class="btn btn-primary">
@@ -58,25 +58,164 @@
         <!-- Verified metrics -->
         <div class="metrics-strip">
             <div class="metric">
-                <span class="metric-value">9.2&times;</span>
-                <span class="metric-label">Cython DP kernel speedup, bit-identical results</span>
+                <span class="metric-value">6 yrs</span>
+                <span class="metric-label">Building production Python, 4 as tech lead</span>
             </div>
             <div class="metric">
-                <span class="metric-value">19&times;</span>
-                <span class="metric-label">Faster transition matrices vs. <code>scipy.expm</code></span>
+                <span class="metric-value">9.2&times;</span>
+                <span class="metric-label">Speedup from Cython kernels I wrote, identical output</span>
             </div>
             <div class="metric">
                 <span class="metric-value">1,130</span>
-                <span class="metric-label">Tests in CI across Python 3.9&ndash;3.14</span>
+                <span class="metric-label">Tests I own in CI, across Python 3.9&ndash;3.14</span>
             </div>
             <div class="metric">
-                <span class="metric-value">v0.6.0</span>
-                <span class="metric-label">PhyNetPy shipped on PyPI</span>
+                <span class="metric-value">3</span>
+                <span class="metric-label">Systems designed and shipped end to end</span>
             </div>
         </div>
         <p class="metrics-note">
-            These come from a benchmark harness you can download and re-run.
+            Every performance number on this site ships with the benchmark harness that produced it.
             <a href="phynetpy-showcase.html#benchmarks">See the methodology &rarr;</a>
+        </p>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills">
+        <h2 class="section-title">What I Bring</h2>
+        <p class="section-description">
+            Four things I get hired for, and the work that backs each one up
+        </p>
+        <div class="strengths-grid">
+            <div class="strength-card">
+                <h3>Performance Engineering</h3>
+                <p>
+                    I profile first and fix what the profiler actually points at. I've shipped four Cython extension
+                    modules, replaced generic matrix exponentiation with closed-form solutions for an
+                    8.6&ndash;19.5&times; win over <code>scipy.linalg.expm</code>, cut a search loop's runtime
+                    2.8&times; after finding 3.7M redundant graph traversals, and moved likelihood scoring onto the
+                    GPU with CuPy and VRAM-aware batching so out-of-memory surfaces as a recoverable error instead
+                    of a dead run.
+                </p>
+            </div>
+            <div class="strength-card">
+                <h3>API &amp; Systems Design</h3>
+                <p>
+                    I design interfaces other people have to live with. My last major redesign replaced an
+                    overgrown command surface with one typed, composable API behind three verbs, and moved a whole
+                    class of user error from two hours into a run to the call site. Branch lengths now carry their
+                    units in the type, which closes a bug that used to produce quietly wrong scientific results.
+                    It shipped with a migration guide and compatibility matrix so a breaking release didn't cost
+                    anyone their work.
+                </p>
+            </div>
+            <div class="strength-card">
+                <h3>Technical Leadership</h3>
+                <p>
+                    Setting direction, not just closing tickets. I own the technical roadmap alongside a principal
+                    investigator, onboard and review contributors in a dense 41k-line codebase, and wrote the
+                    coding standards that both humans and AI assistants build against. I also make releases
+                    boring: one command from version bump to PyPI, and an AST-based generator that keeps the API
+                    reference honest.
+                </p>
+            </div>
+            <div class="strength-card">
+                <h3>Full-Stack &amp; Platform</h3>
+                <p>
+                    I build the services and the interfaces on top of them: Flask and FastAPI backends, REST API
+                    design, token auth, SQLite/Postgres, and Docker. On the frontend I've hand-written ~2,500 lines
+                    of framework-free ES modules for interactive network rendering, alignment views, a file
+                    browser, and an in-browser editor &mdash; plus a CI matrix across six Python versions with
+                    cross-platform smoke tests gating every release.
+                </p>
+            </div>
+        </div>
+
+        <h3 class="subsection-title">Technical Skills</h3>
+        <div class="skills-tech-grid">
+            <div class="skill-group">
+                <h4>Languages</h4>
+                <p>Python, Cython, JavaScript, TypeScript, C, Java, C#/.NET, SQL</p>
+            </div>
+            <div class="skill-group">
+                <h4>Performance</h4>
+                <p>Profiling (cProfile, tracemalloc), Cython extension modules, caching, vectorization, multiprocessing, CUDA/CuPy GPU offload</p>
+            </div>
+            <div class="skill-group">
+                <h4>Data &amp; ML</h4>
+                <p>NumPy, SciPy, PyTorch, TensorFlow, scikit-learn, pandas, NetworkX</p>
+            </div>
+            <div class="skill-group">
+                <h4>Web &amp; Backend</h4>
+                <p>ES modules, Canvas/SVG rendering, React, Flask, FastAPI, REST API design, SQLite, PostgreSQL, MongoDB</p>
+            </div>
+            <div class="skill-group">
+                <h4>Infrastructure</h4>
+                <p>GitHub Actions CI/CD, PyPI packaging and release automation, Docker, pytest, Git</p>
+            </div>
+            <div class="skill-group">
+                <h4>AI-Assisted Dev</h4>
+                <p>Repo-level assistant rules, coding standards that constrain model output, review process for generated code</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="experience">
+        <h2 class="section-title">Experience</h2>
+        <p class="section-description">
+            Six years at a university systems lab, growing from research assistant into technical lead
+        </p>
+        <div class="exp-list">
+            <div class="exp-item">
+                <div class="exp-head">
+                    <span class="exp-title">Senior Software Engineer &mdash; Technical Lead</span>
+                    <span class="exp-dates">June 2022 &ndash; Present</span>
+                </div>
+                <div class="exp-org">Rice University, Computational Systems Lab &mdash; Houston, TX (Remote)</div>
+                <ul>
+                    <li>
+                        Technical lead and principal architect of an open-source Python library on PyPI, writing 217
+                        of its 249 commits across architecture, compiled kernels, packaging, docs, and user support.
+                    </li>
+                    <li>
+                        Led a full API redesign through a breaking release, then wrote the migration guide and
+                        compatibility matrix that let users move across it without redoing work.
+                    </li>
+                    <li>
+                        Delivered the measured performance wins: four Cython extension modules, GPU scoring paths,
+                        and 2.8&ndash;19.5&times; improvements on the paths that mattered. Cut topological error
+                        2.9&times; against the incumbent implementation while running 7.4&times; faster on the
+                        hardest benchmark case.
+                    </li>
+                    <li>
+                        Own CI/CD, release automation, and the conventions contributors build against. Grew the
+                        suite to 1,130 tests at a 100% pass rate, including memory regression, stress, and numerical
+                        cross-checks against a reference Java implementation.
+                    </li>
+                    <li>
+                        Set the technical roadmap with the principal investigator, onboarded and reviewed
+                        collaborators, and wrote the NSF Year-1 technical report.
+                    </li>
+                </ul>
+            </div>
+            <div class="exp-item">
+                <div class="exp-head">
+                    <span class="exp-title">Software Engineering Intern / ML Research Assistant</span>
+                    <span class="exp-dates">Aug 2020 &ndash; May 2022</span>
+                </div>
+                <div class="exp-org">Rice University, Computational Systems Lab &mdash; Houston, TX</div>
+                <ul>
+                    <li>Built Python machine-learning pipelines for large-scale data processing and model experimentation.</li>
+                    <li>Implemented tensor operations and data-encoding pipelines for high-volume numerical workloads.</li>
+                    <li>Profiled and optimized existing codebases for runtime and memory footprint.</li>
+                </ul>
+            </div>
+        </div>
+        <p class="exp-footer">
+            <strong>Rice University</strong> &mdash; B.A. Computer Science
+            <span class="exp-sep">&middot;</span>
+            <a href="resume.html">Full r&eacute;sum&eacute; with details &rarr;</a>
         </p>
     </section>
 
@@ -84,7 +223,8 @@
     <section id="projects" class="projects">
         <h2 class="section-title">Featured Projects</h2>
         <p class="section-description">
-            A few things I've built, mostly in scientific computing and network analysis
+            Three systems I built end to end: a scientific library, the full-stack platform that runs it, and a
+            GPU-accelerated data generator for ML
         </p>
         <div class="projects-grid">
             <!-- PhyNetPy Project Card -->
@@ -125,8 +265,9 @@
                 </div>
                 <h3>BioStore</h3>
                 <p>
-                    Full-stack platform for submitting, monitoring, and visualizing long-running PhyNetPy jobs.
-                    The frontend is about 2,500 lines of hand-written ES modules with no framework and no build step.
+                    Full-stack platform for submitting, monitoring, and visualizing long-running scientific compute
+                    jobs. I built both halves: the Flask/SQLite backend and about 2,500 lines of hand-written ES
+                    modules on top of it, with no framework and no build step.
                 </p>
                 <ul>
                     <li>Interactive network rendering and alignment views</li>
@@ -151,14 +292,18 @@
                 <div class="project-icon">
                     <span class="icon-text">BioForge</span>
                 </div>
-                <h3>GPU-Accelerated Synthetic Sequence Generation</h3>
+                <h3>BioForge</h3>
                 <p>
-                    A GPU-accelerated Python library that generates synthetic DNA, RNA, and protein sequences
-                    with known ground truth, so you can train and benchmark ML models against data where you
-                    already know the right answer. It covers substitution, indel, and recombination models,
-                    population genetics simulation, and sequencing error, and it writes out one-hot arrays and
-                    PyTorch datasets directly. Every run records its config so the data can be regenerated.
+                    A GPU-accelerated Python library that generates synthetic DNA, RNA, and protein sequences with
+                    known ground truth, so ML models can be trained and benchmarked against data where the right
+                    answer is already known.
                 </p>
+                <ul>
+                    <li>Substitution, indel, and recombination models plus population-genetics simulation</li>
+                    <li>Sequencing-error models for realistic read simulation</li>
+                    <li>Writes one-hot arrays and PyTorch datasets directly</li>
+                    <li>Every run records its config, so any dataset can be regenerated exactly</li>
+                </ul>
                 <div class="tech-stack">
                     <span class="tech-tag">Python</span>
                     <span class="tech-tag">NumPy</span>
@@ -170,53 +315,6 @@
                     
                 </div>
                 <a href="https://github.com/markkessler66/BioForge" class="project-link">View on GitHub →</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- PhyNetPy Feature Section -->
-    <section id="phynetpy" class="phynetpy-section">
-        <h2 class="section-title">What Shipped in PhyNetPy 0.6.0</h2>
-        <p class="section-description">
-            0.6.0 was a full API redesign plus a round of performance work I could actually measure
-        </p>
-        <div class="feature-grid">
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <span class="icon-text">API</span>
-                </div>
-                <h3>Typed Three-Axis API</h3>
-                <p>
-                    The old command surface had grown in every direction, so I replaced it with one composable API.
-                    You pick your data, a biological model, and a statistical criterion, then call
-                    <code>infer</code>, <code>score</code>, or <code>simulate</code>. Combinations that don't make
-                    sense get rejected at the call site rather than two hours into a run, and the validity matrix
-                    is published so you know which ones those are.
-                </p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <span class="icon-text">FAST</span>
-                </div>
-                <h3>Compiled Hot Paths</h3>
-                <p>
-                    Four Cython extension modules sit under the graph core and the scoring kernels. The
-                    pseudo-likelihood DP runs up to 9.2&times; faster than the pure-Python version and returns
-                    bit-identical scores. Closed-form transition matrices beat <code>scipy.linalg.expm</code> by
-                    8.6 to 19.5&times;.
-                </p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <span class="icon-text">SAFE</span>
-                </div>
-                <h3>Hard to Misuse</h3>
-                <p>
-                    Branch lengths now carry their units in the type, so the library won't quietly guess between
-                    coalescent and substitution scales. That mistake used to produce wrong results without raising
-                    anything. There are 1,130 tests behind it, including numerical cross-checks against the
-                    reference Java implementation.
-                </p>
             </div>
         </div>
     </section>

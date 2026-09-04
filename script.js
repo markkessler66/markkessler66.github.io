@@ -27,6 +27,6 @@ const observer = new IntersectionObserver((entries) => {
 }, observerOptions);
 
 // Observe all cards and sections
-document.querySelectorAll('.project-card, .feature-card').forEach(el => {
+document.querySelectorAll('.project-card, .feature-card, .strength-card, .exp-item').forEach(el => {
     observer.observe(el);
 });

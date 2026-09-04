@@ -6,7 +6,7 @@ My personal site and portfolio — the cool things I've coded. :D
 
 | File | Purpose |
 |---|---|
-| `index.html` | Landing page: intro, featured projects, PhyNetPy 0.6.0 highlights, contact |
+| `index.html` | Landing page: intro, skills, experience, featured projects, about, contact |
 | `resume.html` | Résumé, styled for both screen and print, with a PDF download button |
 | `phynetpy-showcase.html` | Deep technical showcase for PhyNetPy: architecture, measured benchmarks, methodology |
 | `demo.html` | Interactive SwitchParentage / SRPP walkthrough on a Scenario D toy network |

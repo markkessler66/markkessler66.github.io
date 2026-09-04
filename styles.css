@@ -246,6 +246,190 @@ nav {
     font-family: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
 }
 
+/* Skills Section */
+.skills {
+    background-color: var(--bg-light);
+    padding: 5rem 2rem;
+}
+
+.strengths-grid {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 1.75rem;
+}
+
+.strength-card {
+    background-color: var(--bg-white);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--primary-color);
+    border-radius: 12px;
+    padding: 1.75rem;
+    transition: all 0.3s ease;
+}
+
+.strength-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.strength-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-dark);
+}
+
+.strength-card p {
+    color: var(--text-light);
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.strength-card code {
+    background-color: var(--bg-light);
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    font-size: 0.88em;
+    border: 1px solid var(--border-color);
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+}
+
+/* Technical skills grid */
+.subsection-title {
+    max-width: 1000px;
+    margin: 3.5rem auto 1.5rem;
+    font-size: 1.35rem;
+    color: var(--text-dark);
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.skills-tech-grid {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem 2rem;
+}
+
+.skill-group h4 {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--primary-color);
+    margin-bottom: 0.35rem;
+}
+
+.skill-group p {
+    color: var(--text-light);
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+/* Experience Section */
+.experience {
+    background-color: var(--bg-white);
+    padding: 5rem 2rem;
+}
+
+.exp-list {
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.exp-item {
+    position: relative;
+    padding-left: 1.75rem;
+    padding-bottom: 2.5rem;
+    border-left: 2px solid var(--border-color);
+}
+
+.exp-item:last-child {
+    padding-bottom: 0;
+    border-left-color: transparent;
+}
+
+.exp-item::before {
+    content: '';
+    position: absolute;
+    left: -7px;
+    top: 0.4rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    box-shadow: 0 0 0 4px var(--bg-white);
+}
+
+.exp-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+}
+
+.exp-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.exp-dates {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    white-space: nowrap;
+}
+
+.exp-org {
+    margin-top: 0.2rem;
+    font-size: 0.95rem;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.exp-item ul {
+    margin-top: 1rem;
+    padding-left: 1.25rem;
+    color: var(--text-light);
+}
+
+.exp-item ul li {
+    margin-bottom: 0.6rem;
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.exp-item ul li::marker {
+    color: var(--primary-color);
+}
+
+.exp-footer {
+    max-width: 860px;
+    margin: 1rem auto 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.95rem;
+    color: var(--text-light);
+}
+
+.exp-footer .exp-sep {
+    margin: 0 0.5rem;
+    color: var(--border-color);
+}
+
+.exp-footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.exp-footer a:hover {
+    text-decoration: underline;
+}
+
 /* Projects Section */
 .projects {
     background-color: var(--bg-light);
@@ -545,6 +729,19 @@ footer a:hover {
 
     .projects-grid {
         grid-template-columns: 1fr;
+    }
+
+    .strengths-grid,
+    .skills-tech-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .strength-card {
+        padding: 1.5rem 1.25rem;
+    }
+
+    .exp-dates {
+        white-space: normal;
     }
 
     .metrics-strip {
