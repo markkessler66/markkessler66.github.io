@@ -89,7 +89,7 @@
             <dt>Infrastructure</dt>
             <dd>GitHub Actions CI/CD, PyPI packaging and release automation, Docker, pytest, Git</dd>
             <dt>AI-Assisted Dev</dt>
-            <dd>Repo-level assistant rules, coding standards that constrain model output, review process for generated code</dd>
+            <dd>Cursor, Claude Code, LangChain, Agentic Development with sandboxing and human approval</dd>
         </dl>
 
         <h2>Experience</h2>
@@ -97,7 +97,7 @@
         <div class="role">
             <div class="role-head">
                 <span class="role-title">Senior Software Engineer &mdash; Technical Lead, PhyNetPy</span>
-                <span class="role-dates">June 2022 &ndash; Present</span>
+                <span class="role-dates">August 2020 &ndash; Present</span>
             </div>
             <div class="role-org">Rice University, Computational Systems Lab &mdash; Houston, TX (Remote)</div>
 
@@ -166,21 +166,19 @@
                     out-of-memory conditions surface as recoverable errors instead of killing the run. Also added
                     multiprocess scoring pools and parallel MCMC chains.
                 </li>
+                <li>
+                    Built Python machine-learning pipelines for large-scale data processing and model experimentation.
+                </li>
+                <li>
+                    Implemented tensor operations and data-encoding pipelines for high-volume numerical workloads.
+                </li>
+                <li>
+                    Experimented with different Neural Network architectures and probed for optimal model hyperparameters
+                    for inferring quartet networks from large DNA data sets.
+                </li>
             </ul>
         </div>
 
-        <div class="role">
-            <div class="role-head">
-                <span class="role-title">Software Engineering Intern / ML Research Assistant</span>
-                <span class="role-dates">Aug 2020 &ndash; May 2022</span>
-            </div>
-            <div class="role-org">Rice University, Computational Systems Lab &mdash; Houston, TX</div>
-            <ul>
-                <li>Built Python machine-learning pipelines for large-scale data processing and model experimentation.</li>
-                <li>Implemented tensor operations and data-encoding pipelines for high-volume numerical workloads.</li>
-                <li>Profiled and optimized existing codebases for runtime and memory footprint.</li>
-            </ul>
-        </div>
 
         <h2>Projects</h2>
 
@@ -213,18 +211,31 @@
                     Backend handles token auth, job execution, and lease-based file locking on SQLite (WAL) so
                     multiple users can edit the same dataset without clobbering each other.
                 </li>
+                <li>
+                    This is an experiment in AI/Agentic development best practices. I currently use Cursor/Claude, bounded by
+                    codebase wide rulesets and OpenHands to regulate the workflow.  
+                </li>
             </ul>
         </div>
 
         <div class="project">
             <div class="project-name">
-                BioForge <span class="project-meta">&mdash; GPU-accelerated synthetic data generation</span>
+                NBC-MAK: DFW and Tropical Weather Forecasting <span class="project-meta">&mdash; Local AI model training and CUDA development</span>
             </div>
             <ul>
                 <li>
-                    Python library generating synthetic DNA/RNA/protein sequences with known ground truth, for training
-                    and benchmarking ML models. Covers evolutionary models, population-genetics simulation, sequencing
-                    error models, and PyTorch-ready outputs, with runs reproducible from tracked config.
+                    My passion project! I enjoy tracking tropical systems, and these complex weather time series datasets are perfect
+                    for learning how to locally train AI models and work with large data. 
+                </li>
+                <li>
+                    Always-on public API data pulling, and always-on local training.
+                </li>
+                <li>
+                    Responsive React front end, with beautiful map overlays, data visualization, data sandboxing, and statistical 
+                    analyses of my local model compared with 6+ other large scale public models. 
+                </li>
+                <li>
+                    CUDA enabled development, dealing with vast tensors of atmospheric data across time.
                 </li>
             </ul>
         </div>
